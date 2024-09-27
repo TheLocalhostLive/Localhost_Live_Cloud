@@ -7,14 +7,15 @@ use mongodb::{bson::doc, Collection};
 use tokio::time::sleep;
 use std::env;
 use std::fs::File;
-use std::io::{BufRead, BufReader, Read};
+use std::io::{ BufReader, Read};
 use std::process::Stdio;
 
 use std::time::Duration;
 use tokio::process::Command;
 mod db;
 mod model;
-use tokio::io::{AsyncBufReadExt, AsyncReadExt};
+
+mod handler;
 
 // Initialize MongoDB Collection
 fn get_user_collection(db: web::Data<mongodb::Database>) -> Collection<User> {
