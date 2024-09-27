@@ -2,6 +2,7 @@ use crate::model::User;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use dotenv::dotenv;
 use futures::stream::TryStreamExt;
+use model::Contrainer;
 use mongodb::bson::oid::ObjectId;
 use mongodb::{bson::doc, Collection};
 use tokio::time::sleep;
@@ -9,7 +10,6 @@ use std::env;
 use std::fs::File;
 use std::io::{ BufReader, Read};
 use std::process::Stdio;
-
 use std::time::Duration;
 use tokio::process::Command;
 mod db;
@@ -20,6 +20,9 @@ mod handler;
 // Initialize MongoDB Collection
 fn get_user_collection(db: web::Data<mongodb::Database>) -> Collection<User> {
     db.collection::<User>("users")
+}
+fn get_container_collection(db: web::Data<mongodb::Database>) -> Collection<Contrainer>{
+    db.collection::<Contrainer>("containers")
 }
 
 // Create a new user
@@ -169,7 +172,7 @@ async fn main() -> std::io::Result<()> {
             .route(
                 "/process/{process_name}",
                 web::get().to(get_console_by_process_name),
-            )
+            ).route("/process", web::post().to(handler::lxc_container::create_container))
     })
     .bind("127.0.0.1:8080")?
     .run()
