@@ -6,13 +6,13 @@ const root = createRoot(document.getElementById("root"));
 
 root.render(
   <Auth0Provider
-    domain="dev-4rcvkns3pn1y2ety.us.auth0.com"
-    clientId="tFNevsQ6dGd2pVEG5GO4rTVpK0aYHUGR"
+    domain="dev-jfmhfrg7tmi1fr64.us.auth0.com"
+    clientId="vJGp34ovHLa67f3c7VGVDHHl6LYgKbai"
     useRefreshTokens={true}
     cacheLocation="localstorage"
     authorizationParams={{
       redirect_uri: window.location.origin,
-      audience: "https://dev-4rcvkns3pn1y2ety.us.auth0.com/api/v2/",
+      audience: "https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/",
       scope: "openid profile email offline_access",
     }}
   >

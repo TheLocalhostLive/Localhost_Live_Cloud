@@ -29,8 +29,8 @@ function App() {
   } = useAuth0();
 
   const settings = [
-    { name: "Profile", callback: () => {} },
-    { name: "Dashboard", callback: () => {} },
+    { name: "Profile", callback: () => {console.log("profile")} },
+    { name: "Dashboard", callback: () => {console.log("profile")} },
     {
       name: "Logout",
       callback: () => {
@@ -73,13 +73,15 @@ function App() {
           console.log("isAuthenticated");
           const token = await getAccessTokenSilently({
             ignoreCache: true,
-            audience: `https://dev-4rcvkns3pn1y2ety.us.auth0.com/api/v2/`,
+            audience: `https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/`,
             redirect_uri: "http://localhost:5716/",
             scope: "openid profile email offline_access",
 
             detailedResponse: true,
           });
+          console.log(user);
           console.log(token.access_token);
+          console.log(accessToken);
           setAccessToken(token);
         } else {
           console.log("Not authenticated");
@@ -136,8 +138,8 @@ function App() {
           >
             {settings.map((setting) => (
               <MenuItem
-                id={setting}
-                key={setting}
+                id={setting.name}
+                key={setting.name}
                 onClick={() => handleCloseUserMenu(setting.callback)}
               >
                 <Typography sx={{ textAlign: "center" }}>{setting.name}</Typography>
