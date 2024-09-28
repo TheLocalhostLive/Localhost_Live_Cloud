@@ -2,8 +2,10 @@ use actix_web::{
     dev::{Service, ServiceRequest, ServiceResponse, Transform},
     Error,
 };
-use futures_util::future::{ok, Ready, LocalBoxFuture};
+use auth0_rs::Auth0;
+use futures_util::future::{ok, LocalBoxFuture, Ready};
 use reqwest::Client;
+use serde_json::json;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
@@ -68,24 +70,57 @@ where
 
                         // Fetch JWKS from Auth0
                         let jwks_url = format!("https://{}/.well-known/jwks.json", auth0_domain);
+                        println!("JWKS URL: {}", jwks_url);
+                        
                         let jwks = client
                             .get(&jwks_url)
                             .send()
                             .await
-                            .map_err(|_| actix_web::error::ErrorUnauthorized("Could not fetch JWKS"))?
+                            .map_err(|_| {
+                                actix_web::error::ErrorUnauthorized("Could not fetch JWKS")
+                            })?
                             .json::<serde_json::Value>()
                             .await
-                            .map_err(|_| actix_web::error::ErrorUnauthorized("Invalid JWKS format"))?;
+                            .map_err(|_| {
+                                actix_web::error::ErrorUnauthorized("Invalid JWKS format")
+                            })?;
+                        
+                        // Ensure we have a "keys" array
+                        let keys = jwks["keys"].as_array().ok_or_else(|| {
+                            actix_web::error::ErrorUnauthorized("Invalid JWKS format: 'keys' array not found")
+                        })?;
+                        
+                        // Create a new JSON object with just the "keys" field
+                        let formatted_jwks = json!({ "keys": keys });
+                        
+                        // Serialize the formatted JWKS to a string
+                        let jwks_str = serde_json::to_string(&formatted_jwks).map_err(|_| {
+                            actix_web::error::ErrorUnauthorized("Failed to serialize JWKS")
+                        })?;
+                        
+                        let auth0 = Auth0::new(&jwks_str).map_err(|e| {
+                            actix_web::error::ErrorUnauthorized(format!("Failed to initialize Auth0: {:?}", e))
+                        })?;
+                        
+                        let res = auth0.validate_token(token);
+                        assert_eq!(res.is_ok(), true);
+                        let claims = res.unwrap();
+                        dbg!(&claims);
+                        println!("{}", claims["aud"][1]);
+                        // assert_eq!(
+                        //     claims.as_object().unwrap().get("aud").unwrap(),
+                        //     "https://dev-jfhfrg7tmi1fr64.us.auth0.com/api/v2/"
+                        // );
 
-                        // Simplified token decoding and validation
-                        // Proceed if the token is valid
                         return service.call(req).await;
                     }
                 }
             }
 
             // If no valid token, return unauthorized
-            Err(actix_web::error::ErrorUnauthorized("No valid authorization token"))
+            Err(actix_web::error::ErrorUnauthorized(
+                "No valid authorization token",
+            ))
         })
     }
 

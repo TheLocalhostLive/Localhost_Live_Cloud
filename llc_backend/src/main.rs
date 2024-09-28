@@ -15,6 +15,7 @@ mod model;
 use std::fs::File;
 use std::io::{BufReader, Read};
 use std::process::Stdio;
+use std::sync::{Arc, RwLock};
 use std::time::Duration;
 use tokio::process::Command;
 use tokio::time::sleep;
@@ -24,7 +25,7 @@ pub mod middleware;
 mod model;
 use crate::middleware::auth::AuthMiddleware;
 use reqwest::Client;
-use std::sync::Arc;
+
 
 // Initialize MongoDB Collection
 fn get_user_collection(db: web::Data<mongodb::Database>) -> Collection<User> {
@@ -109,6 +110,10 @@ async fn delete_user(db: web::Data<mongodb::Database>, path: web::Path<String>) 
     }
 }
 
+async fn test_route() -> impl Responder {
+    HttpResponse::Ok().body("test success")
+}
+
 // Import AsyncReadExt for reading process output
 
 async fn get_console_by_process_name(process_name: web::Path<String>) -> impl Responder {
@@ -181,11 +186,12 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(cors) // Wrap the app with CORS middleware
             .wrap(AuthMiddleware {
-                auth0_domain: "your-auth0-domain".to_string(),
-                audience: "your-audience".to_string(),
+                auth0_domain: "dev-jfmhfrg7tmi1fr64.us.auth0.com".to_string(),
+                audience: "https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/".to_string(),
                 client: Arc::new(Client::new()),
             })
             .app_data(web::Data::new(db.clone()))
+            .route("/test", web::get().to(test_route))
             .route("/users", web::post().to(create_user))
             .route("/users", web::get().to(get_users))
             .route("/users/{id}", web::get().to(get_user))
