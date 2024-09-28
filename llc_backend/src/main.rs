@@ -12,6 +12,19 @@ use std::env;
 mod db;
 mod handler;
 mod model;
+use std::fs::File;
+use std::io::{BufReader, Read};
+use std::process::Stdio;
+use std::time::Duration;
+use tokio::process::Command;
+use tokio::time::sleep;
+mod db;
+mod handler;
+pub mod middleware;
+mod model;
+use crate::middleware::auth::AuthMiddleware;
+use reqwest::Client;
+use std::sync::Arc;
 
 // Initialize MongoDB Collection
 fn get_user_collection(db: web::Data<mongodb::Database>) -> Collection<User> {
@@ -96,6 +109,55 @@ async fn delete_user(db: web::Data<mongodb::Database>, path: web::Path<String>) 
     }
 }
 
+// Import AsyncReadExt for reading process output
+
+async fn get_console_by_process_name(process_name: web::Path<String>) -> impl Responder {
+    let pname = process_name.into_inner();
+    println!("Request received for process: {}", pname);
+    let script_path = "scripts/pm2.sh"; // Adjust the path as necessary
+
+    // Spawn the process to execute the script
+    let mut process = Command::new("sh")
+        .arg(script_path)
+        .arg(&pname) // Pass the process name received in the request
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("Failed to execute script");
+
+    // Wait for a specified time (e.g., 3 seconds) to allow the script to capture logs
+    let wait_time = Duration::from_secs(3);
+    sleep(wait_time).await;
+
+    // Wait for the process to finish
+    let exit_status = process.wait().await.expect("Failed to wait for process");
+
+    // Prepare to read the log file
+    let log_file_path = format!("pm2_logs_{}.txt", pname); // Path to your log file
+    let file = File::open(&log_file_path);
+
+    match file {
+        Ok(file) => {
+            let mut reader = BufReader::new(file);
+            let mut contents = String::new();
+
+            // Read the file contents
+            match reader.read_to_string(&mut contents) {
+                Ok(_) => {
+                    if exit_status.success() {
+                        HttpResponse::Ok().body(contents) // Return the logs if the process was successful
+                    } else {
+                        HttpResponse::InternalServerError()
+                            .body(format!("Script failed. Logs:\n{}", contents))
+                    }
+                }
+                Err(_) => HttpResponse::InternalServerError().body("Failed to read log file."),
+            }
+        }
+        Err(_) => HttpResponse::NotFound().body("Log file not found."),
+    }
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
@@ -118,7 +180,12 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors) // Wrap the app with CORS middleware
-            .app_data(web::Data::new(db.clone())) // Ensure you pass the database
+            .wrap(AuthMiddleware {
+                auth0_domain: "your-auth0-domain".to_string(),
+                audience: "your-audience".to_string(),
+                client: Arc::new(Client::new()),
+            })
+            .app_data(web::Data::new(db.clone()))
             .route("/users", web::post().to(create_user))
             .route("/users", web::get().to(get_users))
             .route("/users/{id}", web::get().to(get_user))
