@@ -6,10 +6,14 @@ const root = createRoot(document.getElementById("root"));
 
 root.render(
   <Auth0Provider
-    domain="dev-1yffugckd6d5gydc.us.auth0.com"
-    clientId="W9yLUPon9XtgpquZKmURQj4URCRthWS1"
+    domain="dev-4rcvkns3pn1y2ety.us.auth0.com"
+    clientId="tFNevsQ6dGd2pVEG5GO4rTVpK0aYHUGR"
+    useRefreshTokens={true}
+    cacheLocation="localstorage"
     authorizationParams={{
       redirect_uri: window.location.origin,
+      audience: "https://dev-4rcvkns3pn1y2ety.us.auth0.com/api/v2/",
+      scope: "openid profile email offline_access",
     }}
   >
     <App />
