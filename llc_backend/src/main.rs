@@ -128,11 +128,11 @@ async fn main() -> std::io::Result<()> {
                 "/process/{process_name}",
                 web::get().to(handler::container::get_console_by_process_name),
             )
-            .route("/deploy", web::post().to(handler::container::deploy))
+            .route("/deploy", web::post().to(handler::container::deploy_and_create_container))
             .route(
                 "/deploy",
                 web::get().to(handler::container::get_deployed_containers),
-            )
+            ).route("/build-deploy", web::post().to(handler::container::deploy_and_build))
     })
     .bind("127.0.0.1:8080")?
     .run()

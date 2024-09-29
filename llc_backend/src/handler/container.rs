@@ -1,5 +1,6 @@
 use std::process::Stdio;
 
+use serde::Deserialize;
 use tokio::process::Command;
 use actix_web::{web, HttpResponse, Responder};
 use futures::TryStreamExt;
@@ -17,7 +18,7 @@ fn get_container_collection(db: web::Data<mongodb::Database>) -> Collection<Cont
 }
 
 
-pub async fn deploy(db: web::Data<mongodb::Database>, container: web::Json<Container>) -> impl Responder {
+pub async fn deploy_and_create_container(db: web::Data<mongodb::Database>, container: web::Json<Container>) -> impl Responder {
     let collection = get_container_collection(db);
 
     // Check if the containerlication container already exists
@@ -77,18 +78,38 @@ pub async fn deploy(db: web::Data<mongodb::Database>, container: web::Json<Conta
 
 // Get all users
 pub async fn get_deployed_containers(db: web::Data<mongodb::Database>) -> impl Responder {
+
+
     let collection = get_container_collection(db);
-    let mut cursor = collection.find(doc! {}).await.unwrap();
 
-    let mut container = vec![];
+    // Attempt to find all documents in the collection
+    let mut cursor = match collection.find(doc! {}).await {
+        Ok(cursor) => cursor,
+        Err(err) => {
+            eprintln!("Failed to fetch containers: {}", err);
+            return HttpResponse::InternalServerError().json("Failed to fetch containers.");
+        }
+    };
 
-    while let Some(containerlication) = cursor.try_next().await.unwrap() {
-        container.push(containerlication);
+    let mut containers = vec![];
+
+    // Iterate over the cursor to collect containers
+    while let Some(container) = match cursor.try_next().await {
+        Ok(Some(container)) => Some(container),
+        Ok(None) => None, // No more documents
+        Err(err) => {
+            eprintln!("Error while retrieving containers: {}", err);
+            return HttpResponse::InternalServerError().json("Error retrieving containers.");
+        }
+    } {
+        containers.push(container);
     }
 
-    HttpResponse::Ok().json(container)
+    HttpResponse::Ok().json(containers)
 }
+
 pub async fn get_console_by_process_name(process_name: web::Path<String>) -> impl Responder {
+
     let pname = process_name.into_inner();
     println!("Request received for process: {}", pname);
     let script_path = "scripts/pm2.sh"; // Adjust the path as necessary
@@ -129,4 +150,43 @@ pub async fn get_console_by_process_name(process_name: web::Path<String>) -> imp
         },
         Err(_) => HttpResponse::NotFound().body("Log file not found."),
     }
+}
+
+#[derive(Deserialize)]
+pub struct DeployRequest {
+    container_name: String,
+    application_name: String,
+}
+
+pub async fn deploy_and_build(
+    json: web::Json<DeployRequest>,
+) -> impl Responder {
+    dbg!("Deploy Build route hit");
+    let script_path = "scripts/build_redeploy.sh";
+
+    // Extract container_name and application_name from the JSON
+    let container_name_str = &json.container_name;
+    let application_name_str = &json.application_name;
+    dbg!("container Name: {}",container_name_str);
+    dbg!("Application Name: {}",application_name_str);
+
+    let  process = Command::new("sh")
+        .arg(script_path)
+        .arg(container_name_str) // Pass the container_name to the script
+        .arg(application_name_str) // Pass the application_name to the script
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("Failed to execute script");
+
+    let output = process.wait_with_output().await.expect("Failed to wait for process");
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return HttpResponse::InternalServerError().body(format!("Script failed: {}", stderr));
+    }
+
+    // If the process succeeds, return the standard output
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    HttpResponse::Ok().body(format!("Script succeeded: {}", stdout))
 }
