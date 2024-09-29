@@ -1,33 +1,20 @@
+[PM2] Spawning PM2 daemon with pm2_home=/root/.pm2
+[PM2] PM2 Successfully daemonized
 [TAILING] Tailing last 15 lines for [all] processes (change the value with --lines option)
 /root/.pm2/pm2.log last 15 lines:
-PM2        | 2024-09-27T07:14:41: PM2 log: PM2 version          : 5.4.2
-PM2        | 2024-09-27T07:14:41: PM2 log: Node.js version      : 20.15.1
-PM2        | 2024-09-27T07:14:41: PM2 log: Current arch         : x64
-PM2        | 2024-09-27T07:14:41: PM2 log: PM2 home             : /root/.pm2
-PM2        | 2024-09-27T07:14:41: PM2 log: PM2 PID file         : /root/.pm2/pm2.pid
-PM2        | 2024-09-27T07:14:41: PM2 log: RPC socket file      : /root/.pm2/rpc.sock
-PM2        | 2024-09-27T07:14:41: PM2 log: BUS socket file      : /root/.pm2/pub.sock
-PM2        | 2024-09-27T07:14:41: PM2 log: Application log path : /root/.pm2/logs
-PM2        | 2024-09-27T07:14:41: PM2 log: Worker Interval      : 30000
-PM2        | 2024-09-27T07:14:41: PM2 log: Process dump file    : /root/.pm2/dump.pm2
-PM2        | 2024-09-27T07:14:41: PM2 log: Concurrent actions   : 2
-PM2        | 2024-09-27T07:14:41: PM2 log: SIGTERM timeout      : 1600
-PM2        | 2024-09-27T07:14:41: PM2 log: ===============================================================================
-PM2        | 2024-09-27T07:16:25: PM2 log: App [vartaalup:0] starting in -fork mode-
-PM2        | 2024-09-27T07:16:25: PM2 log: App [vartaalup:0] online
-
-/root/.pm2/logs/vartaalup-error.log last 15 lines:
-0|vartaalu | (node:766) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-0|vartaalu | (Use `node --trace-warnings ...` to show where the warning was created)
-0|vartaalu | (node:499) [MONGODB DRIVER] Warning: useNewUrlParser is a deprecated option: useNewUrlParser has no effect since Node.js Driver version 4.0.0 and will be removed in the next major version
-0|vartaalu | (Use `node --trace-warnings ...` to show where the warning was created)
-
-/root/.pm2/logs/vartaalup-out.log last 15 lines:
-0|vartaalu | mongodb+srv://ant:ant@cluster0.vyjozac.mongodb.net/
-0|vartaalu | Server is Running 3005
-0|vartaalu | conneted to Database
-0|vartaalu | mongodb+srv://ant:ant@cluster0.vyjozac.mongodb.net/
-0|vartaalu | Server is Running 3005
-0|vartaalu | conneted to Database
-0|vartaalu | conneted to Database
+PM2        | 2024-09-28T14:53:23: PM2 log: --- New PM2 Daemon started ----------------------------------------------------
+PM2        | 2024-09-28T14:53:23: PM2 log: Time                 : Sat Sep 28 2024 14:53:23 GMT+0000 (Coordinated Universal Time)
+PM2        | 2024-09-28T14:53:23: PM2 log: PM2 version          : 5.4.2
+PM2        | 2024-09-28T14:53:23: PM2 log: Node.js version      : 20.15.1
+PM2        | 2024-09-28T14:53:23: PM2 log: Current arch         : x64
+PM2        | 2024-09-28T14:53:23: PM2 log: PM2 home             : /root/.pm2
+PM2        | 2024-09-28T14:53:23: PM2 log: PM2 PID file         : /root/.pm2/pm2.pid
+PM2        | 2024-09-28T14:53:23: PM2 log: RPC socket file      : /root/.pm2/rpc.sock
+PM2        | 2024-09-28T14:53:23: PM2 log: BUS socket file      : /root/.pm2/pub.sock
+PM2        | 2024-09-28T14:53:23: PM2 log: Application log path : /root/.pm2/logs
+PM2        | 2024-09-28T14:53:23: PM2 log: Worker Interval      : 30000
+PM2        | 2024-09-28T14:53:23: PM2 log: Process dump file    : /root/.pm2/dump.pm2
+PM2        | 2024-09-28T14:53:23: PM2 log: Concurrent actions   : 2
+PM2        | 2024-09-28T14:53:23: PM2 log: SIGTERM timeout      : 1600
+PM2        | 2024-09-28T14:53:23: PM2 log: ===============================================================================
 

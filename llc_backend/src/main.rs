@@ -1,28 +1,21 @@
 use crate::model::User;
+use actix_cors::Cors;
+use actix_web::http::header;
+use actix_web::web::head;
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use dotenv::dotenv;
 use futures::stream::TryStreamExt;
-use model::Contrainer;
+use model::Container;
 use mongodb::bson::oid::ObjectId;
 use mongodb::{bson::doc, Collection};
-use tokio::time::sleep;
 use std::env;
-use std::fs::File;
-use std::io::{ BufReader, Read};
-use std::process::Stdio;
-use std::time::Duration;
-use tokio::process::Command;
 mod db;
-mod model;
-
 mod handler;
+mod model;
 
 // Initialize MongoDB Collection
 fn get_user_collection(db: web::Data<mongodb::Database>) -> Collection<User> {
     db.collection::<User>("users")
-}
-fn get_container_collection(db: web::Data<mongodb::Database>) -> Collection<Contrainer>{
-    db.collection::<Contrainer>("containers")
 }
 
 // Create a new user
@@ -103,57 +96,6 @@ async fn delete_user(db: web::Data<mongodb::Database>, path: web::Path<String>) 
     }
 }
 
- // Import AsyncReadExt for reading process output
-
- 
- async fn get_console_by_process_name(process_name: web::Path<String>) -> impl Responder {
-    let pname = process_name.into_inner();
-    println!("Request received for process: {}", pname);
-    let script_path = "scripts/pm2.sh"; // Adjust the path as necessary
-
-    // Spawn the process to execute the script
-    let mut process = Command::new("sh")
-        .arg(script_path)
-        .arg(&pname) // Pass the process name received in the request
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .expect("Failed to execute script");
-
-    // Wait for a specified time (e.g., 3 seconds) to allow the script to capture logs
-    let wait_time = Duration::from_secs(3);
-    sleep(wait_time).await;
-
-    // Wait for the process to finish
-    let exit_status = process.wait().await.expect("Failed to wait for process");
-
-    // Prepare to read the log file
-    let log_file_path = format!("pm2_logs_{}.txt", pname); // Path to your log file
-    let file = File::open(&log_file_path);
-
-    match file {
-        Ok(file) => {
-            let mut reader = BufReader::new(file);
-            let mut contents = String::new();
-            
-            // Read the file contents
-            match reader.read_to_string(&mut contents) {
-                Ok(_) => {
-                    if exit_status.success() {
-                        HttpResponse::Ok().body(contents) // Return the logs if the process was successful
-                    } else {
-                        HttpResponse::InternalServerError().body(format!("Script failed. Logs:\n{}", contents))
-                    }
-                },
-                Err(_) => HttpResponse::InternalServerError().body("Failed to read log file."),
-            }
-        },
-        Err(_) => HttpResponse::NotFound().body("Log file not found."),
-    }
-}
- 
-
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
@@ -162,8 +104,21 @@ async fn main() -> std::io::Result<()> {
     let db = db::init_db().await;
 
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://127.0.0.1:5173")
+            .allowed_origin("http://localhost:5173")
+            .allowed_origin("http://localhost:5173/check-console")
+            .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"]) // Use a Vec for methods
+            .allowed_headers(vec![
+                header::CONTENT_TYPE,
+                header::AUTHORIZATION,
+                header::ACCEPT,
+            ])
+            .max_age(3600); // Optional: Cache for one hour
+
         App::new()
-            .app_data(web::Data::new(db.clone()))
+            .wrap(cors) // Wrap the app with CORS middleware
+            .app_data(web::Data::new(db.clone())) // Ensure you pass the database
             .route("/users", web::post().to(create_user))
             .route("/users", web::get().to(get_users))
             .route("/users/{id}", web::get().to(get_user))
@@ -171,8 +126,13 @@ async fn main() -> std::io::Result<()> {
             .route("/users/{id}", web::delete().to(delete_user))
             .route(
                 "/process/{process_name}",
-                web::get().to(get_console_by_process_name),
-            ).route("/process", web::post().to(handler::lxc_container::create_container))
+                web::get().to(handler::container::get_console_by_process_name),
+            )
+            .route("/deploy", web::post().to(handler::container::deploy))
+            .route(
+                "/deploy",
+                web::get().to(handler::container::get_deployed_containers),
+            )
     })
     .bind("127.0.0.1:8080")?
     .run()
