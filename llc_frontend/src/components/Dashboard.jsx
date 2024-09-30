@@ -28,6 +28,11 @@ function Dashboard() {
     // console.log(container_name)
     navigate(`/check-console`, { state: { container_name } });
   };
+  const handleDepoyProjectClick = () => {
+    // console.log(`Card with ID ${id} clicked`);
+    // console.log(container_name)
+    navigate(`/deploy`);
+  };
 
   return (
     <>
@@ -36,7 +41,7 @@ function Dashboard() {
         <div className="top-container-div">
           <Button
             color="warning"
-            onClick={function () {}}
+            onClick={handleDepoyProjectClick}
             variant="outlined"
             sx={{
               color: "rgb(255,215,0)",
