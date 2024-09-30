@@ -1,0 +1,14 @@
+.console{
+    background-color: black;
+    height: 600px;
+    width: 1200px;
+    display: flex;
+    margin-left: 300px;
+    margin-top: 100px;
+
+}
+.console-text{
+    color: white;
+    padding: 10px;
+    font-size: large;
+}
