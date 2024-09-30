@@ -3,7 +3,7 @@
     margin-left: 20px;
     display: flex;
     height: 250px;
-    background-color: bisque;
+    background:linear-gradient(black,grey);
     flex-direction: column;
     border-radius: 50px;
     justify-content: flex-start;
@@ -14,8 +14,25 @@
     display: flex;
     margin-left: 100px;
     margin-top: 80px;
-    color: black;
+    font-size: 64px; /* Increased font size */
+    font-weight: 900; /* Extra bold for emphasis */
+    background: linear-gradient(to right,rgb(244, 222, 181), rgb(215, 169, 18),rgb(255,140,0)); /* White to gold gradient */
+    -webkit-background-clip: text;
+    color: transparent; /* Transparent text to show gradient */
+    background-clip: text;
+    animation: glow-animation 3s infinite alternate; /* Optional shimmer/glow effect */
 }
+
+/* Optional glowing animation */
+@keyframes glow-animation {
+    from {
+        background-position: 0%;
+    }
+    to {
+        background-position: 100%;
+    }
+}
+
 
 .top-container-div {
     display: flex;
@@ -111,7 +128,7 @@
 .deployed-list-container {
     background-color: #333;
     padding: 20px;
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     border-radius: 10px;
 }
@@ -161,4 +178,13 @@
 
 .check-console-button:hover {
     background-color: #e5e0e8;
+}
+.button-icon-alignment{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 5px;
+}
+.chip{
+    color: rgb(255,215,0),
 }
