@@ -1,0 +1,164 @@
+.top-container {
+    margin-top: 20px;
+    margin-left: 20px;
+    display: flex;
+    height: 250px;
+    background-color: bisque;
+    flex-direction: column;
+    border-radius: 50px;
+    justify-content: flex-start;
+    gap: 1px;
+}
+
+.top-container-h1 {
+    display: flex;
+    margin-left: 100px;
+    margin-top: 80px;
+    color: black;
+}
+
+.top-container-div {
+    display: flex;
+    justify-content: start;
+    flex-direction: row;
+    color: black;
+    margin-left: 100px;
+    gap: 10px;
+}
+
+.top-container-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+
+    width: 125px;
+    height: 32px;
+
+    background: #F7F2FA;
+
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+
+}
+
+.project-button-outer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.project-button-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 40px;
+    background: #F7F2FA;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3);
+    padding: 0 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.project-button-inner:first-child {
+    border-top-left-radius: 18px; /* Left side curve */
+    border-bottom-left-radius: 18px;
+}
+
+.project-button-inner:last-child {
+    border-top-right-radius: 18px; /* Right side curve */
+    border-bottom-right-radius: 18px;
+    border-left: none; /* Remove border between buttons */
+}
+
+.project-button-inner svg {
+    margin-right: 8px; /* Add margin between icon and text */
+}
+
+.project-button-inner:hover {
+    background-color: #E5E0E8;
+}
+
+.container-outer{
+    
+    display: flex;
+    justify-content: center;
+    
+}
+.container-inner{
+    background-color: rgb(172, 244, 172);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20px;
+    padding-top: 6px;
+   
+    height: 30px;
+    width: 200px;
+    border-radius: 30px;
+    gap: 10px;
+}
+
+.deployed-list-container {
+    background-color: #333;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 10px;
+}
+
+.deployed-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.deployed-item h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.deployed-item h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #555;
+}
+
+/* Style the button */
+.check-console-button {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: #f7f2fa;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.check-console-button svg {
+    margin-right: 8px; /* Space between icon and text */
+}
+
+.check-console-button:hover {
+    background-color: #e5e0e8;
+}
