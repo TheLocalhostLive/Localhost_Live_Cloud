@@ -1,16 +1,47 @@
 import React, { useEffect, useState } from "react";
 import "../style/landing_page.css";
 
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
 
 const phrases = ["LLC...", "Localhost Live Cloud"];
-const Model = () => {
-    const { scene } = useGLTF('src/assets/black_hole.glb'); // Update the path to your .glb model
-    return <primitive object={scene} scale={1.5} />;
-  };
+
+import { useAuth0 } from "@auth0/auth0-react";
+import CustomAppBar from "./ui_components/CustomAppBar";
+
 const LandingPage = () => {
   const [currentPhrase, setCurrentPhrase] = useState(0);
+  const [accessToken, setAccessToken] = useState("");
+  const { isAuthenticated, getAccessTokenSilently, user, isLoading } =
+    useAuth0();
+
+  useEffect(() => {
+    const fetchAccessToken = async () => {
+      try {
+        if (isAuthenticated) {
+          console.log("isAuthenticated");
+          const token = await getAccessTokenSilently({
+            ignoreCache: true,
+            audience: `https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/`,
+            redirect_uri: "http://localhost:5716/",
+            scope: "openid profile email offline_access",
+
+            detailedResponse: true,
+          });
+          console.log(user);
+          console.log(token.access_token);
+          //console.log(accessToken);
+          setAccessToken(token);
+        } else {
+          console.log("Not authenticated");
+        }
+      } catch (error) {
+        console.error("Error fetching access token:", error);
+      }
+    };
+
+    fetchAccessToken();
+  }, [isAuthenticated, getAccessTokenSilently, user]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -20,12 +51,16 @@ const LandingPage = () => {
     return () => clearInterval(interval);
   }, []);
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
-      <div className="root">
+      <CustomAppBar />
+      <div className="outer">
         <h1 data-text={phrases[currentPhrase]}>{phrases[currentPhrase]}</h1>
       </div>
-      <Model></Model>
     </>
   );
 };
