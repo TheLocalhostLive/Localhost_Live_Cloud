@@ -19,10 +19,7 @@ use std::sync::{Arc, RwLock};
 use std::time::Duration;
 use tokio::process::Command;
 use tokio::time::sleep;
-mod db;
-mod handler;
 pub mod middleware;
-mod model;
 use crate::middleware::auth::AuthMiddleware;
 use reqwest::Client;
 
