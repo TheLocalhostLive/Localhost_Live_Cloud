@@ -1,0 +1,54 @@
+/* Global styles for html and body */
+html, body {
+    margin: 0; 
+    padding: 0; 
+    height: 100%; 
+    background-color: black; 
+    color: white; 
+}
+
+/* Styles for the root container */
+.root {
+    background-color: black; /* Ensure the root has a black background */
+    display: flex; /* Use flexbox layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    height: 100%; /* Take full height of the viewport */
+    overflow: hidden; /* Hide overflow from the root container */
+}
+
+/* Styles for the main heading */
+.root h1 {
+    position: relative; /* Enable positioning of the pseudo-element */
+    font-size: 10vw; /* Adjust font size */
+    max-width: 90vw; /* Limit maximum width */
+    -webkit-text-stroke: 0.3vw #FFD700; /* Golden stroke for the text */
+    color: transparent; /* Make the text color transparent to show the effect */
+    overflow: hidden; /* Hide overflow */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+}
+
+/* Pseudo-element for animation effect */
+.root h1::before {
+    content: attr(data-text); /* Duplicate the text from the data attribute */
+    position: absolute; /* Position it absolutely within the h1 */
+    top: 0; 
+    left: 0; 
+    height: 100%;
+    width: 100%;
+    color: #FFD700; /* Color of the animated text */
+    -webkit-text-stroke: 0vw #FFD700; /* Stroke for the pseudo-element */
+    overflow: hidden; /* Hide overflow */
+    border-right: 0.1em solid #FFD700; /* Animated cursor effect */
+    animation: animate 3s linear infinite; /* Animation for the text effect */
+}
+
+/* Keyframes for the animation */
+@keyframes animate {
+    0%, 10%, 100% {
+        width: 0; /* Start and end with width 0 */
+    }
+    70% {
+        width: 100%; /* Full width at 70% of the animation duration */
+    }
+}

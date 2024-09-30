@@ -2,6 +2,8 @@ import axios from 'axios';
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useLocation , useParams} from 'react-router-dom'
+
+import "../style/console.css";
 export default function ConsolePage() {
     const {state }= useLocation()
     const {container_name} = state || "";
@@ -19,8 +21,11 @@ export default function ConsolePage() {
   return (
     <>
      <h1> Console For :{container_name}</h1>
-        <dev className ="">
-            {logs}
+
+        <dev className ="console">
+            <div className='console-text'>
+              {logs}
+            </div>
         </dev>
     </>
   )
