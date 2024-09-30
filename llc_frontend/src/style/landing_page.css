@@ -7,18 +7,18 @@ html, body {
     color: white; 
 }
 
-/* Styles for the root container */
-.root {
-    background-color: black; /* Ensure the root has a black background */
+/* Styles for the outer container */
+.outer {
+    background-color: black; /* Ensure the outer has a black background */
     display: flex; /* Use flexbox layout */
     justify-content: center; /* Center content horizontally */
     align-items: center; /* Center content vertically */
     height: 100%; /* Take full height of the viewport */
-    overflow: hidden; /* Hide overflow from the root container */
+    overflow: hidden; /* Hide overflow from the outer container */
 }
 
 /* Styles for the main heading */
-.root h1 {
+.outer h1 {
     position: relative; /* Enable positioning of the pseudo-element */
     font-size: 10vw; /* Adjust font size */
     max-width: 90vw; /* Limit maximum width */
@@ -29,7 +29,7 @@ html, body {
 }
 
 /* Pseudo-element for animation effect */
-.root h1::before {
+.outer h1::before {
     content: attr(data-text); /* Duplicate the text from the data attribute */
     position: absolute; /* Position it absolutely within the h1 */
     top: 0; 
