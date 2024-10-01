@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import BasicChips from "./ui_components/BasicChips";
 import CreateInstancePopup from "./CreateInstancePopup";
 import { useAuth0 } from "@auth0/auth0-react";
-import ConsolePage from "./ConsolePage";
+import CustomAppBar from "./ui_components/CustomAppBar";
 
 function Dashboard() {
   const [DeployedList, updateDeployedList] = useState([]);
@@ -101,6 +101,7 @@ function Dashboard() {
 
   return (
     <>
+      <CustomAppBar/>
       <div className="top-container">
         <h1 className="top-container-h1">Dashboard</h1>
         <div className="top-container-div">
