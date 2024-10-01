@@ -19,13 +19,6 @@ fn get_container_collection(db: web::Data<mongodb::Database>) -> Collection<Cont
     db.collection::<Container>("containers")
 }
 
-
-
-
-
-
-
-
 pub async fn deploy_and_create_container(db: web::Data<mongodb::Database>, container: web::Json<Container>) -> impl Responder {
     let collection = get_container_collection(db);
 
@@ -50,6 +43,20 @@ pub async fn deploy_and_create_container(db: web::Data<mongodb::Database>, conta
 
     let output = process.wait_with_output().await.expect("Failed to wait for process");
 
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return HttpResponse::InternalServerError().body(format!("Script failed: {}", stderr));
+    }
+    let script_path = "scripts/launch_ttyd.sh";
+    let process = Command::new("sh")
+        .arg(script_path)
+        .arg(&container.container_name)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("Failed to execute script");
+
+    let output = process.wait_with_output().await.expect("Failed to wait for process");
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
         return HttpResponse::InternalServerError().body(format!("Script failed: {}", stderr));
@@ -84,7 +91,7 @@ pub async fn deploy_and_create_container(db: web::Data<mongodb::Database>, conta
 
 
 
-pub async fn get_deployed_containers(db: web::Data<mongodb::Database>,req: HttpRequest) -> impl Responder {
+pub async fn get_deployed_containers(db: web::Data<mongodb::Database>,req: HttpRequest ,owner: web::Path<String>) -> impl Responder {
 
     if let Some(claims) = req.extensions().get::<Claims>() {
         println!("Claims: {:?}", claims);
@@ -95,7 +102,7 @@ pub async fn get_deployed_containers(db: web::Data<mongodb::Database>,req: HttpR
    
     let collection = get_container_collection(db);
 
-    let mut cursor = match collection.find(doc! {}).await {
+    let mut cursor = match collection.find(doc! {"owner": owner.into_inner()}).await {
         Ok(cursor) => cursor,
         Err(err) => {
             eprintln!("Failed to fetch containers: {}", err);
@@ -206,7 +213,14 @@ pub async fn deploy_and_build(
 
 pub async fn launch_ttyd_in_browser(container_name: web::Path<String>) -> impl Responder {
     dbg!("launch_ttyd_in_browser");
+
+    
+
+
     let machine_name = container_name.into_inner();
+   
+
+
     let ip_addr = get_ip(machine_name.clone());
     dbg!(ip_addr.clone());
 

@@ -1,5 +1,8 @@
 use core::str;
 use std::process::Command;
+use std::time::Duration;
+use regex::Regex;
+use tokio::time;
 pub fn get_ip(container_name: String) -> String {
     let command = format!(
         "lxc exec {} -- ip -4 addr show eth0 | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){{3}}'",
@@ -22,9 +25,7 @@ pub fn get_ip(container_name: String) -> String {
     }
 }
 
-use std::time::Duration;
-use regex::Regex;
-use tokio::time;
+
 
 pub async fn get_pub_url(private_ip: String) -> String {
    
@@ -60,6 +61,13 @@ pub async fn get_pub_url(private_ip: String) -> String {
     }
 
     let public_url = extract_public_url(output_str);
+    let command3 = "rm nohup.out";
+
+    let _ = Command::new("sh")
+        .arg("-c")
+        .arg(command3)
+        .output()
+        .expect("Failed to execute command2");    
 
     public_url.unwrap_or_else(|| "No public URL found.".to_string())
 }
