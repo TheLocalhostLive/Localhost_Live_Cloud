@@ -1,6 +1,6 @@
 use actix_web::{
     dev::{Service, ServiceRequest, ServiceResponse, Transform},
-    Error,
+    Error, HttpMessage,
 };
 use auth0_rs::Auth0;
 use futures_util::future::{ok, LocalBoxFuture, Ready};
@@ -8,6 +8,8 @@ use reqwest::Client;
 use serde_json::json;
 use std::sync::Arc;
 use std::task::{Context, Poll};
+
+use crate::model::Claims;
 
 // Define the middleware
 pub struct AuthMiddleware {
@@ -70,7 +72,7 @@ where
 
                         // Fetch JWKS from Auth0
                         let jwks_url = format!("https://{}/.well-known/jwks.json", auth0_domain);
-                        println!("JWKS URL: {}", jwks_url);
+                        // println!("JWKS URL: {}", jwks_url);
                         
                         let jwks = client
                             .get(&jwks_url)
@@ -104,14 +106,15 @@ where
                         
                         let res = auth0.validate_token(token);
                         assert_eq!(res.is_ok(), true);
-                        let claims = res.unwrap();
-                        dbg!(&claims);
-                        println!("{}", claims["aud"][1]);
+                        let  claims = res.unwrap();
+                        dbg!(claims);
+                        
+                        //println!("{}", claims["aud"][1]);
                         // assert_eq!(
                         //     claims.as_object().unwrap().get("aud").unwrap(),
                         //     "https://dev-jfhfrg7tmi1fr64.us.auth0.com/api/v2/"
                         // );
-
+                        //req.extensions_mut().insert(claims.clone());
                         return service.call(req).await;
                     }
                 }

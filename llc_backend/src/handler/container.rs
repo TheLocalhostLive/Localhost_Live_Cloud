@@ -1,40 +1,48 @@
 use std::process::Stdio;
 
 use serde::Deserialize;
+use serde_json::json;
 use tokio::process::Command;
-use actix_web::{web, HttpResponse, Responder};
+use actix_web::{web, HttpMessage, HttpRequest, HttpResponse, Responder};
 use futures::TryStreamExt;
 use mongodb::{bson::doc, Collection};
-use crate:: model::Container;
+use crate::handler::utils::{get_ip, get_pub_url};
+use crate:: model::{Claims, Container};
 
 use tokio::time::sleep;
 use std::fs::File;
 
 use std::time::Duration;
 use std::io::{ BufReader, Read};
-
+use std::string::String;
 fn get_container_collection(db: web::Data<mongodb::Database>) -> Collection<Container> {
     db.collection::<Container>("containers")
 }
 
 
+
+
+
+
+
+
 pub async fn deploy_and_create_container(db: web::Data<mongodb::Database>, container: web::Json<Container>) -> impl Responder {
     let collection = get_container_collection(db);
 
-    // Check if the containerlication container already exists
+   
     let container_exist = collection.find_one(
         doc! { "owner": container.owner.clone(), "container_name": container.container_name.clone() }
     ).await;
 
     if let Ok(Some(_)) = container_exist {
-        // Container with the same name exists, return conflict
+      
         return HttpResponse::Conflict().json("Container exists with the same name. Try a different name.");
     } 
 
     let script_path = "scripts/ceate_lxc.sh";
-    let mut process = Command::new("sh")
+    let process = Command::new("sh")
         .arg(script_path)
-        .arg(&container.container_name) // Pass the unwrcontainered container_name
+        .arg(&container.container_name) 
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
@@ -53,7 +61,6 @@ pub async fn deploy_and_create_container(db: web::Data<mongodb::Database>, conta
         owner: container.owner.clone(),
         application_name: container.application_name.clone(),
         container_name: container.container_name.clone(),
-        tech: container.tech.clone(),
     };
 
    
@@ -63,7 +70,7 @@ pub async fn deploy_and_create_container(db: web::Data<mongodb::Database>, conta
              
                 HttpResponse::Ok().json(id)
             } else {
-                // Inserted, but no valid ObjectId found
+              
                 HttpResponse::InternalServerError().json("Failed to retrieve inserted ObjectId.")
             }
         },
@@ -76,13 +83,18 @@ pub async fn deploy_and_create_container(db: web::Data<mongodb::Database>, conta
 }
 
 
-// Get all users
-pub async fn get_deployed_containers(db: web::Data<mongodb::Database>) -> impl Responder {
 
+pub async fn get_deployed_containers(db: web::Data<mongodb::Database>,req: HttpRequest) -> impl Responder {
 
+    if let Some(claims) = req.extensions().get::<Claims>() {
+        println!("Claims: {:?}", claims);
+        return HttpResponse::Ok().json(claims);
+    }
+
+    HttpResponse::Unauthorized().finish();
+   
     let collection = get_container_collection(db);
 
-    // Attempt to find all documents in the collection
     let mut cursor = match collection.find(doc! {}).await {
         Ok(cursor) => cursor,
         Err(err) => {
@@ -93,10 +105,9 @@ pub async fn get_deployed_containers(db: web::Data<mongodb::Database>) -> impl R
 
     let mut containers = vec![];
 
-    // Iterate over the cursor to collect containers
     while let Some(container) = match cursor.try_next().await {
         Ok(Some(container)) => Some(container),
-        Ok(None) => None, // No more documents
+        Ok(None) => None, 
         Err(err) => {
             eprintln!("Error while retrieving containers: {}", err);
             return HttpResponse::InternalServerError().json("Error retrieving containers.");
@@ -112,11 +123,11 @@ pub async fn get_console_by_process_name(process_name: web::Path<String>) -> imp
 
     let pname = process_name.into_inner();
     println!("Request received for process: {}", pname);
-    let script_path = "scripts/pm2.sh"; // Adjust the path as necessary
+    let script_path = "scripts/pm2.sh"; 
 
     let mut process = Command::new("sh")
         .arg(script_path)
-        .arg(&pname) // Pass the process name received in the request
+        .arg(&pname) 
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
@@ -140,7 +151,7 @@ pub async fn get_console_by_process_name(process_name: web::Path<String>) -> imp
             match reader.read_to_string(&mut contents) {
                 Ok(_) => {
                     if exit_status.success() {
-                        HttpResponse::Ok().body(contents) // Return the logs if the process was successful
+                        HttpResponse::Ok().body(contents) 
                     } else {
                         HttpResponse::InternalServerError().body(format!("Script failed. Logs:\n{}", contents))
                     }
@@ -164,7 +175,7 @@ pub async fn deploy_and_build(
     dbg!("Deploy Build route hit");
     let script_path = "scripts/build_redeploy.sh";
 
-    // Extract container_name and application_name from the JSON
+
     let container_name_str = &json.container_name;
     let application_name_str = &json.application_name;
     dbg!("container Name: {}",container_name_str);
@@ -172,8 +183,8 @@ pub async fn deploy_and_build(
 
     let  process = Command::new("sh")
         .arg(script_path)
-        .arg(container_name_str) // Pass the container_name to the script
-        .arg(application_name_str) // Pass the application_name to the script
+        .arg(container_name_str) 
+        .arg(application_name_str) 
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
@@ -186,7 +197,24 @@ pub async fn deploy_and_build(
         return HttpResponse::InternalServerError().body(format!("Script failed: {}", stderr));
     }
 
-    // If the process succeeds, return the standard output
+   
     let stdout = String::from_utf8_lossy(&output.stdout);
     HttpResponse::Ok().body(format!("Script succeeded: {}", stdout))
+}
+
+
+
+pub async fn launch_ttyd_in_browser(container_name: web::Path<String>) -> impl Responder {
+    dbg!("launch_ttyd_in_browser");
+    let machine_name = container_name.into_inner();
+    let ip_addr = get_ip(machine_name.clone());
+    dbg!(ip_addr.clone());
+
+    println!("Request received for container: {}", machine_name.clone());
+
+    let public_url = get_pub_url(ip_addr.clone()).await;
+    HttpResponse::Ok().json(json!({
+        "public_url": public_url
+    }))
+    
 }

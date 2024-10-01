@@ -1,0 +1,86 @@
+2024-10-01T14:09:46Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+2024-10-01T14:09:46Z INF Requesting new quick Tunnel on trycloudflare.com...
+2024-10-01T14:09:51Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T14:09:51Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+2024-10-01T14:09:51Z INF |  https://business-atlantic-qualification-protected.trycloudflare.com                       |
+2024-10-01T14:09:51Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T14:09:51Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+2024-10-01T14:09:51Z INF Version 2024.8.3
+2024-10-01T14:09:51Z INF GOOS: linux, GOVersion: go1.22.2, GoArch: amd64
+2024-10-01T14:09:51Z INF Settings: map[ha-connections:1 protocol:quic url:http://10.184.169.175:7681]
+2024-10-01T14:09:51Z INF Generated Connector ID: d45a9150-8292-4c91-bce2-0b33ae1f38f5
+2024-10-01T14:09:51Z INF cloudflared will not automatically update if installed by a package manager.
+2024-10-01T14:09:51Z INF Initial protocol quic
+2024-10-01T14:09:51Z INF ICMP proxy will use 192.168.0.185 as source for IPv4
+2024-10-01T14:09:51Z INF ICMP proxy will use fd01::a793:17a0:230e:878c in zone enp9s0 as source for IPv6
+2024-10-01T14:09:51Z INF Starting metrics server on 127.0.0.1:44553/metrics
+2024/10/01 19:39:51 failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+2024-10-01T14:09:51Z WRN Your version 2024.8.3 is outdated. We recommend upgrading it to 2024.9.1
+2024-10-01T14:09:52Z INF Registered tunnel connection connIndex=0 connection=73d6282d-b1d3-4dc7-910b-6590404df0bc event=0 ip=198.41.200.73 location=bom12 protocol=quic
+2024-10-01T14:10:19Z INF Initiating graceful shutdown due to signal interrupt ...
+2024-10-01T14:10:19Z INF Initiating graceful shutdown due to signal interrupt ...
+2024-10-01T14:10:19Z INF Unregistered tunnel connection connIndex=0 event=0 ip=198.41.192.27
+2024-10-01T14:10:19Z ERR Failed to serve quic connection error="context canceled" connIndex=0 event=0 ip=198.41.192.27
+2024-10-01T14:10:19Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.27
+2024-10-01T14:10:19Z ERR no more connections active and exiting
+2024-10-01T14:10:19Z INF Tunnel server stopped
+2024-10-01T14:10:19Z INF Metrics server stopped
+2024-10-01T14:10:19Z INF Unregistered tunnel connection connIndex=0 event=0 ip=198.41.200.73
+2024-10-01T14:10:19Z ERR Failed to serve quic connection error="context canceled" connIndex=0 event=0 ip=198.41.200.73
+2024-10-01T14:10:19Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.200.73
+2024-10-01T14:10:19Z ERR no more connections active and exiting
+2024-10-01T14:10:19Z INF Tunnel server stopped
+2024-10-01T14:10:19Z INF Metrics server stopped
+2024-10-01T14:10:32Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+2024-10-01T14:10:32Z INF Requesting new quick Tunnel on trycloudflare.com...
+2024-10-01T14:10:37Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T14:10:37Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+2024-10-01T14:10:37Z INF |  https://casio-santa-gods-mumbai.trycloudflare.com                                         |
+2024-10-01T14:10:37Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T14:10:37Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+2024-10-01T14:10:37Z INF Version 2024.8.3
+2024-10-01T14:10:37Z INF GOOS: linux, GOVersion: go1.22.2, GoArch: amd64
+2024-10-01T14:10:37Z INF Settings: map[ha-connections:1 protocol:quic url:http://10.184.169.175:7681]
+2024-10-01T14:10:37Z INF cloudflared will not automatically update if installed by a package manager.
+2024-10-01T14:10:37Z INF Generated Connector ID: bf6c8497-79aa-4725-8d8e-59f0517bcaa1
+2024-10-01T14:10:37Z INF Initial protocol quic
+2024-10-01T14:10:37Z INF ICMP proxy will use 192.168.0.185 as source for IPv4
+2024-10-01T14:10:37Z INF ICMP proxy will use fd01::a793:17a0:230e:878c in zone enp9s0 as source for IPv6
+2024-10-01T14:10:37Z INF Starting metrics server on 127.0.0.1:37647/metrics
+2024/10/01 19:40:37 failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+2024-10-01T14:10:37Z WRN Your version 2024.8.3 is outdated. We recommend upgrading it to 2024.9.1
+2024-10-01T14:10:38Z INF Registered tunnel connection connIndex=0 connection=622e01eb-2e94-400c-a539-52c988fb0e63 event=0 ip=198.41.192.107 location=bom03 protocol=quic
+2024-10-01T14:11:31Z INF Initiating graceful shutdown due to signal interrupt ...
+2024-10-01T14:11:32Z INF Unregistered tunnel connection connIndex=0 event=0 ip=198.41.192.107
+2024-10-01T14:11:32Z ERR Failed to serve quic connection error="Application error 0x0 (remote)" connIndex=0 event=0 ip=198.41.192.107
+2024-10-01T14:11:32Z ERR Serve tunnel error error="Application error 0x0 (remote)" connIndex=0 event=0 ip=198.41.192.107
+2024-10-01T14:11:32Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.107
+2024-10-01T14:11:32Z ERR no more connections active and exiting
+2024-10-01T14:11:32Z INF Tunnel server stopped
+2024-10-01T14:11:32Z INF Metrics server stopped
+2024-10-01T14:11:48Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+2024-10-01T14:11:48Z INF Requesting new quick Tunnel on trycloudflare.com...
+2024-10-01T14:11:54Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T14:11:54Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+2024-10-01T14:11:54Z INF |  https://showed-friends-retrieval-lil.trycloudflare.com                                    |
+2024-10-01T14:11:54Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T14:11:54Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+2024-10-01T14:11:54Z INF Version 2024.8.3
+2024-10-01T14:11:54Z INF GOOS: linux, GOVersion: go1.22.2, GoArch: amd64
+2024-10-01T14:11:54Z INF Settings: map[ha-connections:1 protocol:quic url:http://10.184.169.175:7681]
+2024-10-01T14:11:54Z INF cloudflared will not automatically update if installed by a package manager.
+2024-10-01T14:11:54Z INF Generated Connector ID: 52c6b270-81f9-4abc-b428-6ef2fd38301b
+2024-10-01T14:11:54Z INF Initial protocol quic
+2024-10-01T14:11:54Z INF ICMP proxy will use 192.168.0.185 as source for IPv4
+2024-10-01T14:11:54Z INF ICMP proxy will use fd01::a793:17a0:230e:878c in zone enp9s0 as source for IPv6
+2024-10-01T14:11:54Z INF Starting metrics server on 127.0.0.1:40207/metrics
+2024/10/01 19:41:54 failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+2024-10-01T14:11:55Z WRN Your version 2024.8.3 is outdated. We recommend upgrading it to 2024.9.1
+2024-10-01T14:11:55Z INF Registered tunnel connection connIndex=0 connection=7f79755c-c2d6-4a18-9b88-03a72bfd6c80 event=0 ip=198.41.192.107 location=bom09 protocol=quic
+2024-10-01T14:16:05Z INF Initiating graceful shutdown due to signal interrupt ...
+2024-10-01T14:16:06Z INF Unregistered tunnel connection connIndex=0 event=0 ip=198.41.192.107
+2024-10-01T14:16:06Z ERR Failed to serve quic connection error="context canceled" connIndex=0 event=0 ip=198.41.192.107
+2024-10-01T14:16:06Z INF Retrying connection in up to 1s connIndex=0 event=0 ip=198.41.192.107
+2024-10-01T14:16:06Z ERR no more connections active and exiting
+2024-10-01T14:16:06Z INF Tunnel server stopped
+2024-10-01T14:16:06Z INF Metrics server stopped
