@@ -8,20 +8,43 @@ import { AiFillHeart } from "react-icons/ai";
 
 import { useNavigate } from "react-router-dom";
 import BasicChips from "./ui_components/BasicChips";
+import CreateInstancePopup from "./CreateInstancePopup";
+import { useAuth0 } from "@auth0/auth0-react";
+import ConsolePage from "./ConsolePage";
 
 function Dashboard() {
   const [DeployedList, updateDeployedList] = useState([]);
   const navigate = useNavigate();
+  const { user, getAccessTokenSilently } = useAuth0();
+
+  const [accessToken, setAccessToken] = useState(null);
+
+  useState(() => {
+    getAccessTokenSilently().then(token => setAccessToken(token));
+  }, []);
+
   useEffect(() => {
+    if (!accessToken) {
+      console.log("Access Token is missing");
+      return;
+    } else {
+      console.log(accessToken);
+    }
+    
     axios
-      .get("http://localhost:8080/deploy")
+      .get("http://127.0.0.1:8080/deploy", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      })
       .then((res) => {
         updateDeployedList(res.data);
       })
       .catch((error) => {
         console.error("Error fetching deployed projects", error);
       });
-  }, []);
+  }, [accessToken]);
 
   const handleCheckConsoleClick = (id, container_name) => {
     // console.log(`Card with ID ${id} clicked`);
@@ -34,11 +57,67 @@ function Dashboard() {
     navigate(`/deploy`);
   };
 
+  const [open, setOpen] = useState(false);
+  const [instanceName, setInstanceName] = useState("");
+  const [appName, setAppName] = useState("");
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleCreate = async () => {
+    // Handle the create action here
+    const access_token = await getAccessTokenSilently();
+    console.log(access_token);
+
+    // Deploy request to backend server
+    const deployRes = await axios.post(
+      "http://localhost:8080",
+      {
+        owner: user?.nickname, // Ensure user is not undefined
+        container_name: `${user?.name}-${instanceName}`, // Safe navigation
+        application_name: appName,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`, // Passing the token
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(deployRes);
+    updateDeployedList((state) => [...state, deployRes]);
+
+    handleClose();
+  };
+
   return (
     <>
       <div className="top-container">
         <h1 className="top-container-h1">Dashboard</h1>
         <div className="top-container-div">
+          <Button
+            color="warning"
+            onClick={handleOpen}
+            variant="outlined"
+            sx={{
+              color: "rgb(255,215,0)",
+              display: "flex", // Ensure flexbox is applied to align items
+              alignItems: "center", // Align icon and text vertically
+              gap: "5px", // Space between the icon and text
+              "&:hover": {
+                color: "rgb(218,165,32)", // Adjust the text color on hover
+              },
+            }}
+          >
+            <AiOutlinePlus />
+            Create Instance
+          </Button>
           <Button
             color="warning"
             onClick={handleDepoyProjectClick}
@@ -110,6 +189,17 @@ function Dashboard() {
             </div>
           );
         })}
+        {open && (
+          <CreateInstancePopup
+            handleOpen={handleOpen}
+            handleClose={handleClose}
+            instanceName={instanceName}
+            setInstanceName={setInstanceName}
+            handleCreate={handleCreate}
+            appName={appName}
+            setAppName={setAppName}
+          />
+        )}
       </div>
     </>
   );

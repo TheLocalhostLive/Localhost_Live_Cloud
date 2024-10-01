@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../style/landing_page.css";
-
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
-
-const phrases = ["LLC...", "Localhost Live Cloud"];
-
 import { useAuth0 } from "@auth0/auth0-react";
 import CustomAppBar from "./ui_components/CustomAppBar";
 
@@ -14,7 +8,7 @@ const LandingPage = () => {
   const [accessToken, setAccessToken] = useState("");
   const { isAuthenticated, getAccessTokenSilently, user, isLoading } =
     useAuth0();
-
+  const phrases = ["LLC...", "Localhost Live Cloud"];
   useEffect(() => {
     const fetchAccessToken = async () => {
       try {
@@ -30,7 +24,7 @@ const LandingPage = () => {
           });
           console.log(user);
           console.log(token.access_token);
-          //console.log(accessToken);
+          console.log(accessToken);
           setAccessToken(token);
         } else {
           console.log("Not authenticated");

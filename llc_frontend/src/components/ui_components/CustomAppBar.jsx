@@ -10,6 +10,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomAppBar() {
   const {
@@ -17,6 +18,7 @@ export default function CustomAppBar() {
     loginWithRedirect,
     logout,
   } = useAuth0();
+  const navigate = useNavigate()
   const settings = [
     {
       name: "Profile",
@@ -27,7 +29,7 @@ export default function CustomAppBar() {
     {
       name: "Dashboard",
       callback: () => {
-        console.log("profile");
+        navigate("/dashboard")
       },
     },
     {
