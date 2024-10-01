@@ -20,7 +20,7 @@ function Dashboard() {
   const [accessToken, setAccessToken] = useState(null);
 
   useState(() => {
-    getAccessTokenSilently().then(token => setAccessToken(token));
+    getAccessTokenSilently().then((token) => setAccessToken(token));
   }, []);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ function Dashboard() {
     } else {
       console.log(accessToken);
     }
-    
+
     axios
       .get("http://127.0.0.1:8080/deploy", {
         headers: {
@@ -49,7 +49,7 @@ function Dashboard() {
   const handleCheckConsoleClick = (id, container_name) => {
     // console.log(`Card with ID ${id} clicked`);
     // console.log(container_name)
-    navigate(`/check-console`, { state: { container_name } });
+    navigate(`/`, { state: { container_name } });
   };
   const handleDepoyProjectClick = () => {
     // console.log(`Card with ID ${id} clicked`);
@@ -64,7 +64,6 @@ function Dashboard() {
   const handleOpen = () => {
     setOpen(true);
   };
-  
 
   const handleClose = () => {
     setOpen(false);
@@ -102,16 +101,19 @@ function Dashboard() {
         <h1 className="top-container-h1">Dashboard</h1>
         <div className="top-container-div">
           <Button
-            color="warning"
             onClick={handleOpen}
-            variant="outlined"
+            variant="outlined" // Use 'outlined' to have a border
             sx={{
-              color: "rgb(255,215,0)",
-              display: "flex", // Ensure flexbox is applied to align items
-              alignItems: "center", // Align icon and text vertically
-              gap: "5px", // Space between the icon and text
+              backgroundColor: "white", // Set the default background color to white
+              borderColor: "black", // Set border color to black
+              color: "black", // Set default text color to black
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
               "&:hover": {
-                color: "rgb(218,165,32)", // Adjust the text color on hover
+                backgroundColor: "black", // Change background to black on hover
+                color: "white", // Change text color to white on hover
+                borderColor: "black", // Ensure border stays black on hover
               },
             }}
           >
@@ -123,12 +125,16 @@ function Dashboard() {
             onClick={handleDepoyProjectClick}
             variant="outlined"
             sx={{
-              color: "rgb(255,215,0)",
-              display: "flex", // Ensure flexbox is applied to align items
-              alignItems: "center", // Align icon and text vertically
-              gap: "5px", // Space between the icon and text
+              backgroundColor: "white", // Set the default background color to white
+              borderColor: "black", // Set border color to black
+              color: "black", // Set default text color to black
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
               "&:hover": {
-                color: "rgb(218,165,32)", // Adjust the text color on hover
+                backgroundColor: "black", // Change background to black on hover
+                color: "white", // Change text color to white on hover
+                borderColor: "black", // Ensure border stays black on hover
               },
             }}
           >
@@ -140,12 +146,16 @@ function Dashboard() {
             onClick={function () {}}
             variant="outlined"
             sx={{
-              color: "rgb(255,215,0)",
-              display: "flex", // Ensure flexbox is applied to align items
-              alignItems: "center", // Align icon and text vertically
-              gap: "5px", // Space between the icon and text
+              backgroundColor: "white", // Set the default background color to white
+              borderColor: "black", // Set border color to black
+              color: "black", // Set default text color to black
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
               "&:hover": {
-                color: "rgb(218,165,32)", // Adjust the text color on hover
+                backgroundColor: "black", // Change background to black on hover
+                color: "white", // Change text color to white on hover
+                borderColor: "black", // Ensure border stays black on hover
               },
             }}
           >
@@ -170,21 +180,23 @@ function Dashboard() {
               </div>
 
               <Button
-                color="danger"
                 onClick={() => handleCheckConsoleClick(_id, container_name)}
-                variant="outlined"
+                variant="outlined" // Use 'outlined' for a transparent background
                 sx={{
-                  color: "danger",
-                  display: "flex", // Ensure flexbox is applied to align items
-                  alignItems: "center", // Align icon and text vertically
-                  gap: "5px", // Space between the icon and text
+                  borderColor: "black", // Set border color to black
+                  color: "black", // Default text color
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "5px",
                   "&:hover": {
-                    color: "rgb(218,165,32)", // Adjust the text color on hover
+                    backgroundColor: "black", // Change background to black on hover
+                    color: "white", // Change text color to white on hover
+                    borderColor: "black", // Ensure border stays black on hover
                   },
                 }}
               >
                 <AiOutlineCode />
-                Donate
+                Launch
               </Button>
             </div>
           );
