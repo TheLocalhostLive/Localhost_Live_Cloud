@@ -172,6 +172,8 @@ async fn main() -> std::io::Result<()> {
             .allowed_origin("http://127.0.0.1:5173")
             .allowed_origin("http://localhost:5173")
             .allowed_origin("http://localhost:5173/check-console")
+            .allowed_origin("http://localhost:5173/dashboard")
+            .allowed_origin("http://127.0.0.1:5173/dashboard")
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"]) // Use a Vec for methods
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
