@@ -30,9 +30,10 @@ function Dashboard() {
     } else {
       console.log(accessToken);
     }
-
+    let  owner = user?.nickname;
+    console.log(owner)
     axios
-      .get("http://127.0.0.1:8080/deploy", {
+      .get(`http://127.0.0.1:8080/deploy/${owner}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -49,7 +50,7 @@ function Dashboard() {
   const handleCheckConsoleClick = (id, container_name) => {
     // console.log(`Card with ID ${id} clicked`);
     // console.log(container_name)
-    navigate(`/`, { state: { container_name } });
+    navigate(`/vm`, { state: { container_name } });
   };
   const handleDepoyProjectClick = () => {
     // console.log(`Card with ID ${id} clicked`);
@@ -70,30 +71,33 @@ function Dashboard() {
   };
 
   const handleCreate = async () => {
-    // Handle the create action here
-    const access_token = await getAccessTokenSilently();
-    console.log(access_token);
-
-    // Deploy request to backend server
-    const deployRes = await axios.post(
-      "http://localhost:8080",
-      {
-        owner: user?.nickname, // Ensure user is not undefined
-        container_name: `${user?.name}-${instanceName}`, // Safe navigation
-        application_name: appName,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${access_token}`, // Passing the token
-          "Content-Type": "application/json",
+    try {
+      const access_token = await getAccessTokenSilently();
+      console.log(access_token);
+  
+      const deployRes = await axios.post(
+        "http://127.0.0.1:8080/deploy", // Fix spelling of "deploy"
+        {
+          owner: user?.nickname,
+          container_name: `${user?.nickname}-${instanceName}`,
+          application_name: appName,
         },
-      }
-    );
-    console.log(deployRes);
-    updateDeployedList((state) => [...state, deployRes]);
-
-    handleClose();
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      console.log(deployRes);
+      updateDeployedList((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
+      handleClose();
+    } catch (error) {
+      console.error("Error creating instance:", error); // Log the error
+    }
   };
+  
 
   return (
     <>
@@ -180,7 +184,7 @@ function Dashboard() {
               </div>
 
               <Button
-                onClick={() => handleCheckConsoleClick(_id, container_name)}
+                onClick={() =>handleCheckConsoleClick(_id, container_name)}
                 variant="outlined" // Use 'outlined' for a transparent background
                 sx={{
                   borderColor: "black", // Set border color to black

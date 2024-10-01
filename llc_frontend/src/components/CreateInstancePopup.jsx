@@ -38,6 +38,7 @@ const CreateInstancePopup = ({
             label="Instance Name"
             type="text"
             fullWidth
+            helperText="My Linux"
             value={instanceName}
             onChange={(e) => setInstanceName(e.target.value)}
           />
@@ -49,6 +50,7 @@ const CreateInstancePopup = ({
             margin="dense"
             label="Application Name"
             type="text"
+            helperText="Node App"
             fullWidth
             value={appName}
             onChange={(e) => setAppName(e.target.value)}
