@@ -1,0 +1,274 @@
+2024-10-01T11:44:40Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+2024-10-01T11:44:40Z INF Requesting new quick Tunnel on trycloudflare.com...
+2024-10-01T11:44:46Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T11:44:46Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+2024-10-01T11:44:46Z INF |  https://usda-commons-threatening-bent.trycloudflare.com                                   |
+2024-10-01T11:44:46Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T11:44:46Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+2024-10-01T11:44:46Z INF Version 2024.9.1
+2024-10-01T11:44:46Z INF GOOS: linux, GOVersion: go1.22.2, GoArch: amd64
+2024-10-01T11:44:46Z INF Settings: map[ha-connections:1 protocol:quic url:10.184.169.175:7681]
+2024-10-01T11:44:46Z INF Autoupdate frequency is set autoupdateFreq=86400000
+2024-10-01T11:44:46Z INF Generated Connector ID: 393e0046-a911-442d-9927-1224a452b6a0
+2024-10-01T11:44:46Z INF Initial protocol quic
+2024-10-01T11:44:46Z INF ICMP proxy will use 10.184.169.175 as source for IPv4
+2024-10-01T11:44:46Z INF ICMP proxy will use fd42:8470:568a:450e:216:3eff:fe0f:1aac in zone eth0 as source for IPv6
+2024-10-01T11:44:46Z WRN The user running cloudflared process has a GID (group ID) that is not within ping_group_range. You might need to add that user to a group within that range, or instead update the range to encompass a group the user is already in by modifying /proc/sys/net/ipv4/ping_group_range. Otherwise cloudflared will not be able to ping this network error="Group ID 0 is not between ping group 65534 to 65534"
+2024-10-01T11:44:46Z WRN ICMP proxy feature is disabled error="cannot create ICMPv4 proxy: Group ID 0 is not between ping group 65534 to 65534 nor ICMPv6 proxy: socket: permission denied"
+2024-10-01T11:44:46Z INF Starting metrics server on 127.0.0.1:36581/metrics
+2024/10/01 11:44:46 failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+2024-10-01T11:44:46Z INF Registered tunnel connection connIndex=0 connection=0a665179-c468-44d9-97a3-8269cf81a79c event=0 ip=198.41.192.57 location=bom08 protocol=quic
+2024-10-01T11:45:02Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:45:02Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/favicon.ico event=0 ip=198.41.192.57 type=http
+2024-10-01T11:45:02Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:45:02Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/token event=0 ip=198.41.192.57 type=http
+2024-10-01T11:45:02Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:45:02Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/token event=0 ip=198.41.192.57 type=http
+2024-10-01T11:45:02Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:45:02Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ws event=0 ip=198.41.192.57 type=ws
+2024-10-01T11:45:02Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:45:02Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ws event=0 ip=198.41.192.57 type=ws
+2024-10-01T11:45:03Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:45:03Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ws event=0 ip=198.41.192.57 type=ws
+2024-10-01T11:45:04Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:45:04Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T11:45:04Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:45:04Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/favicon.ico event=0 ip=198.41.192.57 type=http
+2024-10-01T11:45:21Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:45:21Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T11:46:00Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:46:00Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T11:46:23Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:46:23Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T11:46:24Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:46:24Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T11:48:57Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:48:57Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/token event=0 ip=198.41.192.57 type=http
+2024-10-01T11:48:57Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:48:57Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ws event=0 ip=198.41.192.57 type=ws
+2024-10-01T11:49:07Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:49:07Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/token event=0 ip=198.41.192.57 type=http
+2024-10-01T11:49:08Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:49:08Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ws event=0 ip=198.41.192.57 type=ws
+2024-10-01T11:53:16Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:53:16Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T11:54:37Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T11:54:37Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+[2024/10/01 12:00:38:2913] N: ttyd 1.7.7 (libwebsockets 4.3.3)
+[2024/10/01 12:00:38:2913] N: tty configuration:
+[2024/10/01 12:00:38:2913] N:   start command: sh
+[2024/10/01 12:00:38:2913] N:   close signal: SIGHUP (1)
+[2024/10/01 12:00:38:2913] N:   terminal type: xterm-256color
+[2024/10/01 12:00:38:2915] N:    /usr/lib/libwebsockets-evlib_uv.so
+[2024/10/01 12:00:38:2915] N: lws_create_context: LWS: 4.3.3, NET CLI SRV H1 H2 WS ConMon IPV6-off
+[2024/10/01 12:00:38:2982] N: elops_init_pt_uv:  Using foreign event loop...
+[2024/10/01 12:00:38:2982] N: __lws_lc_tag:  ++ [wsi|0|pipe] (1)
+[2024/10/01 12:00:38:2983] N: __lws_lc_tag:  ++ [vh|0|netlink] (1)
+[2024/10/01 12:00:38:2983] N: __lws_lc_tag:  ++ [vh|1|default||7681] (2)
+[2024/10/01 12:00:38:2984] N: [vh|1|default||7681]: lws_socket_bind: source ads 0.0.0.0
+[2024/10/01 12:00:38:2984] N: __lws_lc_tag:  ++ [wsi|1|listen|default||7681] (2)
+[2024/10/01 12:00:38:2984] N:  Listening on port: 7681
+[2024/10/01 12:00:59:5825] N: received signal: SIGINT (2), exiting...
+[2024/10/01 12:00:59:5826] N: send ^C to force exit.
+[2024/10/01 12:01:02:0354] N: ttyd 1.7.7 (libwebsockets 4.3.3)
+[2024/10/01 12:01:02:0355] N: tty configuration:
+[2024/10/01 12:01:02:0355] N:   start command: sh
+[2024/10/01 12:01:02:0355] N:   close signal: SIGHUP (1)
+[2024/10/01 12:01:02:0355] N:   terminal type: xterm-256color
+[2024/10/01 12:01:02:0357] N:    /usr/lib/libwebsockets-evlib_uv.so
+[2024/10/01 12:01:02:0357] N: lws_create_context: LWS: 4.3.3, NET CLI SRV H1 H2 WS ConMon IPV6-off
+[2024/10/01 12:01:02:0420] N: elops_init_pt_uv:  Using foreign event loop...
+[2024/10/01 12:01:02:0421] N: __lws_lc_tag:  ++ [wsi|0|pipe] (1)
+[2024/10/01 12:01:02:0421] N: __lws_lc_tag:  ++ [vh|0|netlink] (1)
+[2024/10/01 12:01:02:0422] N: __lws_lc_tag:  ++ [vh|1|default||7681] (2)
+[2024/10/01 12:01:02:0422] N: [vh|1|default||7681]: lws_socket_bind: source ads 0.0.0.0
+[2024/10/01 12:01:02:0422] N: __lws_lc_tag:  ++ [wsi|1|listen|default||7681] (2)
+[2024/10/01 12:01:02:0422] N:  Listening on port: 7681
+[2024/10/01 12:01:07:1047] N: __lws_lc_tag:  ++ [wsisrv|0|adopted] (1)
+[2024/10/01 12:01:07:1049] N: HTTP / - 10.184.169.175
+[2024/10/01 12:01:07:6449] N: HTTP /token - 10.184.169.175
+[2024/10/01 12:01:08:2704] N: __lws_lc_tag:  ++ [wsisrv|1|adopted] (2)
+[2024/10/01 12:01:08:2707] N: WS   /ws - 10.184.169.175, clients: 1
+[2024/10/01 12:01:08:6282] N: started process, pid: 1089
+[2024/10/01 12:01:12:6482] N: __lws_lc_untag:  -- [wsisrv|0|adopted] (1) 5.543s
+[2024/10/01 12:01:54:8844] N: received signal: SIGTERM (15), exiting...
+[2024/10/01 12:01:54:8844] N: send ^C to force exit.
+[2024/10/01 12:01:54:8847] N: WS closed from 10.184.169.175, clients: 0
+[2024/10/01 12:01:54:8848] N: killing process, pid: 1089
+2024-10-01T12:01:54Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:01:54Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/token event=0 ip=198.41.192.57 type=http
+2024-10-01T12:01:55Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:01:55Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ws event=0 ip=198.41.192.57 type=ws
+2024-10-01T12:01:57Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:01:57Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+Error: unknown command "alpine-container" for "lxc"
+2024-10-01T12:02:06Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:02:06Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+Error: unknown command "alpine-container" for "lxc"
+2024-10-01T12:02:35Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:02:35Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T12:02:36Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:02:36Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T12:02:36Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:02:36Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T12:04:17Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:04:17Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T12:04:19Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:04:19Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T12:04:20Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:04:20Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T12:04:20Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:04:20Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T12:04:51Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:04:51Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+2024-10-01T12:04:54Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:04:54Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+[2024/10/01 12:05:11:8435] N: ttyd 1.7.7 (libwebsockets 4.3.3)
+[2024/10/01 12:05:11:8436] N: tty configuration:
+[2024/10/01 12:05:11:8436] N:   start command: sh
+[2024/10/01 12:05:11:8436] N:   close signal: SIGHUP (1)
+[2024/10/01 12:05:11:8436] N:   terminal type: xterm-256color
+[2024/10/01 12:05:11:8437] N:    /usr/lib/libwebsockets-evlib_uv.so
+[2024/10/01 12:05:11:8437] N: lws_create_context: LWS: 4.3.3, NET CLI SRV H1 H2 WS ConMon IPV6-off
+[2024/10/01 12:05:11:8498] N: elops_init_pt_uv:  Using foreign event loop...
+[2024/10/01 12:05:11:8499] N: __lws_lc_tag:  ++ [wsi|0|pipe] (1)
+[2024/10/01 12:05:11:8499] N: __lws_lc_tag:  ++ [vh|0|netlink] (1)
+[2024/10/01 12:05:11:8499] N: __lws_lc_tag:  ++ [vh|1|default||7681] (2)
+[2024/10/01 12:05:11:8500] N: [vh|1|default||7681]: lws_socket_bind: source ads 0.0.0.0
+[2024/10/01 12:05:11:8500] N: __lws_lc_tag:  ++ [wsi|1|listen|default||7681] (2)
+[2024/10/01 12:05:11:8500] N:  Listening on port: 7681
+[2024/10/01 12:05:14:4605] N: __lws_lc_tag:  ++ [wsisrv|0|adopted] (1)
+[2024/10/01 12:05:14:4607] N: HTTP / - 10.184.169.175
+[2024/10/01 12:05:14:7223] N: HTTP /token - 10.184.169.175
+[2024/10/01 12:05:15:2122] N: __lws_lc_tag:  ++ [wsisrv|1|adopted] (2)
+[2024/10/01 12:05:15:2125] N: WS   /ws - 10.184.169.175, clients: 1
+[2024/10/01 12:05:15:6562] N: started process, pid: 1100
+[2024/10/01 12:05:19:7252] N: __lws_lc_untag:  -- [wsisrv|0|adopted] (1) 5.264s
+[2024/10/01 12:05:41:7717] N: received signal: SIGTERM (15), exiting...
+[2024/10/01 12:05:41:7718] N: send ^C to force exit.
+[2024/10/01 12:05:41:7718] N: WS closed from 10.184.169.175, clients: 0
+[2024/10/01 12:05:41:7719] N: killing process, pid: 1100
+2024-10-01T12:05:41Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:05:41Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/token event=0 ip=198.41.192.57 type=http
+2024-10-01T12:05:42Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:05:42Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ws event=0 ip=198.41.192.57 type=ws
+2024-10-01T12:05:44Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:05:44Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/token event=0 ip=198.41.192.57 type=http
+2024-10-01T12:05:45Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:05:45Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ws event=0 ip=198.41.192.57 type=ws
+2024-10-01T12:05:46Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://10.184.169.175:7681
+2024-10-01T12:05:46Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 10.184.169.175:7681: connect: connection refused" connIndex=0 dest=https://usda-commons-threatening-bent.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+[2024/10/01 12:05:51:8195] N: ttyd 1.7.7 (libwebsockets 4.3.3)
+[2024/10/01 12:05:51:8195] N: tty configuration:
+[2024/10/01 12:05:51:8195] N:   start command: sh
+[2024/10/01 12:05:51:8195] N:   close signal: SIGHUP (1)
+[2024/10/01 12:05:51:8195] N:   terminal type: xterm-256color
+[2024/10/01 12:05:51:8197] N:    /usr/lib/libwebsockets-evlib_uv.so
+[2024/10/01 12:05:51:8197] N: lws_create_context: LWS: 4.3.3, NET CLI SRV H1 H2 WS ConMon IPV6-off
+[2024/10/01 12:05:51:8262] N: elops_init_pt_uv:  Using foreign event loop...
+[2024/10/01 12:05:51:8263] N: __lws_lc_tag:  ++ [wsi|0|pipe] (1)
+[2024/10/01 12:05:51:8263] N: __lws_lc_tag:  ++ [vh|0|netlink] (1)
+[2024/10/01 12:05:51:8264] N: __lws_lc_tag:  ++ [vh|1|default||7681] (2)
+[2024/10/01 12:05:51:8264] N: [vh|1|default||7681]: lws_socket_bind: source ads 0.0.0.0
+[2024/10/01 12:05:51:8264] N: __lws_lc_tag:  ++ [wsi|1|listen|default||7681] (2)
+[2024/10/01 12:05:51:8264] N:  Listening on port: 7681
+[2024/10/01 12:05:54:0778] N: __lws_lc_tag:  ++ [wsisrv|0|adopted] (1)
+[2024/10/01 12:05:54:0779] N: HTTP / - 10.184.169.175
+[2024/10/01 12:05:54:3223] N: HTTP /token - 10.184.169.175
+[2024/10/01 12:05:54:5568] N: __lws_lc_tag:  ++ [wsisrv|1|adopted] (2)
+[2024/10/01 12:05:54:5571] N: WS   /ws - 10.184.169.175, clients: 1
+[2024/10/01 12:05:54:6762] N: started process, pid: 1105
+[2024/10/01 12:05:59:3242] N: __lws_lc_untag:  -- [wsisrv|0|adopted] (1) 5.246s
+[2024/10/01 13:19:40:3063] N: __lws_lc_tag:  ++ [wsisrv|2|adopted] (2)
+[2024/10/01 13:19:40:3066] N: HTTP / - 10.184.169.175
+[2024/10/01 13:19:40:7264] N: HTTP /token - 10.184.169.175
+[2024/10/01 13:19:41:5072] N: __lws_lc_tag:  ++ [wsisrv|3|adopted] (3)
+[2024/10/01 13:19:41:5073] N: WS   /ws - 10.184.169.175, clients: 2
+[2024/10/01 13:19:41:8154] N: started process, pid: 1255
+[2024/10/01 13:19:42:7354] N: WS closed from 10.184.169.175, clients: 1
+[2024/10/01 13:19:42:7354] N: killing process, pid: 1255
+[2024/10/01 13:19:42:7354] N: __lws_lc_untag:  -- [wsisrv|3|adopted] (2) 1.228s
+[2024/10/01 13:19:42:7357] N: process killed with signal 1, pid: 1255
+[2024/10/01 13:19:44:3839] N: HTTP / - 10.184.169.175
+[2024/10/01 13:19:44:9319] N: HTTP / - 10.184.169.175
+[2024/10/01 13:19:46:3983] N: HTTP /token - 10.184.169.175
+[2024/10/01 13:19:47:5722] N: __lws_lc_tag:  ++ [wsisrv|4|adopted] (3)
+[2024/10/01 13:19:47:5724] N: WS   /ws - 10.184.169.175, clients: 2
+[2024/10/01 13:19:47:8831] N: started process, pid: 1257
+[2024/10/01 13:19:48:5311] N: HTTP / - 10.184.169.175
+[2024/10/01 13:19:49:0595] N: HTTP / - 10.184.169.175
+[2024/10/01 13:19:49:8113] N: WS closed from 10.184.169.175, clients: 1
+[2024/10/01 13:19:49:8113] N: killing process, pid: 1257
+[2024/10/01 13:19:49:8114] N: __lws_lc_untag:  -- [wsisrv|4|adopted] (2) 2.239s
+[2024/10/01 13:19:49:8116] N: process killed with signal 1, pid: 1257
+[2024/10/01 13:19:49:8145] N: __lws_lc_untag:  -- [wsisrv|2|adopted] (1) 9.508s
+[2024/10/01 13:24:13:6439] N: __lws_lc_tag:  ++ [wsisrv|5|adopted] (2)
+[2024/10/01 13:24:13:6441] N: HTTP / - 10.184.169.175
+[2024/10/01 13:24:14:1387] N: HTTP /token - 10.184.169.175
+[2024/10/01 13:24:14:6443] N: __lws_lc_untag:  -- [wsisrv|5|adopted] (1) 1.000s
+[2024/10/01 13:26:46:9791] N: __lws_lc_tag:  ++ [wsisrv|6|adopted] (2)
+[2024/10/01 13:26:46:9793] N: HTTP / - 10.184.169.1
+[2024/10/01 13:26:47:5028] N: HTTP /token - 10.184.169.1
+[2024/10/01 13:26:48:2918] N: __lws_lc_tag:  ++ [wsisrv|7|adopted] (3)
+[2024/10/01 13:26:48:2926] N: WS   /ws - 10.184.169.1, clients: 2
+[2024/10/01 13:26:48:6211] N: started process, pid: 1273
+[2024/10/01 13:26:50:7827] N: HTTP / - 10.184.169.1
+[2024/10/01 13:26:50:7940] N: __lws_lc_tag:  ++ [wsisrv|8|adopted] (4)
+[2024/10/01 13:26:50:7941] N: HTTP / - 10.184.169.1
+[2024/10/01 13:26:51:3080] N: HTTP / - 10.184.169.1
+[2024/10/01 13:26:51:3996] N: HTTP / - 10.184.169.1
+[2024/10/01 13:26:52:1337] N: HTTP /token - 10.184.169.1
+[2024/10/01 13:26:52:2003] N: HTTP /token - 10.184.169.1
+[2024/10/01 13:26:52:7210] N: HTTP /favicon.ico - 10.184.169.1
+[2024/10/01 13:26:53:2781] N: __lws_lc_tag:  ++ [wsisrv|9|adopted] (5)
+[2024/10/01 13:26:53:2784] N: WS   /ws - 10.184.169.1, clients: 3
+[2024/10/01 13:26:53:3634] N: __lws_lc_tag:  ++ [wsisrv|a|adopted] (6)
+[2024/10/01 13:26:53:3637] N: WS   /ws - 10.184.169.1, clients: 4
+[2024/10/01 13:26:53:5862] N: started process, pid: 1275
+[2024/10/01 13:26:53:6673] N: started process, pid: 1277
+[2024/10/01 13:26:55:7843] N: __lws_lc_untag:  -- [wsisrv|6|adopted] (5) 8.805s
+[2024/10/01 13:26:57:7235] N: __lws_lc_untag:  -- [wsisrv|8|adopted] (4) 6.929s
+[2024/10/01 13:28:03:1818] N: WS closed from 10.184.169.1, clients: 3
+[2024/10/01 13:28:03:1818] N: killing process, pid: 1277
+[2024/10/01 13:28:03:1819] N: __lws_lc_untag:  -- [wsisrv|a|adopted] (3) 1.163min
+[2024/10/01 13:28:03:1821] N: process killed with signal 1, pid: 1277
+[2024/10/01 13:33:31:4265] N: WS closed from 10.184.169.1, clients: 2
+[2024/10/01 13:33:31:4266] N: killing process, pid: 1275
+[2024/10/01 13:33:31:4266] N: __lws_lc_untag:  -- [wsisrv|9|adopted] (2) 6.635min
+[2024/10/01 13:33:31:4268] N: process killed with signal 1, pid: 1275
+[2024/10/01 13:39:40:7215] N: __lws_lc_tag:  ++ [wsisrv|b|adopted] (3)
+[2024/10/01 13:39:40:7216] N: HTTP / - 10.184.169.1
+[2024/10/01 13:39:41:1669] N: HTTP /token - 10.184.169.1
+[2024/10/01 13:39:41:8933] N: __lws_lc_tag:  ++ [wsisrv|c|adopted] (4)
+[2024/10/01 13:39:41:8935] N: WS   /ws - 10.184.169.1, clients: 3
+[2024/10/01 13:39:42:2415] N: started process, pid: 1281
+[2024/10/01 13:39:46:1681] N: __lws_lc_untag:  -- [wsisrv|b|adopted] (3) 5.446s
+2024-10-01T13:41:33Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+2024-10-01T13:41:33Z INF Requesting new quick Tunnel on trycloudflare.com...
+2024-10-01T13:41:37Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T13:41:37Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+2024-10-01T13:41:37Z INF |  https://multi-expenditures-stationery-genetics.trycloudflare.com                          |
+2024-10-01T13:41:37Z INF +--------------------------------------------------------------------------------------------+
+2024-10-01T13:41:37Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+2024-10-01T13:41:37Z INF Version 2024.8.3
+2024-10-01T13:41:37Z INF GOOS: linux, GOVersion: go1.22.2, GoArch: amd64
+2024-10-01T13:41:37Z INF Settings: map[ha-connections:1 protocol:quic url:10.184.169.175:7681]
+2024-10-01T13:41:37Z INF Generated Connector ID: ed5d23a3-9c3a-4d2e-8738-93f2482ec013
+2024-10-01T13:41:37Z INF cloudflared will not automatically update if installed by a package manager.
+2024-10-01T13:41:37Z INF Initial protocol quic
+2024-10-01T13:41:37Z INF ICMP proxy will use 192.168.0.185 as source for IPv4
+2024-10-01T13:41:37Z INF ICMP proxy will use fd01::a793:17a0:230e:878c in zone enp9s0 as source for IPv6
+2024-10-01T13:41:37Z WRN Your version 2024.8.3 is outdated. We recommend upgrading it to 2024.9.1
+2024-10-01T13:41:37Z INF Starting metrics server on 127.0.0.1:45045/metrics
+2024/10/01 19:11:37 failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+2024-10-01T13:41:38Z INF Registered tunnel connection connIndex=0 connection=8e2680b3-1b43-4da5-9286-221193a425ef event=0 ip=198.41.200.53 location=bom12 protocol=quic
+[2024/10/01 14:05:11:0580] N: WS closed from 10.184.169.175, clients: 2
+[2024/10/01 14:05:11:0581] N: killing process, pid: 1105
+[2024/10/01 14:05:11:0582] N: __lws_lc_untag:  -- [wsisrv|1|adopted] (2) 1.987hr
+[2024/10/01 14:05:11:0583] N: process killed with signal 1, pid: 1105
+[2024/10/01 14:05:11:5441] N: __lws_lc_tag:  ++ [wsisrv|d|adopted] (3)
+[2024/10/01 14:05:11:5444] N: HTTP /token - 10.184.169.175
+[2024/10/01 14:05:12:2495] N: __lws_lc_tag:  ++ [wsisrv|e|adopted] (4)
+[2024/10/01 14:05:12:2497] N: WS   /ws - 10.184.169.175, clients: 3
+[2024/10/01 14:05:12:5411] N: started process, pid: 1311
+[2024/10/01 14:05:16:5448] N: __lws_lc_untag:  -- [wsisrv|d|adopted] (3) 5.000s

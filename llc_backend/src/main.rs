@@ -113,53 +113,6 @@ async fn test_route() -> impl Responder {
 
 // Import AsyncReadExt for reading process output
 
-async fn get_console_by_process_name(process_name: web::Path<String>) -> impl Responder {
-    let pname = process_name.into_inner();
-    println!("Request received for process: {}", pname);
-    let script_path = "scripts/pm2.sh"; // Adjust the path as necessary
-
-    // Spawn the process to execute the script
-    let mut process = Command::new("sh")
-        .arg(script_path)
-        .arg(&pname) // Pass the process name received in the request
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .expect("Failed to execute script");
-
-    // Wait for a specified time (e.g., 3 seconds) to allow the script to capture logs
-    let wait_time = Duration::from_secs(3);
-    sleep(wait_time).await;
-
-    // Wait for the process to finish
-    let exit_status = process.wait().await.expect("Failed to wait for process");
-
-    // Prepare to read the log file
-    let log_file_path = format!("pm2_logs_{}.txt", pname); // Path to your log file
-    let file = File::open(&log_file_path);
-
-    match file {
-        Ok(file) => {
-            let mut reader = BufReader::new(file);
-            let mut contents = String::new();
-
-            // Read the file contents
-            match reader.read_to_string(&mut contents) {
-                Ok(_) => {
-                    if exit_status.success() {
-                        HttpResponse::Ok().body(contents) // Return the logs if the process was successful
-                    } else {
-                        HttpResponse::InternalServerError()
-                            .body(format!("Script failed. Logs:\n{}", contents))
-                    }
-                }
-                Err(_) => HttpResponse::InternalServerError().body("Failed to read log file."),
-            }
-        }
-        Err(_) => HttpResponse::NotFound().body("Log file not found."),
-    }
-}
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
@@ -172,6 +125,8 @@ async fn main() -> std::io::Result<()> {
             .allowed_origin("http://127.0.0.1:5173")
             .allowed_origin("http://localhost:5173")
             .allowed_origin("http://localhost:5173/check-console")
+            .allowed_origin("http://localhost:5173/dashboard")
+            .allowed_origin("http://127.0.0.1:5173/dashboard")
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"]) // Use a Vec for methods
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
@@ -182,11 +137,11 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors) // Wrap the app with CORS middleware
-            .wrap(AuthMiddleware {
-                auth0_domain: "dev-jfmhfrg7tmi1fr64.us.auth0.com".to_string(),
-                audience: "https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/".to_string(),
-                client: Arc::new(Client::new()),
-            })
+            // .wrap(AuthMiddleware {
+            //     auth0_domain: "dev-jfmhfrg7tmi1fr64.us.auth0.com".to_string(),
+            //     audience: "https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/".to_string(),
+            //     client: Arc::new(Client::new()),
+            // })
             .app_data(web::Data::new(db.clone()))
             .route("/test", web::get().to(test_route))
             .route("/users", web::post().to(create_user))
@@ -203,6 +158,7 @@ async fn main() -> std::io::Result<()> {
                 "/deploy",
                 web::get().to(handler::container::get_deployed_containers),
             ).route("/build-deploy", web::post().to(handler::container::deploy_and_build))
+            .route("/launch/{container_name}", web::get().to(handler::container::launch_ttyd_in_browser))
     })
     .bind("127.0.0.1:8080")?
     .run()

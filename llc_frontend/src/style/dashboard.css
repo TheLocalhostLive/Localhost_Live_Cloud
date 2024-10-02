@@ -1,3 +1,11 @@
+html, body {
+    margin: 0; 
+    padding: 0; 
+    height: 100%; 
+    background-color: black; 
+    color: white; 
+}
+
 .top-container {
     margin-top: 20px;
     margin-left: 20px;
@@ -16,7 +24,7 @@
     margin-top: 80px;
     font-size: 64px; /* Increased font size */
     font-weight: 900; /* Extra bold for emphasis */
-    background: linear-gradient(to right,rgb(244, 222, 181), rgb(215, 169, 18),rgb(255,140,0)); /* White to gold gradient */
+    background: linear-gradient(to right,White,White); /* White to gold gradient */
     -webkit-background-clip: text;
     color: transparent; /* Transparent text to show gradient */
     background-clip: text;
@@ -146,6 +154,7 @@
 }
 
 .deployed-item h2 {
+    color: black;
     margin: 0;
     font-size: 20px;
     font-weight: bold;

@@ -7,9 +7,9 @@ html, body {
     color: white; 
 }
 
-/* Styles for the outer container */
+/* Styles for the root container */
 .outer {
-    background-color: black; /* Ensure the outer has a black background */
+    background-color: black; /* Ensure the root has a black background */
     display: flex; /* Use flexbox layout */
     justify-content: center; /* Center content horizontally */
     align-items: center; /* Center content vertically */
@@ -20,7 +20,7 @@ html, body {
 /* Styles for the main heading */
 .outer h1 {
     position: relative; /* Enable positioning of the pseudo-element */
-    font-size: 10vw; /* Adjust font size */
+    font-size: 7vw; /* Adjust font size */
     max-width: 90vw; /* Limit maximum width */
     -webkit-text-stroke: 0.3vw #FFD700; /* Golden stroke for the text */
     color: transparent; /* Make the text color transparent to show the effect */
