@@ -127,6 +127,8 @@ async fn main() -> std::io::Result<()> {
             .allowed_origin("http://localhost:5173/check-console")
             .allowed_origin("http://localhost:5173/dashboard")
             .allowed_origin("http://127.0.0.1:5173/dashboard")
+            .allowed_origin("http://127.0.0.1:5173/vm")
+            .allowed_origin("http://localhost:5173/vm")
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"]) // Use a Vec for methods
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
@@ -155,10 +157,11 @@ async fn main() -> std::io::Result<()> {
             )
             .route("/deploy", web::post().to(handler::container::deploy_and_create_container))
             .route(
-                "/deploy",
+                "/deploy/{owner}",
                 web::get().to(handler::container::get_deployed_containers),
             ).route("/build-deploy", web::post().to(handler::container::deploy_and_build))
             .route("/launch/{container_name}", web::get().to(handler::container::launch_ttyd_in_browser))
+            .route("/delete", web::delete().to(handler::container::delecte))
     })
     .bind("127.0.0.1:8080")?
     .run()

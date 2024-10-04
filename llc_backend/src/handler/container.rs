@@ -1,4 +1,5 @@
-use std::process::Stdio;
+use std::fmt::format;
+use std::process::{self, Stdio};
 
 use serde::Deserialize;
 use serde_json::json;
@@ -7,7 +8,7 @@ use actix_web::{web, HttpMessage, HttpRequest, HttpResponse, Responder};
 use futures::TryStreamExt;
 use mongodb::{bson::doc, Collection};
 use crate::handler::utils::{get_ip, get_pub_url};
-use crate:: model::{Claims, Container};
+use crate:: model::{Claims, Container, ContainerDeleteSchema};
 
 use tokio::time::sleep;
 use std::fs::File;
@@ -232,3 +233,46 @@ pub async fn launch_ttyd_in_browser(container_name: web::Path<String>) -> impl R
     }))
     
 }
+
+
+
+pub async fn delecte(db: web::Data<mongodb::Database>, container: web::Json<ContainerDeleteSchema>) -> impl Responder {
+    let collection = get_container_collection(db);
+
+   
+    let container_exist = collection.find_one(
+        doc! { "owner": container.owner.clone(), "container_name": container.container_name.clone() }
+    ).await;
+
+    if let Ok(None) = container_exist {
+      
+        return HttpResponse::Conflict().json("Either Container Does not exist or you are not Permitted to do this operation");
+    }
+    let command = format!("lxc delete {} --force", container.container_name.clone());
+    let process = Command::new("sh")
+        .arg("-c")
+        .arg(&command)
+        .output()
+        .await;
+
+    
+        match process {
+            Ok(output) if output.status.success() => {
+                HttpResponse::Ok().json(serde_json::json!({"message": "Virtual Machine Terminated Successfully!"}))
+            }
+            Ok(output) => {
+                HttpResponse::InternalServerError().json(serde_json::json!({
+                    "message": "Failed to terminate Virtual Machine",
+                    "error": String::from_utf8_lossy(&output.stderr)
+                }))
+            }
+            Err(e) => {
+                HttpResponse::InternalServerError().json(serde_json::json!({
+                    "message": "Failed to execute command",
+                    "error": e.to_string()
+                }))
+            }
+        }
+    
+}
+
