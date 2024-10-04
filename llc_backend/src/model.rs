@@ -26,3 +26,8 @@ pub struct Claims {
     pub exp: usize,
     // Add other fields as necessary
 }
+#[derive(Debug,Serialize,Deserialize)]
+pub struct ContainerDeleteSchema{
+    pub owner:String,
+    pub container_name :String
+}
