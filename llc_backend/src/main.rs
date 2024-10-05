@@ -156,7 +156,7 @@ async fn main() -> std::io::Result<()> {
                 "/deploy/{owner}",
                 web::get().to(handler::container::get_deployed_containers),
             ).route("/build-deploy", web::post().to(handler::container::deploy_and_build))
-            .route("/launch/{container_name}", web::get().to(handler::container::launch_ttyd_in_browser))
+            .route("/launch/", web::get().to(handler::container::launch_ttyd_in_browser))
             .route("/delete", web::delete().to(handler::container::delecte))
             .route("/host-project", web::post().to(handler::cloudflared::host_project))
             

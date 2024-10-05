@@ -1,3 +1,4 @@
+use std::clone;
 use std::fmt::format;
 use std::process::{self, Stdio};
 
@@ -56,13 +57,6 @@ pub async fn create_container(db: web::Data<mongodb::Database>,
             let stderr = String::from_utf8_lossy(&output1.stderr);
             return HttpResponse::InternalServerError().body(format!("Script failed: {}", stderr));
         }
-
-    // let script_path2 = "scripts/launch_ttyd.sh";
-    // let _ = Command::new("sh")
-    //     .arg(script_path2)
-    //     .arg(&container.container_name)
-    //     .spawn()
-    //     .expect("Failed to execute script");
     let container_ip = get_ip(container.container_name.clone());
     let service = format!("http://{}:7681", container_ip,);
     let hostname = format!("{}.thelocalhost.live", container.container_name.clone());
@@ -183,13 +177,21 @@ pub async fn deploy_and_build(json: web::Json<DeployRequest>) -> impl Responder 
 
 pub async fn launch_ttyd_in_browser(
     db: web::Data<mongodb::Database>,
-    launch_payload: web::Path<LaunchPayLoad>,
+    launch_payload: web::Query<LaunchPayLoad>,
 ) -> impl Responder {
     let collection = get_container_collection(db);
     let machine_name = launch_payload.container_name.clone();
     let owner = launch_payload.owner.clone();
+    dbg!(machine_name.clone());
+    dbg!(owner.clone());
 
     println!("Request received for container: {}", machine_name.clone());
+    let script_path2 = "scripts/launch_ttyd.sh";
+    let _ = Command::new("sh")
+        .arg(script_path2)
+        .arg(machine_name.clone())
+        .spawn()
+        .expect("Failed to execute script");
 
     match collection
         .find_one(doc! { "owner": owner, "container_name": machine_name.clone() })
