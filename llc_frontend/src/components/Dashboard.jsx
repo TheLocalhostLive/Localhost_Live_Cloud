@@ -3,7 +3,7 @@ import "../style/dashboard.css";
 import { AiOutlinePlus, AiFillExclamationCircle, AiFillCode, AiFillHeart } from "react-icons/ai";
 import axios from "axios";
 import Button from "@mui/joy/Button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BasicChips from "./ui_components/BasicChips";
 import CreateInstancePopup from "./CreateInstancePopup";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -31,6 +31,7 @@ function Dashboard() {
       return;
     }
     let owner = user?.nickname;
+    console.log(owner);
     axios
       .get(`http://127.0.0.1:8080/deploy/${owner}`, {
         headers: {
@@ -101,6 +102,8 @@ function Dashboard() {
   const handleCreate = async () => {
     try {
       const access_token = await getAccessTokenSilently();
+      console.log(access_token);
+
       const deployRes = await axios.post(
         "http://127.0.0.1:8080/deploy",
         {
@@ -115,7 +118,9 @@ function Dashboard() {
           },
         }
       );
-      updateDeployedList((state) => [...state, deployRes.data]);
+
+      console.log(deployRes);
+      updateDeployedList((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
       handleClose();
     } catch (error) {
       console.error("Error creating instance:", error);
