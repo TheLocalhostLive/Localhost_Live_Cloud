@@ -197,3 +197,8 @@ html, body {
 .chip{
     color: rgb(255,215,0),
 }
+.deployed-item-inner{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}

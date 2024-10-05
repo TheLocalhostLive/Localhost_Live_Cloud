@@ -10,8 +10,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import CustomAppBar from "./ui_components/CustomAppBar";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-import PaymentPage from "./PaymentPage";
-import HostPage from "./HostPage";
+
 
 function Dashboard() {
   const [DeployedList, updateDeployedList] = useState([]);
