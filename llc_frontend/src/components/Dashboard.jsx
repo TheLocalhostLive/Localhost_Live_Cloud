@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from "react";
 import "../style/dashboard.css";
-import { AiOutlinePlus, AiOutlineCheck, AiOutlineCode } from "react-icons/ai";
+import { AiOutlinePlus, AiFillExclamationCircle, AiFillCode, AiFillHeart } from "react-icons/ai";
 import axios from "axios";
 import Button from "@mui/joy/Button";
-
-import { AiFillHeart } from "react-icons/ai";
-
 import { useNavigate } from "react-router-dom";
 import BasicChips from "./ui_components/BasicChips";
 import CreateInstancePopup from "./CreateInstancePopup";
 import { useAuth0 } from "@auth0/auth0-react";
 import CustomAppBar from "./ui_components/CustomAppBar";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import PaymentPage from "./PaymentPage";
+import HostPage from "./HostPage";
 
 function Dashboard() {
   const [DeployedList, updateDeployedList] = useState([]);
   const navigate = useNavigate();
   const { user, getAccessTokenSilently } = useAuth0();
-
   const [accessToken, setAccessToken] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   useState(() => {
     getAccessTokenSilently().then((token) => setAccessToken(token));
@@ -27,11 +30,8 @@ function Dashboard() {
     if (!accessToken) {
       console.log("Access Token is missing");
       return;
-    } else {
-      console.log(accessToken);
     }
-    let  owner = user?.nickname;
-    console.log(owner)
+    let owner = user?.nickname;
     axios
       .get(`http://127.0.0.1:8080/deploy/${owner}`, {
         headers: {
@@ -47,17 +47,46 @@ function Dashboard() {
       });
   }, [accessToken]);
 
-  const handleCheckConsoleClick = (id, container_name) => {
-    // console.log(`Card with ID ${id} clicked`);
-    // console.log(container_name)
+  const handleLaunchClick = (id, container_name) => {
     navigate(`/vm`, { state: { container_name } });
   };
+
+  function handleTerminateClick(container_name) {
+    let owner = user?.nickname;
+    axios
+      .delete(`http://127.0.0.1:8080/delete`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        data: {
+          owner: owner,
+          container_name: container_name,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setSnackbarMessage("Terminated Successfully!");
+          setSnackbarSeverity("success");
+          setOpenSnackbar(true);
+          // Optionally remove the terminated container from the list
+          updateDeployedList((prev) =>
+            prev.filter((item) => item.container_name !== container_name)
+          );
+        }
+      })
+      .catch((error) => {
+        setSnackbarMessage("Failed to Terminate!");
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
+        console.error("Error terminating the container", error);
+      });
+  }
+
   const handleDepoyProjectClick = () => {
-    // console.log(`Card with ID ${id} clicked`);
-    // console.log(container_name)
     navigate(`/deploy`);
   };
-
+ 
   const [open, setOpen] = useState(false);
   const [instanceName, setInstanceName] = useState("");
   const [appName, setAppName] = useState("");
@@ -73,10 +102,8 @@ function Dashboard() {
   const handleCreate = async () => {
     try {
       const access_token = await getAccessTokenSilently();
-      console.log(access_token);
-  
       const deployRes = await axios.post(
-        "http://127.0.0.1:8080/deploy", // Fix spelling of "deploy"
+        "http://127.0.0.1:8080/deploy",
         {
           owner: user?.nickname,
           container_name: `${user?.nickname}-${instanceName}`,
@@ -89,36 +116,44 @@ function Dashboard() {
           },
         }
       );
-  
-      console.log(deployRes);
-      updateDeployedList((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
+      updateDeployedList((state) => [...state, deployRes.data]);
       handleClose();
     } catch (error) {
-      console.error("Error creating instance:", error); // Log the error
+      console.error("Error creating instance:", error);
     }
   };
-  
+  function handleHostProjectClick() {
+    navigate('/host-project')
+  }
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+  };
+  const handleDontateCLick =()=>{
+    navigate('/donate')
+  }
+
 
   return (
     <>
-      <CustomAppBar/>
+      <CustomAppBar />
       <div className="top-container">
         <h1 className="top-container-h1">Dashboard</h1>
         <div className="top-container-div">
           <Button
             onClick={handleOpen}
-            variant="outlined" // Use 'outlined' to have a border
+            variant="outlined"
             sx={{
-              backgroundColor: "white", // Set the default background color to white
-              borderColor: "black", // Set border color to black
-              color: "black", // Set default text color to black
+              backgroundColor: "white",
+              borderColor: "black",
+              color: "black",
               display: "flex",
               alignItems: "center",
               gap: "5px",
               "&:hover": {
-                backgroundColor: "black", // Change background to black on hover
-                color: "white", // Change text color to white on hover
-                borderColor: "black", // Ensure border stays black on hover
+                backgroundColor: "black",
+                color: "white",
+                borderColor: "black",
               },
             }}
           >
@@ -130,16 +165,16 @@ function Dashboard() {
             onClick={handleDepoyProjectClick}
             variant="outlined"
             sx={{
-              backgroundColor: "white", // Set the default background color to white
-              borderColor: "black", // Set border color to black
-              color: "black", // Set default text color to black
+              backgroundColor: "white",
+              borderColor: "black",
+              color: "black",
               display: "flex",
               alignItems: "center",
               gap: "5px",
               "&:hover": {
-                backgroundColor: "black", // Change background to black on hover
-                color: "white", // Change text color to white on hover
-                borderColor: "black", // Ensure border stays black on hover
+                backgroundColor: "black",
+                color: "white",
+                borderColor: "black",
               },
             }}
           >
@@ -148,19 +183,41 @@ function Dashboard() {
           </Button>
           <Button
             color="warning"
-            onClick={function () {}}
+            onClick={handleHostProjectClick}
             variant="outlined"
             sx={{
-              backgroundColor: "white", // Set the default background color to white
-              borderColor: "black", // Set border color to black
-              color: "black", // Set default text color to black
+              backgroundColor: "white",
+              borderColor: "black",
+              color: "black",
               display: "flex",
               alignItems: "center",
               gap: "5px",
               "&:hover": {
-                backgroundColor: "black", // Change background to black on hover
-                color: "white", // Change text color to white on hover
-                borderColor: "black", // Ensure border stays black on hover
+                backgroundColor: "black",
+                color: "white",
+                borderColor: "black",
+              },
+            }}
+          >
+            <AiOutlinePlus />
+            Host Your Project
+          </Button>
+          
+          <Button
+            color="warning"
+            onClick={handleDontateCLick}
+            variant="outlined"
+            sx={{
+              backgroundColor: "white",
+              borderColor: "black",
+              color: "black",
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              "&:hover": {
+                backgroundColor: "black",
+                color: "white",
+                borderColor: "black",
               },
             }}
           >
@@ -184,25 +241,47 @@ function Dashboard() {
                 <h3>{tech}</h3>
               </div>
 
-              <Button
-                onClick={() =>handleCheckConsoleClick(_id, container_name)}
-                variant="outlined" // Use 'outlined' for a transparent background
-                sx={{
-                  borderColor: "black", // Set border color to black
-                  color: "black", // Default text color
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "5px",
-                  "&:hover": {
-                    backgroundColor: "black", // Change background to black on hover
-                    color: "white", // Change text color to white on hover
-                    borderColor: "black", // Ensure border stays black on hover
-                  },
-                }}
-              >
-                <AiOutlineCode />
-                Launch
-              </Button>
+              <div className="deployed-item-inner">
+                <Button
+                  onClick={() => handleTerminateClick(container_name)}
+                  variant="outlined"
+                  sx={{
+                    borderColor: "black",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px",
+                    "&:hover": {
+                      backgroundColor: "black",
+                      color: "white",
+                      borderColor: "black",
+                    },
+                  }}
+                >
+                  <AiFillExclamationCircle />
+                  Terminate
+                </Button>
+
+                <Button
+                  onClick={() => handleLaunchClick(_id, container_name)}
+                  variant="outlined"
+                  sx={{
+                    borderColor: "black",
+                    color: "black",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px",
+                    "&:hover": {
+                      backgroundColor: "black",
+                      color: "white",
+                      borderColor: "black",
+                    },
+                  }}
+                >
+                  <AiFillCode />
+                  Launch
+                </Button>
+              </div>
             </div>
           );
         })}
@@ -218,6 +297,20 @@ function Dashboard() {
           />
         )}
       </div>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
