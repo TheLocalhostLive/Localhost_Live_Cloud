@@ -15,11 +15,11 @@ html, body {
     align-items: center; /* Center content vertically */
     height: 100%; /* Take full height of the viewport */
     overflow: hidden; /* Hide overflow from the outer container */
+    flex-direction: column;
 }
 
 /* Styles for the main heading */
 .outer h1 {
-    position: relative; /* Enable positioning of the pseudo-element */
     font-size: 7vw; /* Adjust font size */
     max-width: 90vw; /* Limit maximum width */
     -webkit-text-stroke: 0.3vw #FFD700; /* Golden stroke for the text */
@@ -50,5 +50,21 @@ html, body {
     }
     70% {
         width: 100%; /* Full width at 70% of the animation duration */
+    }
+}
+
+.scroll-up-animate {
+    position: absolute;
+    top: 100%;
+    animation: scroll-up-animate 1s forwards;
+    transition: all;
+}
+
+@keyframes scroll-up-animate {
+    0%{
+        top: 100%;
+    }
+    100% {
+        top: 10%;
     }
 }
