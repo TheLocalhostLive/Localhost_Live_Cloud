@@ -12,6 +12,7 @@ use std::env;
 mod db;
 mod handler;
 mod model;
+use crate::handler::utils::{create_order};
 use std::fs::File;
 use std::io::{BufReader, Read};
 use std::process::Stdio;
@@ -129,6 +130,8 @@ async fn main() -> std::io::Result<()> {
             .allowed_origin("http://127.0.0.1:5173/dashboard")
             .allowed_origin("http://127.0.0.1:5173/vm")
             .allowed_origin("http://localhost:5173/vm")
+            .allowed_origin("http://127.0.0.1:5173/donate")
+            .allowed_origin("http://localhost:5173/donate")
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"]) // Use a Vec for methods
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
@@ -159,7 +162,7 @@ async fn main() -> std::io::Result<()> {
             .route("/launch/", web::get().to(handler::container::launch_ttyd_in_browser))
             .route("/delete", web::delete().to(handler::container::delecte))
             .route("/host-project", web::post().to(handler::cloudflared::host_project))
-            
+            .route("/create_order", web::post().to(create_order))
     })
     .bind("127.0.0.1:8080")?
     .run()

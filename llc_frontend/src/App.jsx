@@ -5,6 +5,7 @@ import LandingPage from "./components/LandingPage";
 
 import Deploy from "./components/Deploy";
 import VirtulMatchine from "./components/VirtulMatchine";
+import  Payment  from "./components/Payment";
 
 function App() {
   const router = createBrowserRouter([
@@ -30,6 +31,10 @@ function App() {
     {
       path: "/vm",
       element: <VirtulMatchine/>,
+    },
+    {
+      path: "/donate",
+      element: <Payment/>,
     },
   ]);
 
