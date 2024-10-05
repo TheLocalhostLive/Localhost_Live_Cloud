@@ -8,13 +8,13 @@ import VirtulMatchine from "./components/VirtulMatchine";
 
 function App() {
   const router = createBrowserRouter([
-    // {
-    //   path: "/",
-    //   element: <LandingPage />,
-    // },
-
     {
       path: "/",
+      element: <LandingPage />,
+    },
+
+    {
+      path: "/dashboard",
       element: <Dashboard />,
     },
 
