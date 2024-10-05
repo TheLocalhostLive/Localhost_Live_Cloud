@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "../style/landing_page.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import CustomAppBar from "./ui_components/CustomAppBar";
+import BlackHoleModel from "./BlackHoleModel";
 
 const LandingPage = () => {
   const [currentPhrase, setCurrentPhrase] = useState(0);
@@ -53,7 +54,8 @@ const LandingPage = () => {
     <>
       <CustomAppBar />
       <div className="outer">
-        <h1 data-text={phrases[currentPhrase]}>{phrases[currentPhrase]}</h1>
+        <BlackHoleModel />
+        <h1 className="main-text scroll-up-animate" data-text={phrases[currentPhrase]}>{phrases[currentPhrase]}</h1>
       </div>
     </>
   );
