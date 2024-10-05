@@ -231,6 +231,16 @@ pub async fn delecte(
         return HttpResponse::Conflict()
             .json("Either Container Does not exist or you are not Permitted to do this operation");
     }
+    let delete_result = collection.delete_one(doc! {
+        "owner": &container.owner,
+        "container_name": &container.container_name
+    }).await;
+
+    // Handle the potential error in deletion
+    if let Err(err) = delete_result {
+        return HttpResponse::InternalServerError()
+            .json(format!("Error deleting container: {}", err));
+    }
     let command = format!("lxc delete {} --force", container.container_name.clone());
     let process = Command::new("sh").arg("-c").arg(&command).output().await;
 
