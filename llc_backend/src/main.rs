@@ -151,17 +151,15 @@ async fn main() -> std::io::Result<()> {
             .route("/users/{id}", web::get().to(get_user))
             .route("/users/{id}", web::put().to(update_user))
             .route("/users/{id}", web::delete().to(delete_user))
-            .route(
-                "/process/{process_name}",
-                web::get().to(handler::container::get_console_by_process_name),
-            )
-            .route("/deploy", web::post().to(handler::container::deploy_and_create_container))
+            .route("/deploy", web::post().to(handler::container::create_container))
             .route(
                 "/deploy/{owner}",
                 web::get().to(handler::container::get_deployed_containers),
             ).route("/build-deploy", web::post().to(handler::container::deploy_and_build))
             .route("/launch/{container_name}", web::get().to(handler::container::launch_ttyd_in_browser))
             .route("/delete", web::delete().to(handler::container::delecte))
+            .route("/host-project", web::post().to(handler::cloudflared::host_project))
+            
     })
     .bind("127.0.0.1:8080")?
     .run()
