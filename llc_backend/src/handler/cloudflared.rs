@@ -1,0 +1,166 @@
+use actix_web::{web::{self, put}, HttpResponse, Responder};
+use reqwest::Client;
+use serde::{Deserialize, Serialize};
+use serde_json::json;
+use dotenv::dotenv;
+use std::env;
+
+
+use crate::model::{DnsRecordRequest, HostProjectPost, Ingress, OriginRequest};
+
+use super::utils::get_ip;
+
+pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(), Box<dyn std::error::Error>> {
+
+    dotenv().ok();
+    
+    let account_id = env::var("account_id").expect("account_id must be set");
+    let tunnel_id = env::var("tunnel_id").expect("tunned_id must be set");
+    let api_token = env::var("api_token").expect("api_token must be set");
+    let zone_id = env::var("zone_id").expect("zone_id must be set");
+    //let dns_api_token = env::var("dns_api_token").expect("dns_api_token must be set");
+    dbg!(account_id.clone());
+    dbg!(api_token.clone());
+    dbg!(api_token.clone());
+    dbg!(zone_id.clone());
+    dbg!(config.hostname.clone());
+    dbg!(config.service.clone());
+    dbg!(config.subdomain.clone());
+
+    let base_url = format!(
+        "https://api.cloudflare.com/client/v4/accounts/{}/cfd_tunnel/{}",
+        account_id.clone(), tunnel_id.clone()
+    );
+
+    let client = Client::new();
+
+    let get_response = client
+        .get(format!("{}/configurations", base_url.clone()))
+        .header("Authorization", api_token.clone())
+        .send()
+        .await?;
+
+    let mut get_response_json: serde_json::Value = get_response.json().await?;
+    dbg!(get_response_json.clone());
+
+    let ingress_config = get_response_json["result"]["config"]["ingress"]
+        .as_array_mut()
+        .unwrap();
+
+    dbg!(ingress_config.clone());
+
+    let http_status_404 = ingress_config
+        .iter()
+        .position(|entry| entry["service"] == "http_status:404")
+        .map(|pos| ingress_config.remove(pos)); 
+
+
+    ingress_config.push(serde_json::json!({
+        "service": config.service,
+        "hostname": config.hostname,
+        "originRequest": config.originRequest
+    }));
+
+    if let Some(status_entry) = http_status_404 {
+        ingress_config.push(status_entry);
+    }
+
+  
+    let put_body = json!({
+        "config": {
+            "ingress": ingress_config
+        }
+    });
+    println!("{}", json!(put_body.clone()));
+    let put_response = client
+        .put(format!("{}/configurations", base_url.clone()))
+        .header("Authorization", api_token.clone())
+        .json(&put_body)
+        .send()
+        .await?;
+   // dbg!()
+
+    if !put_response.status().is_success() {
+        println!("Failed to update tunnel configuration.");
+        return Ok(());
+    }
+
+    let dns_record = DnsRecordRequest {
+        record_type: "CNAME".to_string(),
+        proxied: true,
+        name: config.subdomain.clone(),
+        content: format!("{}.cfargotunnel.com", tunnel_id.clone()),
+        ttl: 3600
+    };
+    
+    println!("{}", json!(dns_record));
+
+
+    
+    let dns_response = client
+        .post(format!(
+            "https://api.cloudflare.com/client/v4/zones/{}/dns_records",
+            zone_id
+        ))
+        .header("Authorization", api_token)
+        .json(&dns_record)
+        .send()
+        .await?;
+
+    println!("{:#?}", dns_response);
+    if dns_response.status().is_success() {
+        println!("DNS record created successfully.");
+    } else {
+        println!("Failed to create DNS record.");
+    }
+
+    Ok(())
+}
+
+
+
+
+pub async fn host_project(hosting_details: web::Json<HostProjectPost>) -> impl Responder {
+    let container_ip = get_ip(hosting_details.container_name.clone());
+    let service = format!("{}:{}", container_ip, hosting_details.application_port.clone());
+    let hostname = format!("{}.thelocalhost.live", hosting_details.container_name.clone());
+    let subdomain = hosting_details.container_name.clone();
+
+    let config = Ingress {
+        service,
+        hostname,
+        originRequest: OriginRequest {},
+        subdomain,
+    };
+
+    match update_cloudflare_tunnel(config).await {
+        Ok(_) => {
+            HttpResponse::Ok().json(json!({
+                "status": "success",
+                "message": "Project hosted successfully"
+            }))
+        }
+        Err(e) => {
+            eprintln!("Error: {}", e);
+            HttpResponse::InternalServerError().json(json!({
+                "status": "error",
+                "message": format!("Failed to host project: {}", e)
+            }))
+        }
+    }
+}
+
+
+// #[tokio::main]
+// async fn main() {
+//     let config = Ingress {
+//         service: "http://localhost:5005".to_string(),
+//         hostname: "joydeep.thelocalhost.live".to_string(),
+//         originRequest: OriginRequest {},
+//         subdomain: "joydeep".to_string()
+//     };
+
+//     if let Err(e) = update_cloudflare_tunnel(config).await {
+//         eprintln!("Error: {}", e);
+//     }
+// }

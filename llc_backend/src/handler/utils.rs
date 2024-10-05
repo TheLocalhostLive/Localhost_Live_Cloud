@@ -27,50 +27,10 @@ pub fn get_ip(container_name: String) -> String {
 
 
 
-pub async fn get_pub_url(private_ip: String) -> String {
-   
-    let command = format!(
-        "nohup cloudflared tunnel --url http://{}:7681 &",
-        private_ip
-    );
-
-   
-    let _ = Command::new("sh")
-    .arg("-c")
-    .arg(&command)
-    .spawn()
-    .expect("Failed to start cloudflared tunnel");
-
-    time::sleep(Duration::from_secs(10)).await;
-
-    let command2 = "cat nohup.out";
-
-    let output = Command::new("sh")
-        .arg("-c")
-        .arg(command2)
-        .output()
-        .expect("Failed to execute command2");
-
-        let output_str = str::from_utf8(&output.stdout)
-        .unwrap_or_else(|_| "Failed to read output");
-
-    if output_str.is_empty() {
-        eprintln!("The output from nohup.out is empty. Please check if the tunnel started correctly.");
-    } else {
-        eprintln!("Output from nohup.out:\n{}", output_str);
-    }
-
-    let public_url = extract_public_url(output_str);
-    let command3 = "rm nohup.out";
-
-    let _ = Command::new("sh")
-        .arg("-c")
-        .arg(command3)
-        .output()
-        .expect("Failed to execute command2");    
-
-    public_url.unwrap_or_else(|| "No public URL found.".to_string())
-}
+// pub async fn get_pub_url(db,private_ip: String , owner:String) -> String {
+//    // let collection = get_container_collection(db);
+  
+// }
 
 fn extract_public_url(input: &str) -> Option<String> {
 
