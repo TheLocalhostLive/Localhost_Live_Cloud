@@ -3,6 +3,11 @@ use std::process::Command;
 use std::time::Duration;
 use regex::Regex;
 use tokio::time;
+use reqwest::Client;
+use serde::Deserialize;
+use actix_web::{web, App, HttpServer, HttpResponse};
+use serde_json::json;
+
 pub fn get_ip(container_name: String) -> String {
     let command = format!(
         "lxc exec {} -- ip -4 addr show eth0 | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){{3}}'",
@@ -82,4 +87,38 @@ fn extract_public_url(input: &str) -> Option<String> {
         return Some(caps[0].to_string());
     }
     None
+}
+
+
+#[derive(Deserialize)]
+pub struct CreateOrderRequest {
+    amount: u32, 
+}
+
+pub async fn create_order(req: web::Json<CreateOrderRequest>) -> HttpResponse {
+    let client = Client::new();
+    let razorpay_api_key = "rzp_test_prB6bb3aMwxOFB";
+    let razorpay_api_secret = "sghXkPwcIu4umME81feqxMid";
+    let order_url = "https://api.razorpay.com/v1/orders";
+
+    let order_data = json!({
+        "amount": req.amount,
+        "currency": "INR",
+        "receipt": "receipt#1",
+    });
+
+    let response = client
+        .post(order_url)
+        .basic_auth(razorpay_api_key, Some(razorpay_api_secret))
+        .json(&order_data)
+        .send()
+        .await;
+
+    match response {
+        Ok(res) => {
+            let order_json = res.json::<serde_json::Value>().await.unwrap();
+            HttpResponse::Ok().json(order_json)
+        }
+        Err(_) => HttpResponse::InternalServerError().finish(),
+    }
 }

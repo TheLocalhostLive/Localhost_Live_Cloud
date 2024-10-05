@@ -6,7 +6,7 @@ import Button from "@mui/joy/Button";
 
 import { AiFillHeart } from "react-icons/ai";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BasicChips from "./ui_components/BasicChips";
 import CreateInstancePopup from "./CreateInstancePopup";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -30,8 +30,8 @@ function Dashboard() {
     } else {
       console.log(accessToken);
     }
-    let  owner = user?.nickname;
-    console.log(owner)
+    let owner = user?.nickname;
+    console.log(owner);
     axios
       .get(`http://127.0.0.1:8080/deploy/${owner}`, {
         headers: {
@@ -74,7 +74,7 @@ function Dashboard() {
     try {
       const access_token = await getAccessTokenSilently();
       console.log(access_token);
-  
+
       const deployRes = await axios.post(
         "http://127.0.0.1:8080/deploy", // Fix spelling of "deploy"
         {
@@ -89,7 +89,7 @@ function Dashboard() {
           },
         }
       );
-  
+
       console.log(deployRes);
       updateDeployedList((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
       handleClose();
@@ -97,11 +97,10 @@ function Dashboard() {
       console.error("Error creating instance:", error); // Log the error
     }
   };
-  
 
   return (
     <>
-      <CustomAppBar/>
+      <CustomAppBar />
       <div className="top-container">
         <h1 className="top-container-h1">Dashboard</h1>
         <div className="top-container-div">
@@ -146,27 +145,30 @@ function Dashboard() {
             <AiOutlinePlus />
             Deploy Project
           </Button>
-          <Button
-            color="warning"
-            onClick={function () {}}
-            variant="outlined"
-            sx={{
-              backgroundColor: "white", // Set the default background color to white
-              borderColor: "black", // Set border color to black
-              color: "black", // Set default text color to black
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              "&:hover": {
-                backgroundColor: "black", // Change background to black on hover
-                color: "white", // Change text color to white on hover
-                borderColor: "black", // Ensure border stays black on hover
-              },
-            }}
-          >
-            <AiFillHeart />
-            Donate
-          </Button>
+
+          <Link to="/donate" passHref>
+            <Button
+              color="warning"
+              variant="outlined"
+              sx={{
+                backgroundColor: "white", // Set the default background color to white
+                borderColor: "black", // Set border color to black
+                color: "black", // Set default text color to black
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                "&:hover": {
+                  backgroundColor: "black", // Change background to black on hover
+                  color: "white", // Change text color to white on hover
+                  borderColor: "black", // Ensure border stays black on hover
+                },
+              }}
+            >
+              <AiFillHeart />
+              Donate
+            </Button>
+          </Link>
+
         </div>
       </div>
 
@@ -185,7 +187,7 @@ function Dashboard() {
               </div>
 
               <Button
-                onClick={() =>handleCheckConsoleClick(_id, container_name)}
+                onClick={() => handleCheckConsoleClick(_id, container_name)}
                 variant="outlined" // Use 'outlined' for a transparent background
                 sx={{
                   borderColor: "black", // Set border color to black
