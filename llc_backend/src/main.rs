@@ -2,7 +2,7 @@ use crate::model::User;
 use actix_cors::Cors;
 use actix_web::http::header;
 use actix_web::web::head;
-use actix_web::{web, App, HttpMessage, HttpRequest, HttpResponse, HttpServer, Responder};
+use actix_web::{web, App, HttpMessage, HttpRequest, HttpResponse, HttpServer, Responder,Result};
 use dotenv::dotenv;
 use futures::stream::TryStreamExt;
 use model::Container;
@@ -23,7 +23,8 @@ use tokio::time::sleep;
 pub mod middleware;
 use crate::middleware::auth::AuthMiddleware;
 use reqwest::{Client};
-
+use actix_files::Files;
+use actix_files::NamedFile;
 
 // Initialize MongoDB Collection
 fn get_user_collection(db: web::Data<mongodb::Database>) -> Collection<User> {
@@ -118,7 +119,9 @@ async fn test_route(req: HttpRequest) -> impl Responder {
 }
 
 // Import AsyncReadExt for reading process output
-
+async fn fallback(req: HttpRequest) -> Result<NamedFile> {
+    Ok(NamedFile::open("./frontend/index.html")?)
+}
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
@@ -155,6 +158,8 @@ async fn main() -> std::io::Result<()> {
             .max_age(3600); // Optional: Cache for one hour
 
         App::new()
+        .service(Files::new("/", "./frontend").index_file("index.html"))
+        .default_service(web::route().to(fallback))
             .wrap(cors) // Wrap the app with CORS middleware
             .wrap(AuthMiddleware {
                 auth0_domain: "dev-jfmhfrg7tmi1fr64.us.auth0.com".to_string(),
