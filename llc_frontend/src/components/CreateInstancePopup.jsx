@@ -22,8 +22,6 @@ const CreateInstancePopup = ({
   instanceName,
   setInstanceName,
   handleCreate,
-  appName,
-  setAppName
 }) => {
   const { user } = useAuth0();
   return (
@@ -44,19 +42,7 @@ const CreateInstancePopup = ({
           />
           <Typography>{`${user?.nickname}-${instanceName}`}</Typography>
         </DialogContent>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Application Name"
-            type="text"
-            helperText="Node App"
-            fullWidth
-            value={appName}
-            onChange={(e) => setAppName(e.target.value)}
-          />
-          
-        </DialogContent>
+        
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button variant="contained" onClick={handleCreate}>
