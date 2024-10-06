@@ -6,6 +6,8 @@ import LandingPage from "./components/LandingPage";
 import Deploy from "./components/Deploy";
 import VirtulMatchine from "./components/VirtulMatchine";
 import  Payment  from "./components/Payment";
+import { useLoading } from "./hook/useLoader";
+import { Backdrop, CircularProgress } from "@mui/material";
 
 function App() {
   const router = createBrowserRouter([
@@ -38,7 +40,19 @@ function App() {
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  const { isLoading } = useLoading();
+
+  return (
+    <div>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: 100000 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <RouterProvider router={router} />
+    </div>
+  );
 }
 
 export default App;
