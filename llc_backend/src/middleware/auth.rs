@@ -1,5 +1,6 @@
 use actix_web::{
     dev::{Service, ServiceRequest, ServiceResponse, Transform},
+    http::Method,
     Error, HttpMessage,
 };
 use auth0_rs::Auth0;
@@ -8,8 +9,6 @@ use reqwest::Client;
 use serde_json::json;
 use std::sync::Arc;
 use std::task::{Context, Poll};
-
-use crate::model::Claims;
 
 // Define the middleware
 pub struct AuthMiddleware {
@@ -77,8 +76,6 @@ where
 
                         // Fetch JWKS from Auth0
                         let jwks_url = format!("https://{}/.well-known/jwks.json", auth0_domain);
-                        // println!("JWKS URL: {}", jwks_url);
-                        
                         let jwks = client
                             .get(&jwks_url)
                             .send()
@@ -91,35 +88,40 @@ where
                             .map_err(|_| {
                                 actix_web::error::ErrorUnauthorized("Invalid JWKS format")
                             })?;
-                        
-                        // Ensure we have a "keys" array
-                        let keys = jwks["keys"].as_array().ok_or_else(|| {
-                            actix_web::error::ErrorUnauthorized("Invalid JWKS format: 'keys' array not found")
+
+                        // Validate token
+                        let auth0 = Auth0::new(&jwks.to_string()).map_err(|e| {
+                            actix_web::error::ErrorUnauthorized(format!(
+                                "Failed to initialize Auth0: {:?}",
+                                e
+                            ))
                         })?;
-                        
-                        // Create a new JSON object with just the "keys" field
-                        let formatted_jwks = json!({ "keys": keys });
-                        
-                        // Serialize the formatted JWKS to a string
-                        let jwks_str = serde_json::to_string(&formatted_jwks).map_err(|_| {
-                            actix_web::error::ErrorUnauthorized("Failed to serialize JWKS")
-                        })?;
-                        
-                        let auth0 = Auth0::new(&jwks_str).map_err(|e| {
-                            actix_web::error::ErrorUnauthorized(format!("Failed to initialize Auth0: {:?}", e))
-                        })?;
-                        
+
                         let res = auth0.validate_token(token);
-                        assert_eq!(res.is_ok(), true);
-                        let  claims = res.unwrap();
-                        dbg!(claims);
+                        if res.is_err() {
+                            return Err(actix_web::error::ErrorUnauthorized("Invalid token"));
+                        }
+
+                        // Now we can safely call the UserInfo endpoint
+                        let userinfo_url = format!("https://{}/userinfo", auth0_domain);
+                        let user_info: serde_json::Value = client
+                            .get(&userinfo_url)
+                            .bearer_auth(token) // Use the access token
+                            .send()
+                            .await
+                            .map_err(|_| {
+                                actix_web::error::ErrorUnauthorized("Could not fetch user info")
+                            })?
+                            .json()
+                            .await
+                            .map_err(|_| {
+                                actix_web::error::ErrorUnauthorized("Invalid user info format")
+                            })?;
                         
-                        //println!("{}", claims["aud"][1]);
-                        // assert_eq!(
-                        //     claims.as_object().unwrap().get("aud").unwrap(),
-                        //     "https://dev-jfhfrg7tmi1fr64.us.auth0.com/api/v2/"
-                        // );
-                        //req.extensions_mut().insert(claims.clone());
+                        dbg!(user_info.clone());
+                        // Insert user info into the request extensions
+                        req.extensions_mut().insert(user_info.clone());
+
                         return service.call(req).await;
                     }
                 }
