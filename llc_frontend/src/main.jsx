@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { Auth0Provider } from "@auth0/auth0-react";
 import App from "./App";
+import { LoadingProvider } from "./context/LoadingContext";
 
 const root = createRoot(document.getElementById("root"));
 
@@ -16,6 +17,8 @@ root.render(
       scope: "openid profile email offline_access",
     }}
   >
-    <App />
+    <LoadingProvider>
+      <App />
+    </LoadingProvider>
   </Auth0Provider>
 );

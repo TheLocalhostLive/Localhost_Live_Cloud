@@ -10,6 +10,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import CustomAppBar from "./ui_components/CustomAppBar";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { useLoading } from "../hook/useLoader";
 
 
 function Dashboard() {
@@ -21,11 +22,14 @@ function Dashboard() {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
+  const { startLoading, stopLoading } = useLoading();
+
   useState(() => {
     getAccessTokenSilently().then((token) => setAccessToken(token));
   }, []);
 
   useEffect(() => {
+    startLoading();
     if (!accessToken) {
       console.log("Access Token is missing");
       return;
@@ -45,6 +49,7 @@ function Dashboard() {
       .catch((error) => {
         console.error("Error fetching deployed projects", error);
       });
+      stopLoading();
   }, [accessToken]);
 
   const handleLaunchClick = (id, container_name) => {
@@ -52,6 +57,9 @@ function Dashboard() {
   };
 
   function handleTerminateClick(container_name) {
+    
+    startLoading();
+
     let owner = user?.nickname;
     axios
       .delete(`http://127.0.0.1:8080/delete`, {
@@ -81,6 +89,8 @@ function Dashboard() {
         setOpenSnackbar(true);
         console.error("Error terminating the container", error);
       });
+
+      stopLoading();
   }
 
   const handleDepoyProjectClick = () => {
@@ -101,9 +111,11 @@ function Dashboard() {
 
   const handleCreate = async () => {
     try {
-     
-
-      const deployRes = await axios.post("http://127.0.0.1:8080/deploy",
+      const access_token = await getAccessTokenSilently();
+      console.log(access_token);
+      startLoading();
+      const deployRes = await axios.post(
+        "http://127.0.0.1:8080/deploy",
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
