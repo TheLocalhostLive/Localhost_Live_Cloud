@@ -40,7 +40,7 @@ const HostPage = () => {
       const accessToken = await getAccessTokenSilently();
       console.log(accessToken)
       startLoading();
-      const res = await axios.post(`http://127.0.0.1:8080/host-project`, payload, {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/host-project`, payload, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",

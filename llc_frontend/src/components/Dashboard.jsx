@@ -37,7 +37,7 @@ function Dashboard() {
     let owner = user?.nickname;
     console.log(owner);
     axios
-      .get(`http://127.0.0.1:8080/deploy/${owner}`, {
+      .get(`${import.meta.env.VITE_BACKEND_URL}/deploy/${owner}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -64,7 +64,7 @@ function Dashboard() {
 
     let owner = user?.nickname;
     axios
-      .delete(`http://127.0.0.1:8080/delete`, {
+      .delete(`${import.meta.env.VITE_BACKEND_URL}/delete`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
@@ -117,7 +117,7 @@ function Dashboard() {
       console.log(access_token);
       startLoading();
       const deployRes = await axios.post(
-        "http://127.0.0.1:8080/deploy",
+        `${import.meta.env.VITE_BACKEND_URL}/deploy`,
         {
           owner: user?.nickname,
           container_name: `${user?.nickname}-${instanceName}`,

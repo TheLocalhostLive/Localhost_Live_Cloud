@@ -9,7 +9,7 @@ export default function ConsolePage() {
     const {container_name} = state || "";
     const [logs, updateLogs] = useState("");
     useEffect(()=>{
-        axios.get(`http://localhost:8080/process/${container_name}`)
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/process/${container_name}`)
       .then((res) => {
         updateLogs(res.data);
       })

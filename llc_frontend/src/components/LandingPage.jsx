@@ -18,7 +18,7 @@ const LandingPage = () => {
           const token = await getAccessTokenSilently({
             ignoreCache: true,
             audience: `https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/`,
-            redirect_uri: "http://localhost:5716/",
+            redirect_uri: `${import.meta.env.VITE_BACKEND_URL}`,
             scope: "openid profile email offline_access",
 
             detailedResponse: true,
