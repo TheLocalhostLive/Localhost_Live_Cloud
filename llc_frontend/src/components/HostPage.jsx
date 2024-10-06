@@ -8,6 +8,7 @@ import Alert from "@mui/material/Alert";
 import axios from "axios";
 import CustomAppBar from "./ui_components/CustomAppBar";
 import CopyToClipboardButton from "./ui_components/CopyToClipboardButton";
+import { useLoading } from "../hook/useLoader";
 
 const HostPage = () => {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -19,6 +20,8 @@ const HostPage = () => {
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
+
+  const {startLoading, stopLoading} =  useLoading();
 
   const handleGetpubUrlLlick = async ()=>{
     try {
@@ -36,6 +39,7 @@ const HostPage = () => {
       
       const accessToken = await getAccessTokenSilently();
       console.log(accessToken)
+      startLoading();
       const res = await axios.post(`http://127.0.0.1:8080/host-project`, payload, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -50,7 +54,7 @@ const HostPage = () => {
         setOpenSnackbar(true);
         const URL = res.data.message;
         seturl(URL);
-
+        stopLoading();
 
       }
   
@@ -63,6 +67,7 @@ const HostPage = () => {
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
       console.error("Error hosting the application", error);
+      stopLoading();
     }
 
 
