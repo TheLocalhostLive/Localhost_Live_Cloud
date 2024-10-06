@@ -45,11 +45,14 @@ function Dashboard() {
       })
       .then((res) => {
         updateDeployedList(res.data);
+        stopLoading();
       })
       .catch((error) => {
         console.error("Error fetching deployed projects", error);
       });
-      stopLoading();
+        stopLoading();
+      });
+      
   }, [accessToken]);
 
   const handleLaunchClick = (id, container_name) => {
@@ -132,8 +135,11 @@ function Dashboard() {
       console.log(deployRes);
       updateDeployedList((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
       handleClose();
+      
     } catch (error) {
       console.error("Error creating instance:", error);
+    } finally {
+      stopLoading();
     }
   };
   function handleHostProjectClick() {
