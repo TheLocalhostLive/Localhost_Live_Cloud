@@ -64,6 +64,11 @@ where
         let service = Arc::clone(&self.service);
 
         Box::pin(async move {
+            // Allow CORS preflight (OPTIONS) requests to pass without authentication
+            if req.method() == Method::OPTIONS {
+                return service.call(req).await;
+            }
+
             // Example token validation (simplified for demonstration)
             if let Some(auth_header) = headers.get("Authorization") {
                 if let Ok(auth_str) = auth_header.to_str() {
