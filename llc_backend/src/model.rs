@@ -15,7 +15,6 @@ pub struct Container{
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     pub id:Option<ObjectId>,
     pub owner:String,
-    pub application_name : String,
     pub container_name : String,
     pub container_domain:String
 }
@@ -45,7 +44,6 @@ pub struct ContainerPost{
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     pub id:Option<ObjectId>,
     pub owner:String,
-    pub application_name : String,
     pub container_name : String,
 }
 
