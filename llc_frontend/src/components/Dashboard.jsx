@@ -49,7 +49,6 @@ function Dashboard() {
       })
       .catch((error) => {
         console.error("Error fetching deployed projects", error);
-      });
         stopLoading();
       });
       
@@ -253,11 +252,11 @@ function Dashboard() {
 
       <div className="deployed-list-container">
         {DeployedList.map((post) => {
-          const { _id, application_name, container_name, tech } = post;
+          const {_id, container_name, tech } = post;
           return (
-            <div key={_id} className="deployed-item">
+            <div key={container_name} className="deployed-item">
               <div>
-                <h2>{application_name}</h2>
+                <h2>{container_name}</h2>
                 <h3>{tech}</h3>
               </div>
 
