@@ -1,14 +1,15 @@
 use actix_web::{web::{self, put}, HttpResponse, Responder};
+use mongodb::bson::doc;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use dotenv::dotenv;
-use std::env;
+use std::{env, f32::consts::E};
 
 
 use crate::model::{DnsRecordRequest, HostProjectPost, Ingress, OriginRequest};
 
-use super::utils::get_ip;
+use super::{container::get_container_collection, utils::get_ip};
 
 pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(), Box<dyn std::error::Error>> {
 
@@ -110,34 +111,58 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(), Box<dyn std
     println!("{:#?}", dns_response);
     if dns_response.status().is_success() {
         println!("DNS record created successfully.");
+        return Ok(());
     } else {
         println!("Failed to create DNS record.");
     }
 
-    Ok(())
+    Err(Box::from("Failed to create DNS record"))
+
+    
 }
 
 
 
 
-pub async fn host_project(hosting_details: web::Json<HostProjectPost>) -> impl Responder {
+pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web::Json<HostProjectPost>) -> impl Responder {
+
+    dbg!("Host Project");
+    let collection = get_container_collection(db);
+
+    let container_exist = collection.find_one(
+        doc! { "owner": hosting_details.owner.clone(), "container_name": hosting_details.container_name.clone() }
+    ).await;
+
+    if let Ok(None) = container_exist {
+        return HttpResponse::Conflict()
+            .json("Either Container Does not exist or you are not Permitted to do this operation");
+    }
+
+    let sdomain = format!("{}-{}",hosting_details.owner.clone(),hosting_details.application_name.clone());
     let container_ip = get_ip(hosting_details.container_name.clone());
-    let service = format!("{}:{}", container_ip, hosting_details.application_port.clone());
-    let hostname = format!("{}.thelocalhost.live", hosting_details.container_name.clone());
-    let subdomain = hosting_details.container_name.clone();
+    let service = format!("http://{}:{}", container_ip, hosting_details.application_port.clone());
+    let hostname = format!("{}.thelocalhost.live", sdomain.clone());
+   
+    dbg!(sdomain.clone());
+    dbg!(hosting_details.application_name.clone());
+    dbg!(hosting_details.container_name.clone());
+    dbg!(hosting_details.owner.clone());
+    dbg!(hosting_details.application_port.clone());
+
 
     let config = Ingress {
         service,
-        hostname,
+        hostname:hostname.clone(),
         originRequest: OriginRequest {},
-        subdomain,
+        subdomain:sdomain,
     };
+    
 
     match update_cloudflare_tunnel(config).await {
         Ok(_) => {
             HttpResponse::Ok().json(json!({
                 "status": "success",
-                "message": "Project hosted successfully"
+                "message": hostname.to_string()
             }))
         }
         Err(e) => {

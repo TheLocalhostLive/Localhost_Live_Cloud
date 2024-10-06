@@ -101,23 +101,20 @@ function Dashboard() {
 
   const handleCreate = async () => {
     try {
-      const access_token = await getAccessTokenSilently();
-      console.log(access_token);
+     
 
-      const deployRes = await axios.post(
-        "http://127.0.0.1:8080/deploy",
+      const deployRes = await axios.post("http://127.0.0.1:8080/deploy",
         {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+         data:{
           owner: user?.nickname,
           container_name: `${user?.nickname}-${instanceName}`,
           application_name: appName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+         } 
+        });
 
       console.log(deployRes);
       updateDeployedList((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
@@ -127,7 +124,7 @@ function Dashboard() {
     }
   };
   function handleHostProjectClick() {
-    navigate('/host-project')
+    navigate('/host')
   }
 
   const handleSnackbarClose = () => {

@@ -22,7 +22,7 @@ html, body {
 .outer h1 {
     font-size: 7vw; /* Adjust font size */
     max-width: 90vw; /* Limit maximum width */
-    -webkit-text-stroke: 0.3vw #FFD700; /* Golden stroke for the text */
+    -webkit-text-stroke: 0.3vw #ffffff; /* Golden stroke for the text */
     color: transparent; /* Make the text color transparent to show the effect */
     overflow: hidden; /* Hide overflow */
     white-space: nowrap; /* Prevent text from wrapping to the next line */
@@ -36,10 +36,10 @@ html, body {
     left: 0; 
     height: 100%;
     width: 100%;
-    color: #FFD700; /* Color of the animated text */
-    -webkit-text-stroke: 0vw #FFD700; /* Stroke for the pseudo-element */
+    color: #ffffff; /* Color of the animated text */
+    -webkit-text-stroke: 0vw #ffffff; /* Stroke for the pseudo-element */
     overflow: hidden; /* Hide overflow */
-    border-right: 0.1em solid #FFD700; /* Animated cursor effect */
+    border-right: 0.1em solid #ffffff; /* Animated cursor effect */
     animation: animate 3s linear infinite; /* Animation for the text effect */
 }
 

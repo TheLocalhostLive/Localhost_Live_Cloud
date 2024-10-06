@@ -37,6 +37,7 @@ pub struct ContainerDeleteSchema{
 pub struct HostProjectPost{
     pub owner:String,
     pub container_name :String,
+    pub application_name:String,
     pub application_port : String
 }
 #[derive(Debug,Serialize,Deserialize)]
