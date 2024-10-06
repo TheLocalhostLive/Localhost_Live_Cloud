@@ -55,7 +55,17 @@ const LandingPage = () => {
       <CustomAppBar />
       <div className="outer">
         <BlackHoleModel />
-        <h1 className="main-text scroll-up-animate" data-text={phrases[currentPhrase]}>{phrases[currentPhrase]}</h1>
+
+        <div className="landing-page-text-animation">
+          <div class="landingpage-container">
+            <div class="landingpage-glitch" data-text="DOLUC EVIL TSOHLACOL">
+              LOCALHOST LIVE CLOUD
+            </div>
+            <div class="landingpage-glow">LOCALHOST LIVE CLOUD</div>
+            <p class="landingpage-subtitle">IMPRACTICAL DEVELOPER</p>
+          </div>
+          <div class="scanlines"></div>
+        </div>
       </div>
     </>
   );

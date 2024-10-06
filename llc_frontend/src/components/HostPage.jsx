@@ -1,5 +1,5 @@
 import React from "react";
-import '../style/hostpage.css'
+import "../style/hostpage.css";
 import { Button } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import Snackbar from "@mui/material/Snackbar";
@@ -15,30 +15,30 @@ const HostPage = () => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [url ,seturl]=useState(null);
+  const [url, seturl] = useState(null);
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
 
-  const {startLoading, stopLoading} =  useLoading();
+  const { startLoading, stopLoading } = useLoading();
 
-  const handleGetpubUrlLlick = async ()=>{
+  const handleGetpubUrlLlick = async () => {
     try {
-      const container_name = document.getElementById("vm-name")
-      const application_name = document.getElementById("app-name")
-      const application_port = document.getElementById("app-port")
+      const container_name = document.getElementById("vm-name");
+      const application_name = document.getElementById("app-name");
+      const application_port = document.getElementById("app-port");
       const owner = user?.nickname;
-      const payload ={
+      const payload = {
         owner: owner,
         container_name: container_name.value,
-        application_name:application_name.value,
-        application_port:application_port.value
-      }
+        application_name: application_name.value,
+        application_port: application_port.value,
+      };
       console.log(payload);
-      
+
       const accessToken = await getAccessTokenSilently();
-      console.log(accessToken)
+      console.log(accessToken);
       startLoading();
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/host-project`, payload, {
         headers: {
@@ -55,13 +55,7 @@ const HostPage = () => {
         const URL = res.data.message;
         seturl(URL);
         stopLoading();
-
       }
-  
-       
-      
-        
-      
     } catch (error) {
       setSnackbarMessage("Failed to Host");
       setSnackbarSeverity("error");
@@ -69,62 +63,59 @@ const HostPage = () => {
       console.error("Error hosting the application", error);
       stopLoading();
     }
-
-
-  }
+  };
   return (
     <>
-    <CustomAppBar/>
-      <div className="outer">
-        <h1>Host Your Project</h1>
+      <CustomAppBar />
+      <div className="hostpage-outer">
+        <div class="hostpage-container">
+          <p class="hostpage-glitch">
+            <span aria-hidden="true">Host Your Project</span>
+            Host Your Project
+            <span aria-hidden="true">Host Your Project</span>
+          </p>
+        </div>
 
         <input
           id="vm-name"
           placeholder="Enter the Name of Your Virtual Machine"
           type="text"
-          style={{ height: '40px', width: '300px' }}
+          style={{ height: "40px", width: "300px" }}
         />
 
         <input
-            id="app-name"
-            placeholder="Enter the Name of Your Application"
-            type="text"
-            style={{ height: '40px', width: '300px' }}
+          id="app-name"
+          placeholder="Enter the Name of Your Application"
+          type="text"
+          style={{ height: "40px", width: "300px" }}
         />
         <input
           id="app-port"
-         placeholder="Enter Application Port Number"
-         type="text" 
-         style={{ height: '40px', width: '300px', marginTop: '10px' }}
+          placeholder="Enter Application Port Number"
+          type="text"
+          style={{ height: "40px", width: "300px", marginTop: "10px" }}
         />
-           <Button
-            
-            variant="outlined"
-            onClick={handleGetpubUrlLlick}
-            sx={{
-              backgroundColor: "white",
+        <Button
+          variant="outlined"
+          onClick={handleGetpubUrlLlick}
+          sx={{
+            backgroundColor: "white",
+            borderColor: "black",
+            color: "black",
+            display: "flex",
+            alignItems: "center",
+            gap: "5px",
+            "&:hover": {
+              backgroundColor: "black",
+              color: "white",
               borderColor: "black",
-              color: "black",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              "&:hover": {
-                backgroundColor: "black",
-                color: "white",
-                borderColor: "black",
-              },
-            }}
-          >
-          
-           Get Public Url
-          </Button>
-          
-           {
-             url&&<CopyToClipboardButton text={url}/>
-           }
-          
-           
-          
+            },
+          }}
+        >
+          Get Public Url
+        </Button>
+
+        {url && <CopyToClipboardButton text={url} />}
       </div>
       <Snackbar
         open={openSnackbar}
