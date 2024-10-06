@@ -7,7 +7,7 @@ use auth0_rs::Auth0;
 use futures_util::future::{ok, LocalBoxFuture, Ready};
 use reqwest::Client;
 use serde_json::json;
-use std::sync::Arc;
+use std::{sync::Arc};
 use std::task::{Context, Poll};
 
 // Define the middleware
@@ -61,12 +61,20 @@ where
         let audience = self.audience.clone();
         let client = Arc::clone(&self.client);
         let service = Arc::clone(&self.service);
+        let path = req.path().to_string();
+        if !path.contains("/api") {
+            // Call the next service (skip authentication)
+            return Box::pin(async move {
+                service.call(req).await
+            });
+        }
 
         Box::pin(async move {
             // Allow CORS preflight (OPTIONS) requests to pass without authentication
             if req.method() == Method::OPTIONS {
                 return service.call(req).await;
             }
+            
 
             // Example token validation (simplified for demonstration)
             if let Some(auth_header) = headers.get("Authorization") {

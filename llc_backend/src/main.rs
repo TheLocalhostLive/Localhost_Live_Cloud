@@ -119,9 +119,6 @@ async fn test_route(req: HttpRequest) -> impl Responder {
 }
 
 // Import AsyncReadExt for reading process output
-async fn fallback(req: HttpRequest) -> Result<NamedFile> {
-    Ok(NamedFile::open("./frontend/index.html")?)
-}
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
@@ -158,8 +155,6 @@ async fn main() -> std::io::Result<()> {
             .max_age(3600); // Optional: Cache for one hour
 
         App::new()
-        .service(Files::new("/", "./frontend").index_file("index.html"))
-        .default_service(web::route().to(fallback))
             .wrap(cors) // Wrap the app with CORS middleware
             .wrap(AuthMiddleware {
                 auth0_domain: "dev-jfmhfrg7tmi1fr64.us.auth0.com".to_string(),
@@ -167,21 +162,21 @@ async fn main() -> std::io::Result<()> {
                 client: Arc::new(Client::new()),
             })
             .app_data(web::Data::new(db.clone()))
-            .route("/test", web::get().to(test_route))
-            .route("/users", web::post().to(create_user))
-            .route("/users", web::get().to(get_users))
-            .route("/users/{id}", web::get().to(get_user))
-            .route("/users/{id}", web::put().to(update_user))
-            .route("/users/{id}", web::delete().to(delete_user))
-            .route("/deploy", web::post().to(handler::container::create_container))
+            .route("/api/test", web::get().to(test_route))
+            .route("/api/users", web::post().to(create_user))
+            .route("/api/users", web::get().to(get_users))
+            .route("/api/users/{id}", web::get().to(get_user))
+            .route("/api/users/{id}", web::put().to(update_user))
+            .route("/api/users/{id}", web::delete().to(delete_user))
+            .route("/api/deploy", web::post().to(handler::container::create_container))
             .route(
-                "/deploy/{owner}",
+                "/api/deploy/{owner}",
                 web::get().to(handler::container::get_deployed_containers),
-            ).route("/build-deploy", web::post().to(handler::container::deploy_and_build))
-            .route("/launch/", web::get().to(handler::container::launch_ttyd_in_browser))
-            .route("/delete", web::delete().to(handler::container::delecte))
-            .route("/host-project", web::post().to(handler::cloudflared::host_project))
-            .route("/create_order", web::post().to(create_order))
+            ).route("/api/build-deploy", web::post().to(handler::container::deploy_and_build))
+            .route("/api/launch/", web::get().to(handler::container::launch_ttyd_in_browser))
+            .route("/api/delete", web::delete().to(handler::container::delecte))
+            .route("/api/host-project", web::post().to(handler::cloudflared::host_project))
+            .route("/api/create_order", web::post().to(create_order))
     })
     .bind("127.0.0.1:8080")?
     .run()
