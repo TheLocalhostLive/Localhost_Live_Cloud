@@ -2,7 +2,7 @@ use crate::model::User;
 use actix_cors::Cors;
 use actix_web::http::header;
 use actix_web::web::head;
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{web, App, HttpMessage, HttpRequest, HttpResponse, HttpServer, Responder};
 use dotenv::dotenv;
 use futures::stream::TryStreamExt;
 use model::Container;
@@ -108,8 +108,13 @@ async fn delete_user(db: web::Data<mongodb::Database>, path: web::Path<String>) 
     }
 }
 
-async fn test_route() -> impl Responder {
-    HttpResponse::Ok().body("test success")
+async fn test_route(req: HttpRequest) -> impl Responder {
+    if let Some(user_info) = req.extensions_mut().get::<serde_json::Value>() {
+        // Use the user info as needed
+        // For example, return user info in the response
+        return HttpResponse::Ok().json(user_info);
+    }
+    HttpResponse::Unauthorized().finish()
 }
 
 // Import AsyncReadExt for reading process output
@@ -145,11 +150,11 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors) // Wrap the app with CORS middleware
-            // .wrap(AuthMiddleware {
-            //     auth0_domain: "dev-jfmhfrg7tmi1fr64.us.auth0.com".to_string(),
-            //     audience: "https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/".to_string(),
-            //     client: Arc::new(Client::new()),
-            // })
+            .wrap(AuthMiddleware {
+                auth0_domain: "dev-jfmhfrg7tmi1fr64.us.auth0.com".to_string(),
+                audience: "https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/".to_string(),
+                client: Arc::new(Client::new()),
+            })
             .app_data(web::Data::new(db.clone()))
             .route("/test", web::get().to(test_route))
             .route("/users", web::post().to(create_user))
