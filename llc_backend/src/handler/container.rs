@@ -22,11 +22,13 @@ use std::time::Duration;
 
 use super::cloudflared::update_cloudflare_tunnel;
 
-fn get_container_collection(db: web::Data<mongodb::Database>) -> Collection<Container> {
+pub fn get_container_collection(db: web::Data<mongodb::Database>) -> Collection<Container> {
     db.collection::<Container>("containers")
 }
 
-pub async fn create_container(db: web::Data<mongodb::Database>,
+pub async fn create_container(
+    req: HttpRequest,
+    db: web::Data<mongodb::Database>,
     container: web::Json<ContainerPost>,
 ) -> impl Responder {
     dbg!("Create Contaienr");
@@ -143,7 +145,7 @@ pub struct DeployRequest {
     application_name: String,
 }
 
-pub async fn deploy_and_build(json: web::Json<DeployRequest>) -> impl Responder {
+pub async fn deploy_and_build( req: HttpRequest,json: web::Json<DeployRequest>) -> impl Responder {
     dbg!("Deploy Build route hit");
     let script_path = "scripts/build_redeploy.sh";
 
@@ -176,6 +178,7 @@ pub async fn deploy_and_build(json: web::Json<DeployRequest>) -> impl Responder 
 }
 
 pub async fn launch_ttyd_in_browser(
+    req: HttpRequest,
     db: web::Data<mongodb::Database>,
     launch_payload: web::Query<LaunchPayLoad>,
 ) -> impl Responder {
@@ -218,6 +221,7 @@ pub async fn launch_ttyd_in_browser(
 }
 
 pub async fn delecte(
+    req: HttpRequest,
     db: web::Data<mongodb::Database>,
     container: web::Json<ContainerDeleteSchema>,
 ) -> impl Responder {

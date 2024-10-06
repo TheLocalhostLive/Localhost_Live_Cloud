@@ -22,7 +22,7 @@ use tokio::process::Command;
 use tokio::time::sleep;
 pub mod middleware;
 use crate::middleware::auth::AuthMiddleware;
-use reqwest::Client;
+use reqwest::{Client};
 
 
 // Initialize MongoDB Collection
@@ -132,11 +132,14 @@ async fn main() -> std::io::Result<()> {
             .allowed_origin("http://localhost:5173/vm")
             .allowed_origin("http://127.0.0.1:5173/donate")
             .allowed_origin("http://localhost:5173/donate")
+            .allowed_origin("http://localhost:5173/host")
+            .allowed_origin("http://127.0.0.1:5173/host")
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"]) // Use a Vec for methods
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
                 header::AUTHORIZATION,
                 header::ACCEPT,
+                header::ACCESS_CONTROL_ALLOW_HEADERS
             ])
             .max_age(3600); // Optional: Cache for one hour
 
