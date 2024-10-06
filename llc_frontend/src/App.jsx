@@ -8,6 +8,7 @@ import VirtulMatchine from "./components/VirtulMatchine";
 import  Payment  from "./components/Payment";
 import { useLoading } from "./hook/useLoader";
 import { Backdrop, CircularProgress } from "@mui/material";
+import HostPage from './components/HostPage'
 
 function App() {
   const router = createBrowserRouter([
@@ -37,6 +38,10 @@ function App() {
     {
       path: "/donate",
       element: <Payment/>,
+    },
+    {
+      path: "/host",
+      element: <HostPage/>,
     },
   ]);
 
