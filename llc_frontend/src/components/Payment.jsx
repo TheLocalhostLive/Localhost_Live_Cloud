@@ -16,7 +16,7 @@ const PaymentComponent = () => {
     }
 
     setLoading(true);
-    const response = await fetch("http://127.0.0.1:8080/create_order", {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create_order`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -23,7 +23,7 @@ const VirtulMatchine = () => {
 
         axios
           .get(
-            `http://localhost:8080/launch/`,
+            `${import.meta.env.VITE_BACKEND_URL}/launch/`,
 
             {
               params: { ...payload },

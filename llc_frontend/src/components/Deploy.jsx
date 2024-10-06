@@ -171,7 +171,7 @@ function ProjectSettings() {
     const access_token = await getAccessTokenSilently();
     console.log(data);
     console.log(access_token);
-    fetch("http://localhost:8080/deploy", {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/deploy`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${access_token}`
