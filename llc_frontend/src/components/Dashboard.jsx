@@ -117,16 +117,17 @@ function Dashboard() {
       const deployRes = await axios.post(
         "http://127.0.0.1:8080/deploy",
         {
+          owner: user?.nickname,
+          container_name: `${user?.nickname}-${instanceName}`,
+          application_name: appName,
+        },
+        {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
-         data:{
-          owner: user?.nickname,
-          container_name: `${user?.nickname}-${instanceName}`,
-          application_name: appName,
-         } 
-        });
+        }
+      );
 
       console.log(deployRes);
       updateDeployedList((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
