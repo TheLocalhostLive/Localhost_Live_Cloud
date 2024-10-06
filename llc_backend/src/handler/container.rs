@@ -80,15 +80,14 @@ pub async fn create_container(
     let new_container = Container {
         id: None,
         owner: container.owner.clone(),
-        application_name: container.application_name.clone(),
         container_name: container.container_name.clone(),
         container_domain: hostname.clone()
     };
 
-    match collection.insert_one(new_container).await {
+    match collection.insert_one(&new_container).await {
         Ok(inserted) => {
-            if let Some(id) = inserted.inserted_id.as_object_id() {
-                HttpResponse::Ok().json(id)
+            if let Some(_id) = inserted.inserted_id.as_object_id() {
+                HttpResponse::Ok().json(new_container)
             } else {
                 HttpResponse::InternalServerError().json("Failed to retrieve inserted ObjectId.")
             }
