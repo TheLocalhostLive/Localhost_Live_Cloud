@@ -3,7 +3,7 @@ import Dashboard from "./components/Dashboard";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 
-import Deploy from "./components/Deploy";
+//import Deploy from "./components/Deploy";
 import VirtulMatchine from "./components/VirtulMatchine";
 import  Payment  from "./components/Payment";
 import { useLoading } from "./hook/useLoader";
@@ -23,10 +23,10 @@ function App() {
       element: <Dashboard />,
     },
 
-    {
-      path: "/deploy",
-      element: <Deploy />,
-    },
+    // {
+    //   path: "/deploy",
+    //   element: <Deploy />,
+    // },
 
     {
       path: "/check-console",

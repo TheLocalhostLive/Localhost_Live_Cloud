@@ -95,10 +95,10 @@ function Dashboard() {
       stopLoading();
   }
 
-  const handleDepoyProjectClick = () => {
-    navigate(`/deploy`);
-  };
- 
+  // const handleDepoyProjectClick = () => {
+  //   navigate(`/deploy`);
+  // };
+
   const [open, setOpen] = useState(false);
   const [instanceName, setInstanceName] = useState("");
   const [appName, setAppName] = useState("");
@@ -148,10 +148,9 @@ function Dashboard() {
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
-  const handleDontateCLick =()=>{
-    navigate('/donate')
-  }
-
+  // const handleDontateCLick = () => {
+  //   navigate("/donate");
+  // };
 
   return (
     <>
@@ -179,7 +178,7 @@ function Dashboard() {
             <AiOutlinePlus />
             Create Instance
           </Button>
-          <Button
+          {/*<Button
             color="warning"
             onClick={handleDepoyProjectClick}
             variant="outlined"
@@ -199,7 +198,7 @@ function Dashboard() {
           >
             <AiOutlinePlus />
             Deploy Project
-          </Button>
+          </Button>*/}
           <Button
             color="warning"
             onClick={handleHostProjectClick}
