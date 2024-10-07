@@ -9,6 +9,7 @@ import  Payment  from "./components/Payment";
 import { useLoading } from "./hook/useLoader";
 import { Backdrop, CircularProgress } from "@mui/material";
 import HostPage from './components/HostPage'
+import Footer from "./components/Footer";
 
 function App() {
   const router = createBrowserRouter([
@@ -56,6 +57,7 @@ function App() {
         <CircularProgress color="inherit" />
       </Backdrop>
       <RouterProvider router={router} />
+      <Footer />
     </div>
   );
 }
