@@ -103,7 +103,7 @@ export default function BlackHoleModel() {
 
         {/* Controls for user interaction */}
         <OrbitControls 
-          enableZoom={true}
+          enableZoom={false}
           minDistance={5}
           maxDistance={20}
         />
