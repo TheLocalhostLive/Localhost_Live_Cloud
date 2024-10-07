@@ -2,6 +2,7 @@ use std::clone;
 use std::fmt::format;
 use std::process::{self, Stdio};
 
+use crate::handler::container;
 use crate::handler::utils::get_ip;
 use crate::model::{
     Claims, Container, ContainerDeleteSchema, ContainerPost, Ingress, LaunchPayLoad, OriginRequest,
@@ -43,8 +44,6 @@ pub async fn create_container(
             .json("Container exists with the same name. Try a different name.");
     }
 
-   
-
     let script_path1 = "scripts/ceate_lxc.sh";
     let output1 = Command::new("sh")
         .arg(script_path1)
@@ -55,10 +54,10 @@ pub async fn create_container(
         .await // Await the result of the command
         .expect("Failed to start process");
 
-        if !output1.status.success() {
-            let stderr = String::from_utf8_lossy(&output1.stderr);
-            return HttpResponse::InternalServerError().body(format!("Script failed: {}", stderr));
-        }
+    if !output1.status.success() {
+        let stderr = String::from_utf8_lossy(&output1.stderr);
+        return HttpResponse::InternalServerError().body(format!("Script failed: {}", stderr));
+    }
     let container_ip = get_ip(container.container_name.clone());
     let service = format!("http://{}:7681", container_ip,);
     let hostname = format!("{}.thelocalhost.live", container.container_name.clone());
@@ -81,7 +80,8 @@ pub async fn create_container(
         id: None,
         owner: container.owner.clone(),
         container_name: container.container_name.clone(),
-        container_domain: hostname.clone()
+        container_domain: hostname.clone(),
+        password: container.password.clone(),
     };
 
     match collection.insert_one(&new_container).await {
@@ -137,14 +137,13 @@ pub async fn get_deployed_containers(
     HttpResponse::Ok().json(containers)
 }
 
-
 #[derive(Deserialize)]
 pub struct DeployRequest {
     container_name: String,
     application_name: String,
 }
 
-pub async fn deploy_and_build( req: HttpRequest,json: web::Json<DeployRequest>) -> impl Responder {
+pub async fn deploy_and_build(req: HttpRequest, json: web::Json<DeployRequest>) -> impl Responder {
     dbg!("Deploy Build route hit");
     let script_path = "scripts/build_redeploy.sh";
 
@@ -188,18 +187,22 @@ pub async fn launch_ttyd_in_browser(
     dbg!(owner.clone());
 
     println!("Request received for container: {}", machine_name.clone());
-    let script_path2 = "scripts/launch_ttyd.sh";
-    let _ = Command::new("sh")
-        .arg(script_path2)
-        .arg(machine_name.clone())
-        .spawn()
-        .expect("Failed to execute script");
 
     match collection
         .find_one(doc! { "owner": owner, "container_name": machine_name.clone() })
         .await
     {
         Ok(Some(container)) => {
+            let username = container.owner;
+            let password = container.password;
+            let script_path2 = "scripts/launch_ttyd.sh";
+            let _ = Command::new("sh")
+                .arg(script_path2)
+                .arg(machine_name.clone())
+                .arg(username)
+                .arg(password)
+                .spawn()
+                .expect("Failed to execute script");
             let public_url = container.container_domain;
             HttpResponse::Ok().json(json!({
                 "public_url": public_url
@@ -234,10 +237,12 @@ pub async fn delecte(
         return HttpResponse::Conflict()
             .json("Either Container Does not exist or you are not Permitted to do this operation");
     }
-    let delete_result = collection.delete_one(doc! {
-        "owner": &container.owner,
-        "container_name": &container.container_name
-    }).await;
+    let delete_result = collection
+        .delete_one(doc! {
+            "owner": &container.owner,
+            "container_name": &container.container_name
+        })
+        .await;
 
     // Handle the potential error in deletion
     if let Err(err) = delete_result {

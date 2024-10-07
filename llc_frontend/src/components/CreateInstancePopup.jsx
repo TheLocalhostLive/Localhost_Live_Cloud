@@ -22,6 +22,8 @@ const CreateInstancePopup = ({
   instanceName,
   setInstanceName,
   handleCreate,
+  password,
+  setPassword
 }) => {
   const { user } = useAuth0();
   return (
@@ -39,6 +41,16 @@ const CreateInstancePopup = ({
             helperText="My Linux"
             value={instanceName}
             onChange={(e) => setInstanceName(e.target.value)}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="choose password"
+            type="text"
+            fullWidth
+            helperText="pass@123"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <Typography>{`${user?.nickname}-${instanceName}`}</Typography>
         </DialogContent>

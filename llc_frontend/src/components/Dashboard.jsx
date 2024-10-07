@@ -101,6 +101,7 @@ function Dashboard() {
 
   const [open, setOpen] = useState(false);
   const [instanceName, setInstanceName] = useState("");
+  const [password,setPassword]=useState("")
   const [appName, setAppName] = useState("");
 
   const handleOpen = () => {
@@ -121,7 +122,7 @@ function Dashboard() {
         {
           owner: user?.nickname,
           container_name: `${user?.nickname}-${instanceName}`,
-          application_name: appName,
+          password:password
         },
         {
           headers: {
@@ -309,6 +310,8 @@ function Dashboard() {
             handleClose={handleClose}
             instanceName={instanceName}
             setInstanceName={setInstanceName}
+            password={password}
+            setPassword={setPassword}
             handleCreate={handleCreate}
             appName={appName}
             setAppName={setAppName}

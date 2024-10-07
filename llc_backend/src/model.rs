@@ -16,7 +16,8 @@ pub struct Container{
     pub id:Option<ObjectId>,
     pub owner:String,
     pub container_name : String,
-    pub container_domain:String
+    pub container_domain:String,
+    pub password : String
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -45,6 +46,7 @@ pub struct ContainerPost{
     pub id:Option<ObjectId>,
     pub owner:String,
     pub container_name : String,
+    pub password:String
 }
 
 
