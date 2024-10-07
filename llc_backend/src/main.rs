@@ -130,15 +130,21 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::default()
             .allowed_origin("http://127.0.0.1:5173")
             .allowed_origin("http://localhost:5173")
+            .allowed_origin("https://cloud.thelocalhost.live")
             .allowed_origin("http://localhost:5173/check-console")
+            .allowed_origin("https://cloud.thelocalhost.live/check-console")
             .allowed_origin("http://localhost:5173/dashboard")
             .allowed_origin("http://127.0.0.1:5173/dashboard")
+            .allowed_origin("https://cloud.thelocalhost.live/dashboard")
             .allowed_origin("http://127.0.0.1:5173/vm")
             .allowed_origin("http://localhost:5173/vm")
+            .allowed_origin("https://cloud.thelocalhost.live/vm")
             .allowed_origin("http://127.0.0.1:5173/donate")
             .allowed_origin("http://localhost:5173/donate")
+            .allowed_origin("https://cloud.thelocalhost.live/donate")
             .allowed_origin("http://localhost:5173/host")
             .allowed_origin("http://127.0.0.1:5173/host")
+            .allowed_origin("https://cloud.thelocalhost.live/host")
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"]) // Use a Vec for methods
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
