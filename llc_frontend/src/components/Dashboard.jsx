@@ -148,9 +148,9 @@ function Dashboard() {
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
-  // const handleDontateCLick = () => {
-  //   navigate("/donate");
-  // };
+  const handleDontateCLick = () => {
+    navigate("/donate");
+  };
 
   return (
     <>
