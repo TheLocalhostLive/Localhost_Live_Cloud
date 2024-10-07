@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -61,15 +61,29 @@ const VirtulMatchine = () => {
           <h2> It May take some time</h2>
         </>
       )}
-      <div className="iframe-cont">
-        <Typography variant="h4">Apine OS</Typography>
-        {public_url && (
-          <iframe
-            src={`https://${public_url}`}
-            height="800"
-            width="1000"
-          ></iframe>
-        )}
+      <div className="virtual-machine-outer">
+        <div id="app">
+          <div id="wrapper">
+            <h1
+              class="glitch"
+              data-text="ALPINE LINUX"
+            >
+              ALPINE LINUX
+            </h1>
+            <span class="sub">SSH TERMINAL</span>
+          </div>
+        </div>
+
+        <div className="iframe-cont">
+          {public_url && (
+            <iframe
+              src={`https://${public_url}`}
+              height="800"
+              width="1000"
+              style={{ backgroundColor: 'black' }}
+            ></iframe>
+          )}
+        </div>
       </div>
     </div>
   );
