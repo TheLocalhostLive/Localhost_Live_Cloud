@@ -10,7 +10,7 @@ use serde_json::json;
 
 pub fn get_ip(container_name: String) -> String {
     let command = format!(
-        "lxc exec {} -- ip -4 addr show eth0 | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){{3}}'",
+        "sudo incus exec {} -- ip -4 addr show eth0 | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){{3}}'",
         container_name
     );
 

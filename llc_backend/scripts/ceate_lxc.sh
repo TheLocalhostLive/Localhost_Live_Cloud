@@ -2,10 +2,10 @@
 #!/bin/sh
 
 # Launch the container
-lxc launch images:alpine/3.20 "$1" --storage mypool --network mynetwork
+sudo incus launch images:alpine/3.20 "$1" --storage incus-storage --network incus-network 
 
 # Run a command to update the repositories and install ttyd
-lxc exec "$1" -- sh -c "
+sudo incus exec "$1" -- sh -c "
     apk update || {
         echo 'First update failed, retrying...';
         sleep 5;  # Optional: Wait before retrying
