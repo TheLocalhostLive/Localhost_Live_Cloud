@@ -62,7 +62,7 @@ where
         let client = Arc::clone(&self.client);
         let service = Arc::clone(&self.service);
         let path = req.path().to_string();
-        if !path.contains("/api") {
+        if path.contains("/api/create_order") {
             // Call the next service (skip authentication)
             return Box::pin(async move {
                 service.call(req).await
