@@ -46,7 +46,7 @@ const CreateInstancePopup = ({
             autoFocus
             margin="dense"
             label="choose password"
-            type="text"
+            type="password"
             fullWidth
             helperText="pass@123"
             value={password}
