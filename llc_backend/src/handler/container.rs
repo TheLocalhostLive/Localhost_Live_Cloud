@@ -249,7 +249,7 @@ pub async fn delecte(
         return HttpResponse::InternalServerError()
             .json(format!("Error deleting container: {}", err));
     }
-    let command = format!("lxc delete {} --force", container.container_name.clone());
+    let command = format!("sudo incus delete {} --force", container.container_name.clone());
     let process = Command::new("sh").arg("-c").arg(&command).output().await;
 
     match process {
