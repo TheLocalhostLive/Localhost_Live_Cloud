@@ -118,6 +118,10 @@ async fn test_route(req: HttpRequest) -> impl Responder {
     HttpResponse::Unauthorized().finish()
 }
 
+async fn index_fallback() -> Result<actix_files::NamedFile> {
+    Ok(actix_files::NamedFile::open("./build/index.html")?)
+}
+
 // Import AsyncReadExt for reading process output
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -145,6 +149,7 @@ async fn main() -> std::io::Result<()> {
             .allowed_origin("http://localhost:5173/host")
             .allowed_origin("http://127.0.0.1:5173/host")
             .allowed_origin("https://cloud.thelocalhost.live/host")
+            .allowed_origin("http://localhost:8080")
             .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"]) // Use a Vec for methods
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
@@ -156,27 +161,33 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(cors) // Wrap the app with CORS middleware
-            .wrap(AuthMiddleware {
-                auth0_domain: "dev-jfmhfrg7tmi1fr64.us.auth0.com".to_string(),
-                audience: "https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/".to_string(),
-                client: Arc::new(Client::new()),
-            })
-            .app_data(web::Data::new(db.clone()))
-            .route("/api/test", web::get().to(test_route))
-            .route("/api/users", web::post().to(create_user))
-            .route("/api/users", web::get().to(get_users))
-            .route("/api/users/{id}", web::get().to(get_user))
-            .route("/api/users/{id}", web::put().to(update_user))
-            .route("/api/users/{id}", web::delete().to(delete_user))
-            .route("/api/deploy", web::post().to(handler::container::create_container))
-            .route(
-                "/api/deploy/{owner}",
-                web::get().to(handler::container::get_deployed_containers),
-            ).route("/api/build-deploy", web::post().to(handler::container::deploy_and_build))
-            .route("/api/launch/", web::get().to(handler::container::launch_ttyd_in_browser))
-            .route("/api/delete", web::delete().to(handler::container::delecte))
-            .route("/api/host-project", web::post().to(handler::cloudflared::host_project))
-            .route("/api/create_order", web::post().to(create_order))
+            
+            .service(
+                web::scope("/api")
+                    .wrap(AuthMiddleware {
+                        auth0_domain: "dev-jfmhfrg7tmi1fr64.us.auth0.com".to_string(),
+                        audience: "https://dev-jfmhfrg7tmi1fr64.us.auth0.com/api/v2/".to_string(),
+                        client: Arc::new(Client::new()),
+                    })
+                    .app_data(web::Data::new(db.clone()))
+                    .route("/test", web::get().to(test_route))
+                    .route("/users", web::post().to(create_user))
+                    .route("/users", web::get().to(get_users))
+                    .route("/users/{id}", web::get().to(get_user))
+                    .route("/users/{id}", web::put().to(update_user))
+                    .route("/users/{id}", web::delete().to(delete_user))
+                    .route("/deploy", web::post().to(handler::container::create_container))
+                    .route("/deploy/{owner}", web::get().to(handler::container::get_deployed_containers))
+                    .route("/build-deploy", web::post().to(handler::container::deploy_and_build))
+                    .route("/launch", web::get().to(handler::container::launch_ttyd_in_browser))
+                    .route("/delete", web::delete().to(handler::container::delecte))
+                    .route("/host-project", web::post().to(handler::cloudflared::host_project))
+                    .route("/create_order", web::post().to(create_order)),
+            ).service(Files::new("/", "./build").index_file("index.html"))
+            .default_service(
+                web::get().to(index_fallback), 
+            )
+            
     })
     .bind("127.0.0.1:8080")?
     .run()
