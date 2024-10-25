@@ -1,6 +1,6 @@
 import  { useEffect, useState } from "react";
 import "../style/dashboard.css";
-import { AiOutlinePlus, AiFillExclamationCircle, AiFillCode, AiFillHeart } from "react-icons/ai";
+import { AiOutlinePlus, AiFillHeart } from "react-icons/ai";
 import axios from "axios";
 import Button from "@mui/joy/Button";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,7 @@ import CustomAppBar from "./ui_components/CustomAppBar";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useLoading } from "../hook/useLoader";
-
+import InstanceCard from "./ui_components/InstanceCard";
 
 function Dashboard() {
   const [DeployedList, updateDeployedList] = useState([]);
@@ -251,59 +251,16 @@ function Dashboard() {
       </div>
 
       <div className="deployed-list-container">
-        {DeployedList.map((post) => {
-          const {_id, container_name, tech } = post;
-          return (
-            <div key={container_name} className="deployed-item">
-              <div>
-                <h2>{container_name}</h2>
-                <h3>{tech}</h3>
-              </div>
-
-              <div className="deployed-item-inner">
-                <Button
-                  onClick={() => handleTerminateClick(container_name)}
-                  variant="outlined"
-                  sx={{
-                    borderColor: "black",
-                    color: "black",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "5px",
-                    "&:hover": {
-                      backgroundColor: "black",
-                      color: "white",
-                      borderColor: "black",
-                    },
-                  }}
-                >
-                  <AiFillExclamationCircle />
-                  Terminate
-                </Button>
-
-                <Button
-                  onClick={() => handleLaunchClick(_id, container_name)}
-                  variant="outlined"
-                  sx={{
-                    borderColor: "black",
-                    color: "black",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "5px",
-                    "&:hover": {
-                      backgroundColor: "black",
-                      color: "white",
-                      borderColor: "black",
-                    },
-                  }}
-                >
-                  <AiFillCode />
-                  Launch
-                </Button>
-              </div>
-            </div>
-          );
-        })}
+        {DeployedList.map(({ _id, container_name, tech }) => (
+          <InstanceCard
+            _id={_id}
+            key={_id}
+            container_name={container_name}
+            tech={tech}
+            handleTerminateClick={handleTerminateClick}
+            handleLaunchClick={handleLaunchClick}
+          />
+        ))}
         {open && (
           <CreateInstancePopup
             handleOpen={handleOpen}
