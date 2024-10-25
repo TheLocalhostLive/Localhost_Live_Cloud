@@ -4,7 +4,6 @@ import { AiOutlinePlus, AiFillHeart } from "react-icons/ai";
 import axios from "axios";
 import Button from "@mui/joy/Button";
 import { useNavigate } from "react-router-dom";
-import BasicChips from "./ui_components/BasicChips";
 import CreateInstancePopup from "./CreateInstancePopup";
 import { useAuth0 } from "@auth0/auth0-react";
 import CustomAppBar from "./ui_components/CustomAppBar";
@@ -242,11 +241,6 @@ function Dashboard() {
           </Button>
         </div>
       </div>
-
-      <div className="container-outer">
-        <BasicChips />
-      </div>
-
       <div className="deployed-list-container">
         {DeployedList.map(({ _id, container_name, tech }) => (
           <InstanceCard
