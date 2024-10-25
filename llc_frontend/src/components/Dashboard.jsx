@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../style/dashboard.css";
 import { AiOutlinePlus, AiFillHeart } from "react-icons/ai";
 import axios from "axios";
@@ -51,7 +51,6 @@ function Dashboard() {
         console.error("Error fetching deployed projects", error);
         stopLoading();
       });
-      
   }, [accessToken]);
 
   const handleLaunchClick = (id, container_name) => {
@@ -59,7 +58,6 @@ function Dashboard() {
   };
 
   function handleTerminateClick(container_name) {
-    
     startLoading();
 
     let owner = user?.nickname;
@@ -92,7 +90,7 @@ function Dashboard() {
         console.error("Error terminating the container", error);
       });
 
-      stopLoading();
+    stopLoading();
   }
 
   // const handleDepoyProjectClick = () => {
@@ -101,7 +99,7 @@ function Dashboard() {
 
   const [open, setOpen] = useState(false);
   const [instanceName, setInstanceName] = useState("");
-  const [password,setPassword]=useState("")
+  const [password, setPassword] = useState("");
   const [appName, setAppName] = useState("");
 
   const handleOpen = () => {
@@ -122,7 +120,7 @@ function Dashboard() {
         {
           owner: user?.nickname,
           container_name: `${user?.nickname}-${instanceName}`,
-          password:password
+          password: password,
         },
         {
           headers: {
@@ -135,7 +133,6 @@ function Dashboard() {
       console.log(deployRes);
       updateDeployedList((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
       handleClose();
-      
     } catch (error) {
       console.error("Error creating instance:", error);
     } finally {
@@ -143,7 +140,7 @@ function Dashboard() {
     }
   };
   function handleHostProjectClick() {
-    navigate('/host')
+    navigate("/host");
   }
 
   const handleSnackbarClose = () => {
@@ -221,7 +218,7 @@ function Dashboard() {
             <AiOutlinePlus />
             Host Your Project
           </Button>
-          
+
           <Button
             color="warning"
             onClick={handleDontateCLick}
