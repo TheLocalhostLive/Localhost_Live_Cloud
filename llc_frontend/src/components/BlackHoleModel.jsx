@@ -1,7 +1,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Model } from "./Black_hole";
 import { OrbitControls, Center } from "@react-three/drei";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import * as THREE from 'three';
 
 // Create Stars component (unchanged)
@@ -44,22 +44,29 @@ function Stars({ count = 500 }) {
 // Model component with scale animation
 function AnimatedModel() {
   const [scale, setScale] = useState([0.001, 0.001, 0.001]); // Start small
+  const [rotation, setRotation] = useState([Math.PI, 0, 0]);
+  const targetScale = [0.003, 0.003, 0.003]; // Final scale
 
-  const targetScale = [0.005, 0.005, 0.005]; // Final scale
-
-  // Use Three.js frame loop to smoothly transition the model's scale
+  // // Use Three.js frame loop to smoothly transition the model's scale
   useFrame((state, delta) => {
     setScale((currentScale) => {
       const newScale = new THREE.Vector3(...currentScale).lerp(new THREE.Vector3(...targetScale), delta * 1.5); // Speed factor: delta * 1.5
       return [newScale.x, newScale.y, newScale.z];
     });
-  });
+    setRotation((currentRotation) => {
+      const targetRotation = new THREE.Vector3(Math.PI, 2.5, 0);
+      const current = new THREE.Vector3(...currentRotation);
+      const newRotation = current.lerp(targetRotation, delta * 1.5);
+      return [newRotation.x, newRotation.y, newRotation.z];
+    });
+    
+  }, []);
 
   return (
     <Center>
       <Model 
         scale={scale} // Apply the animated scale
-        rotation={[Math.PI, 0, 0]}  // Rotate 180 degrees around X-axis
+        rotation={rotation}  // Rotate 180 degrees around X-axis
       />
     </Center>
   );
@@ -76,7 +83,7 @@ export default function BlackHoleModel() {
         style={{ background: "#000000" }}  // Solid black background
       >
         {/* Stars in the background */}
-        <Stars count={1000} />  {/* You can adjust the count for more or fewer stars */}
+       { <Stars count={1000} />}  
 
         {/* The animated model that zooms in on load */}
         <AnimatedModel />
