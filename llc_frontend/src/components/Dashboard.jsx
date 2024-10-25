@@ -242,12 +242,11 @@ function Dashboard() {
         </div>
       </div>
       <div className="deployed-list-container">
-        {DeployedList.map(({ _id, container_name, tech }) => (
+        {DeployedList.map(({ _id, container_name }) => (
           <InstanceCard
             _id={_id}
             key={_id}
             container_name={container_name}
-            tech={tech}
             handleTerminateClick={handleTerminateClick}
             handleLaunchClick={handleLaunchClick}
           />

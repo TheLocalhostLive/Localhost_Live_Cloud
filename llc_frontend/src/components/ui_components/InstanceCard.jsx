@@ -5,7 +5,6 @@ import { AiFillExclamationCircle, AiFillCode } from "react-icons/ai";
 export default function InstanceCard({
   _id,
   container_name,
-  tech,
   handleTerminateClick,
   handleLaunchClick,
 }) {
@@ -13,7 +12,9 @@ export default function InstanceCard({
     <div key={container_name} className="deployed-item">
       <div>
         <h2>{container_name}</h2>
-        <h3>{tech}</h3>
+        <div className="status">
+          <Chip size={"small"} clickable label={"healthy"} color={"success"}/>
+        </div>
       </div>
 
       <div className="deployed-item-inner">
