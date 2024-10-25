@@ -2,13 +2,12 @@ import ConsolePage from "./components/ConsolePage";
 import Dashboard from "./components/Dashboard";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "./components/LandingPage";
-
 //import Deploy from "./components/Deploy";
 import VirtulMatchine from "./components/VirtulMatchine";
-import  Payment  from "./components/Payment";
+import Payment from "./components/Payment";
 import { useLoading } from "./hook/useLoader";
 import { Backdrop, CircularProgress } from "@mui/material";
-import HostPage from './components/HostPage'
+import HostPage from "./components/HostPage";
 import Footer from "./components/Footer";
 import "./App.css";
 
@@ -35,15 +34,15 @@ function App() {
     },
     {
       path: "/vm",
-      element: <VirtulMatchine/>,
+      element: <VirtulMatchine />,
     },
     {
       path: "/donate",
-      element: <Payment/>,
+      element: <Payment />,
     },
     {
       path: "/host",
-      element: <HostPage/>,
+      element: <HostPage />,
     },
   ]);
 
@@ -51,10 +50,7 @@ function App() {
 
   return (
     <div>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: 100000 }}
-        open={isLoading}
-      >
+      <Backdrop sx={{ color: "#fff", zIndex: 100000 }} open={isLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
       <main>
