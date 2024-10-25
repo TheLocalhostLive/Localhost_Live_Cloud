@@ -24,7 +24,7 @@ const VirtulMatchine = () => {
 
       axios
         .get(
-          `${import.meta.env.VITE_BACKEND_URL}/launch/`,
+          `${import.meta.env.VITE_BACKEND_URL}/launch`,
 
           {
             params: { ...payload },
