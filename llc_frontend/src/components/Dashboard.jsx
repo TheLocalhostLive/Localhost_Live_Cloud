@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../style/dashboard.css";
 import { AiOutlinePlus, AiFillHeart } from "react-icons/ai";
 import axios from "axios";
-import Button from "@mui/joy/Button";
+import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CreateInstancePopup from "./CreateInstancePopup";
 import { useAuth0 } from "@auth0/auth0-react";
