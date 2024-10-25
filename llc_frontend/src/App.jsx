@@ -10,6 +10,7 @@ import { useLoading } from "./hook/useLoader";
 import { Backdrop, CircularProgress } from "@mui/material";
 import HostPage from './components/HostPage'
 import Footer from "./components/Footer";
+import "./App.css";
 
 function App() {
   const router = createBrowserRouter([
@@ -56,7 +57,9 @@ function App() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
-      <RouterProvider router={router} />
+      <main>
+        <RouterProvider router={router} />
+      </main>
       <Footer />
     </div>
   );
