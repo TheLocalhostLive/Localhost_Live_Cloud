@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import "../style/dashboard.css";
 import { AiOutlinePlus, AiFillExclamationCircle, AiFillCode, AiFillHeart } from "react-icons/ai";
 import axios from "axios";
 import Button from "@mui/joy/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BasicChips from "./ui_components/BasicChips";
 import CreateInstancePopup from "./CreateInstancePopup";
 import { useAuth0 } from "@auth0/auth0-react";
