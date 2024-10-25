@@ -146,7 +146,7 @@ html, body {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    background-color: #f9f9f9;
+    background-color: #474747;
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 8px;
@@ -155,10 +155,11 @@ html, body {
 .deployed-item .left-cont {
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
 }
 
 .deployed-item h2 {
-    color: black;
+    color: rgb(239, 239, 239);
     margin: 0;
     font-size: 18px;
     font-weight: bold;
