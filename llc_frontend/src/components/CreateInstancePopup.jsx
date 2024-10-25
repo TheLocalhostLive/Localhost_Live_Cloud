@@ -1,4 +1,3 @@
-import { ThemeProvider, createTheme } from "@mui/material/styles";
 import {
   Button,
   Dialog,
@@ -6,16 +5,9 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  CssBaseline,
   Typography,
 } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
 
 const CreateInstancePopup = ({
   handleClose,
@@ -23,12 +15,11 @@ const CreateInstancePopup = ({
   setInstanceName,
   handleCreate,
   password,
-  setPassword
+  setPassword,
 }) => {
   const { user } = useAuth0();
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
+    <div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Create Instance</DialogTitle>
         <DialogContent>
@@ -54,7 +45,7 @@ const CreateInstancePopup = ({
           />
           <Typography>{`${user?.nickname}-${instanceName}`}</Typography>
         </DialogContent>
-        
+
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button variant="contained" onClick={handleCreate}>
@@ -62,7 +53,7 @@ const CreateInstancePopup = ({
           </Button>
         </DialogActions>
       </Dialog>
-    </ThemeProvider>
+    </div>
   );
 };
 

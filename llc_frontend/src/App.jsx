@@ -10,6 +10,14 @@ import { Backdrop, CircularProgress } from "@mui/material";
 import HostPage from "./components/HostPage";
 import Footer from "./components/Footer";
 import "./App.css";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 function App() {
   const router = createBrowserRouter([
@@ -47,17 +55,20 @@ function App() {
   ]);
 
   const { isLoading } = useLoading();
-
   return (
-    <div>
-      <Backdrop sx={{ color: "#fff", zIndex: 100000 }} open={isLoading}>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
         <CircularProgress color="inherit" />
       </Backdrop>
       <main>
         <RouterProvider router={router} />
       </main>
       <Footer />
-    </div>
+    </ThemeProvider>
   );
 }
 
