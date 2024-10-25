@@ -157,20 +157,7 @@ function Dashboard() {
         <div className="top-container-div">
           <Button
             onClick={handleOpen}
-            variant="outlined"
-            sx={{
-              backgroundColor: "white",
-              borderColor: "black",
-              color: "black",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              "&:hover": {
-                backgroundColor: "black",
-                color: "white",
-                borderColor: "black",
-              },
-            }}
+            variant="contained"
           >
             <AiOutlinePlus />
             Create Instance
@@ -199,20 +186,8 @@ function Dashboard() {
           <Button
             color="warning"
             onClick={handleHostProjectClick}
-            variant="outlined"
-            sx={{
-              backgroundColor: "white",
-              borderColor: "black",
-              color: "black",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              "&:hover": {
-                backgroundColor: "black",
-                color: "white",
-                borderColor: "black",
-              },
-            }}
+            variant="contained"
+            
           >
             <AiOutlinePlus />
             Host Your Project
@@ -221,20 +196,8 @@ function Dashboard() {
           <Button
             color="warning"
             onClick={handleDontateCLick}
-            variant="outlined"
-            sx={{
-              backgroundColor: "white",
-              borderColor: "black",
-              color: "black",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              "&:hover": {
-                backgroundColor: "black",
-                color: "white",
-                borderColor: "black",
-              },
-            }}
+            variant="contained"
+            
           >
             <AiFillHeart />
             Donate

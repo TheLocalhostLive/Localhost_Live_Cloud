@@ -21,38 +21,17 @@ export default function InstanceCard({
         <Button
           onClick={() => handleTerminateClick(container_name)}
           variant="outlined"
-          sx={{
-            borderColor: "black",
-            color: "black",
-            display: "flex",
-            alignItems: "center",
-            gap: "5px",
-            "&:hover": {
-              backgroundColor: "black",
-              color: "white",
-              borderColor: "black",
-            },
-          }}
+          color="error"
+          size="small"
         >
           <AiFillExclamationCircle />
           Terminate
         </Button>
-
         <Button
           onClick={() => handleLaunchClick(_id, container_name)}
-          variant="outlined"
-          sx={{
-            borderColor: "black",
-            color: "black",
-            display: "flex",
-            alignItems: "center",
-            gap: "5px",
-            "&:hover": {
-              backgroundColor: "black",
-              color: "white",
-              borderColor: "black",
-            },
-          }}
+          variant="contained"
+          color="secondary"
+          size="small"
         >
           <AiFillCode />
           Launch
