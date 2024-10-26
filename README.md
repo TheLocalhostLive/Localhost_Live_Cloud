@@ -12,8 +12,12 @@ The platform uses **React** for the frontend and **Rust's Actix Web** for the ba
 The aim of this project is to connect old, unused computers and create a collaborative cloud environment.
 
 ---
+# How to use localhost cloud to deploy your projects
+[![Watch the video](https://img.youtube.com/vi/YQoJC_bKgwY/0.jpg)](https://youtu.be/YQoJC_bKgwY)
 
-## Contributors guide
+----
+
+# Contributors guide
 
 ### STEP 1: Install Linux Distribution
 
