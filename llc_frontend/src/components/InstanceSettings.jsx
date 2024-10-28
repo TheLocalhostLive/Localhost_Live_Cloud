@@ -24,7 +24,8 @@ import {
   OutlinedInput,
   InputAdornment,
   Alert,
-  Modal
+  Snackbar,
+  Modal,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import CreateAppModal from "./ui_components/CreateAppModal";
@@ -155,7 +156,7 @@ function ResponsiveDrawer() {
 }
 
 function ChangePassModal({ open, handleClose, handleChangePassword }) {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
@@ -163,8 +164,8 @@ function ChangePassModal({ open, handleClose, handleChangePassword }) {
 
   const handleSubmit = () => {
     handleChangePassword(password);
-    setPassword('');  // Clear the input field after submission
-    handleClose();    // Close the modal
+    setPassword(""); // Clear the input field after submission
+    handleClose(); // Close the modal
   };
 
   return (
@@ -176,13 +177,13 @@ function ChangePassModal({ open, handleClose, handleChangePassword }) {
     >
       <Box
         sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
           width: 400,
-          bgcolor: 'background.paper',
-          border: '2px solid #000',
+          bgcolor: "background.paper",
+          border: "2px solid #000",
           boxShadow: 24,
           p: 4,
           borderRadius: 2,
@@ -200,7 +201,7 @@ function ChangePassModal({ open, handleClose, handleChangePassword }) {
           value={password}
           onChange={handlePasswordChange}
         />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
           <Button variant="contained" color="primary" onClick={handleSubmit}>
             Submit
           </Button>
@@ -222,7 +223,7 @@ function GeneralSettingsContent() {
   const handleCloseModal = () => setModalOpen(false);
   const handleChangePassword = (newPassword) => {
     // Add password change logic here, e.g., API call
-    console.log('New password:', newPassword);
+    console.log("New password:", newPassword);
   };
 
   return (
@@ -236,9 +237,9 @@ function GeneralSettingsContent() {
     >
       <Toolbar />
       <Paper sx={{ p: 5 }}>
-        <Typography variant="h5" sx={{m: 2}}>
+        <Typography variant="h5" sx={{ m: 2 }}>
           General
-          </Typography>
+        </Typography>
         <TextField
           variant="outlined"
           label="Instance name"
@@ -247,7 +248,11 @@ function GeneralSettingsContent() {
           disabled
           sx={{ marginBottom: "20px" }}
         />
-        <Button onClick={handleOpenModal} sx={{ marginTop: "20px" }} variant="contained">
+        <Button
+          onClick={handleOpenModal}
+          sx={{ marginTop: "20px" }}
+          variant="contained"
+        >
           Change Password?
         </Button>
       </Paper>
@@ -264,9 +269,7 @@ function PubURLSettingsContent() {
   const { state } = useLocation();
 
   const { container_name } = state || "";
-  const [pubUrls, setPubUrls] = useState([
-    
-  ]);
+  const [pubUrls, setPubUrls] = useState([]);
 
   const { user, getAccessTokenSilently } = useAuth0();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -278,7 +281,6 @@ function PubURLSettingsContent() {
     setOpenSnackbar(false);
   };
 
-
   const [open, setOpen] = useState(false);
   function handleOpen() {
     setOpen(true);
@@ -287,12 +289,10 @@ function PubURLSettingsContent() {
     setOpen(false);
   }
 
-
   const { startLoading, stopLoading } = useLoading();
 
   const handleSubmit = async (name, port) => {
     try {
-      
       const application_name = name;
       const application_port = port;
       const owner = user?.nickname;
@@ -307,26 +307,33 @@ function PubURLSettingsContent() {
       const accessToken = await getAccessTokenSilently();
       console.log(accessToken);
       startLoading();
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/host-project`, payload, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-      
-      if(res.status==200){
-        console.log(res)
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/host-project`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (res.status == 200) {
+        console.log(res);
         setSnackbarMessage("Hosted Your Project!");
         setSnackbarSeverity("success");
         setOpenSnackbar(true);
         const URL = res.data.message;
         seturl(URL);
         stopLoading();
-        setPubUrls((state) => [...state, {
-          name,
-          port,
-          publicURL: URL
-        }]);
+        setPubUrls((state) => [
+          ...state,
+          {
+            name,
+            port,
+            publicURL: URL,
+          },
+        ]);
       }
     } catch (error) {
       setSnackbarMessage("Failed to Host");
@@ -334,13 +341,10 @@ function PubURLSettingsContent() {
       setOpenSnackbar(true);
       console.error("Error hosting the application", error);
       stopLoading();
-    } finally{
+    } finally {
       handleClose();
     }
   };
-
-    
-
 
   useEffect(() => {}, []);
 
@@ -359,7 +363,9 @@ function PubURLSettingsContent() {
           sx={{ mb: "20px", display: "flex", justifyContent: "space-between" }}
         >
           <Typography>{container_name}</Typography>
-          <Button onClick={handleOpen} variant="contained">Expose Port</Button>
+          <Button onClick={handleOpen} variant="contained">
+            Expose Port
+          </Button>
         </Box>
         <Box gap={3}>
           {pubUrls.map(({ name, port, publicURL }) => (
@@ -402,12 +408,9 @@ function PubURLSettingsContent() {
         </Box>
       </Paper>
       {open && (
-        <CreateAppModal
-          handleClose={handleClose}
-          handleSubmit={handleSubmit}
-        />
+        <CreateAppModal handleClose={handleClose} handleSubmit={handleSubmit} />
       )}
-       <Snackbar
+      <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
