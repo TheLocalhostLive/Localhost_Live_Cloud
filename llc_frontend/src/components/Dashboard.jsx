@@ -15,7 +15,7 @@ import InstanceCard from "./ui_components/InstanceCard";
 function Dashboard() {
   const [DeployedList, updateDeployedList] = useState([]);
   const navigate = useNavigate();
-  const { user, getAccessTokenSilently } = useAuth0();
+  const { user, getAccessTokenSilently, logout } = useAuth0();
   const [accessToken, setAccessToken] = useState(null);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -24,7 +24,13 @@ function Dashboard() {
   const { startLoading, stopLoading } = useLoading();
 
   useState(() => {
-    getAccessTokenSilently().then((token) => setAccessToken(token));
+    getAccessTokenSilently().then((token) => { 
+      setAccessToken(token);
+    }).catch(err => {
+      logout();
+      alert("Session Expired..Please Login");
+      console.log(err);
+    });
   }, []);
 
   useEffect(() => {
