@@ -187,7 +187,7 @@ function Dashboard() {
             <AiOutlinePlus />
             Deploy Project
           </Button>*/}
-          <Button
+          {/* <Button
             color="warning"
             onClick={handleHostProjectClick}
             variant="contained"
@@ -195,7 +195,7 @@ function Dashboard() {
           >
             <AiOutlinePlus />
             Host Your Project
-          </Button>
+          </Button> */}
 
           <Button
             color="warning"
