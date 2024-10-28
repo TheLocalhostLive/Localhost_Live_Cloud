@@ -157,8 +157,8 @@ function Dashboard() {
   };
 
   const handleConfigure = (container_name) => {
-    navigate("/settings", { state: { container_name } })
-  }
+    navigate("/settings", { state: { container_name } });
+  };
 
   return (
     <>
@@ -166,10 +166,7 @@ function Dashboard() {
       <div className="top-container">
         <h1 className="top-container-h1">Dashboard</h1>
         <div className="top-container-div">
-          <Button
-            onClick={handleOpen}
-            variant="contained"
-          >
+          <Button onClick={handleOpen} variant="contained">
             <AiOutlinePlus />
             Create Instance
           </Button>
@@ -208,7 +205,6 @@ function Dashboard() {
             color="warning"
             onClick={handleDontateCLick}
             variant="contained"
-            
           >
             <AiFillHeart />
             Donate
