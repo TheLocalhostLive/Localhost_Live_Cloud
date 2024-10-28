@@ -36,7 +36,7 @@ function Dashboard() {
   useEffect(() => {
     startLoading();
     if (!accessToken) {
-      console.log("Access Token is missing");
+      stopLoading();
       return;
     }
     let owner = user?.nickname;
@@ -50,10 +50,11 @@ function Dashboard() {
       })
       .then((res) => {
         updateDeployedList(res.data);
-        stopLoading();
       })
       .catch((error) => {
         console.error("Error fetching deployed projects", error);
+      })
+      .finally(() => {
         stopLoading();
       });
   }, [accessToken]);
