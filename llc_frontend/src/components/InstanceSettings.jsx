@@ -24,16 +24,13 @@ import {
   OutlinedInput,
   InputAdornment,
   Alert,
-  Snackbar
+  Modal
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import CreateAppModal from "./ui_components/CreateAppModal";
 import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useLoading } from "../hook/useLoader";
-
-
-
 
 const drawerWidth = 240;
 
@@ -157,21 +154,76 @@ function ResponsiveDrawer() {
   );
 }
 
+function ChangePassModal({ open, handleClose, handleChangePassword }) {
+  const [password, setPassword] = useState('');
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    handleChangePassword(password);
+    setPassword('');  // Clear the input field after submission
+    handleClose();    // Close the modal
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="password-change-modal"
+      aria-describedby="modal-for-password-change"
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 400,
+          bgcolor: 'background.paper',
+          border: '2px solid #000',
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2,
+        }}
+      >
+        <Typography id="password-change-modal" variant="h6" component="h2">
+          Change Password
+        </Typography>
+        <TextField
+          label="New Password"
+          type="password"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={password}
+          onChange={handlePasswordChange}
+        />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+          <Button variant="contained" color="primary" onClick={handleSubmit}>
+            Submit
+          </Button>
+          <Button variant="outlined" color="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
+}
+
 function GeneralSettingsContent() {
   const { state } = useLocation();
 
   const { container_name } = state || "";
-  const [isEditMode, setEditMode] = useState(false);
-  const [password, setPassword] = useState("*******");
-
-  function handleEditClick() {
-    setPassword("");
-    setEditMode(true);
-  }
-
-  function handlePasswordChange(e) {
-    setPassword(e.target.value);
-  }
+  const [isModalOpen, setModalOpen] = useState(false);
+  const handleOpenModal = () => setModalOpen(true);
+  const handleCloseModal = () => setModalOpen(false);
+  const handleChangePassword = (newPassword) => {
+    // Add password change logic here, e.g., API call
+    console.log('New password:', newPassword);
+  };
 
   return (
     <Box
@@ -184,6 +236,9 @@ function GeneralSettingsContent() {
     >
       <Toolbar />
       <Paper sx={{ p: 5 }}>
+        <Typography variant="h5" sx={{m: 2}}>
+          General
+          </Typography>
         <TextField
           variant="outlined"
           label="Instance name"
@@ -192,23 +247,15 @@ function GeneralSettingsContent() {
           disabled
           sx={{ marginBottom: "20px" }}
         />
-        <Box sx={{ display: "flex" }}>
-          <TextField
-            variant="outlined"
-            label="Password"
-            type="password"
-            fullWidth
-            value={password}
-            disabled={!isEditMode}
-            onChange={handlePasswordChange}
-          />
-        </Box>
-        <Button onClick={handleEditClick}>Edit</Button>
-        <Divider />
-        <Button sx={{ marginTop: "20px" }} variant="contained">
-          Submit
+        <Button onClick={handleOpenModal} sx={{ marginTop: "20px" }} variant="contained">
+          Change Password?
         </Button>
       </Paper>
+      <ChangePassModal
+        open={isModalOpen}
+        handleClose={handleCloseModal}
+        handleChangePassword={handleChangePassword}
+      />
     </Box>
   );
 }
