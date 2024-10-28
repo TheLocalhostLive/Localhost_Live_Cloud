@@ -26,6 +26,7 @@ import {
   Alert,
   Snackbar,
   Modal,
+  Chip,
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import CreateAppModal from "./ui_components/CreateAppModal";
@@ -359,10 +360,15 @@ function PubURLSettingsContent() {
     >
       <Toolbar />
       <Paper sx={{ p: 5 }}>
+        <Typography variant="h5" sx={{ m: 2 }}>
+          Public URL
+        </Typography>
         <Box
           sx={{ mb: "20px", display: "flex", justifyContent: "space-between" }}
         >
-          <Typography>{container_name}</Typography>
+          <Typography >
+            <Chip color="primary"  label={`${container_name}`} /> 
+          </Typography>
           <Button onClick={handleOpen} variant="contained">
             Expose Port
           </Button>
@@ -405,6 +411,13 @@ function PubURLSettingsContent() {
               <Button>Edit</Button>
             </Box>
           ))}
+          {pubUrls.length === 0 && (
+            <Box>
+              <Typography sx={{ width: "100%", textAlign: "center" }}>
+                No ports exposed!
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Paper>
       {open && (
