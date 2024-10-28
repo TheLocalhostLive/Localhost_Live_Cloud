@@ -6,6 +6,7 @@ export default function InstanceCard({
   container_name,
   handleTerminateClick,
   handleLaunchClick,
+  handleConfigure
 }) {
   return (
     <div key={container_name} className="deployed-item">
@@ -34,7 +35,7 @@ export default function InstanceCard({
         </Button>
         
         <Button
-          onClick={() => handleLaunchClick(_id, container_name)}
+          onClick={() => handleConfigure( container_name)}
           variant="contained"
           color="info"
           size="large"

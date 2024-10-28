@@ -12,6 +12,7 @@ import Footer from "./components/Footer";
 import "./App.css";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
+import InstanceSettings from "./components/InstanceSettings";
 
 const darkTheme = createTheme({
   palette: {
@@ -51,6 +52,10 @@ function App() {
     {
       path: "/host",
       element: <HostPage />,
+    },
+    {
+      path: "/settings",
+      element: <InstanceSettings />,
     },
   ]);
 

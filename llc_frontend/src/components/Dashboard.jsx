@@ -149,6 +149,10 @@ function Dashboard() {
     navigate("/donate");
   };
 
+  const handleConfigure = (container_name) => {
+    navigate("/settings", { state: { container_name } })
+  }
+
   return (
     <>
       <CustomAppBar />
@@ -212,6 +216,7 @@ function Dashboard() {
             container_name={container_name}
             handleTerminateClick={handleTerminateClick}
             handleLaunchClick={handleLaunchClick}
+            handleConfigure={handleConfigure}
           />
         ))}
         {open && (
