@@ -51,6 +51,7 @@ export default function CustomAppBar() {
 
   return (
     <AppBar position="static" sx={{ 
+      zIndex: (theme) => theme.zIndex.drawer,
       background: "linear-gradient(-20deg, grey, black)",
       }}>
       <Toolbar>
