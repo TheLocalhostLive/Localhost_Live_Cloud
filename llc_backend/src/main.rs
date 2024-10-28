@@ -149,8 +149,11 @@ async fn main() -> std::io::Result<()> {
             .allowed_origin("http://localhost:5173/host")
             .allowed_origin("http://127.0.0.1:5173/host")
             .allowed_origin("https://cloud.thelocalhost.live/host")
+            .allowed_origin("http://localhost:5173/settings")
+            .allowed_origin("http://127.0.0.1:5173/settings")
+            .allowed_origin("https://cloud.thelocalhost.live/settings")
             .allowed_origin("http://localhost:8080")
-            .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"]) // Use a Vec for methods
+            .allowed_methods(vec!["GET", "POST", "PUT", "DELETE", "PATCH"]) // Use a Vec for methods
             .allowed_headers(vec![
                 header::CONTENT_TYPE,
                 header::AUTHORIZATION,
@@ -178,6 +181,7 @@ async fn main() -> std::io::Result<()> {
                     .route("/users/{id}", web::delete().to(delete_user))
                     .route("/deploy", web::post().to(handler::container::create_container))
                     .route("/deploy/{owner}", web::get().to(handler::container::get_deployed_containers))
+                    .route("/deploy/{owner}", web::patch().to(handler::container::change_container_password))
                     .route("/build-deploy", web::post().to(handler::container::deploy_and_build))
                     .route("/launch", web::get().to(handler::container::launch_ttyd_in_browser))
                     .route("/delete", web::delete().to(handler::container::delecte))

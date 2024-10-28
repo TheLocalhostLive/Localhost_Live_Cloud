@@ -165,8 +165,6 @@ function ChangePassModal({ open, handleClose, handleChangePassword }) {
 
   const handleSubmit = () => {
     handleChangePassword(password);
-    setPassword(""); // Clear the input field after submission
-    handleClose(); // Close the modal
   };
 
   return (
@@ -222,9 +220,55 @@ function GeneralSettingsContent() {
   const [isModalOpen, setModalOpen] = useState(false);
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
-  const handleChangePassword = (newPassword) => {
-    // Add password change logic here, e.g., API call
-    console.log("New password:", newPassword);
+  const { getAccessTokenSilently, user } = useAuth0();
+  const { startLoading, stopLoading } = useLoading();
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const handleChangePassword = async (newPassword) => {
+    console.log(newPassword);
+    if(newPassword.trim().length < 6) {
+      setSnackbarMessage("Password Must be atleast 6 charecter long.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+      return;
+    }
+    try {
+      startLoading();
+      const token = await getAccessTokenSilently();
+      const response = await axios.patch(
+        `http://localhost:8080/api/deploy/${user?.nickname}`,
+        {
+          container_name: container_name,
+          new_password: newPassword,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSnackbarMessage("Password Changed successfully");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
+      console.log("Password changed successfully:", response.data);
+    } catch (error) {
+      console.error(
+        "Error changing password:",
+        error.response?.data || error.message
+      );
+      setSnackbarMessage("Failed to Host");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
+    } finally {
+      stopLoading();
+      handleCloseModal();
+    }
+  };
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
   };
 
   return (
@@ -262,6 +306,20 @@ function GeneralSettingsContent() {
         handleClose={handleCloseModal}
         handleChangePassword={handleChangePassword}
       />
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
@@ -366,8 +424,8 @@ function PubURLSettingsContent() {
         <Box
           sx={{ mb: "20px", display: "flex", justifyContent: "space-between" }}
         >
-          <Typography >
-            <Chip color="primary"  label={`${container_name}`} /> 
+          <Typography>
+            <Chip color="primary" label={`${container_name}`} />
           </Typography>
           <Button onClick={handleOpen} variant="contained">
             Expose Port

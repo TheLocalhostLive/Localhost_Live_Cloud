@@ -138,6 +138,40 @@ pub async fn get_deployed_containers(
 }
 
 #[derive(Deserialize)]
+pub struct PasswordChangeRequest {
+    container_name: String,
+    new_password: String,
+}
+
+pub async fn change_container_password(
+    path: web::Path<(String)>, // Path containing (user_id, container_name)
+    payload: web::Json<PasswordChangeRequest>,
+    db: web::Data<mongodb::Database>,
+) -> impl Responder {
+    let (owner) = path.into_inner();
+    let container_name = &payload.container_name;
+
+    // Define filter based on user_id and container_name
+    let filter = doc! { "container_name": &container_name, "owner": &owner };
+    let update = doc! { "$set": { "password": &payload.new_password } };
+    let collection = get_container_collection(db);
+    // Attempt to update the password field
+    match collection.update_one(filter, update).await {
+        Ok(update_result) => {
+            if update_result.matched_count == 1 {
+                HttpResponse::Ok().json("Password updated successfully")
+            } else {
+                HttpResponse::NotFound().json("Container not found or user not authorized")
+            }
+        }
+        Err(e) => {
+            eprintln!("Failed to update password: {:?}", e);
+            HttpResponse::InternalServerError().json("Error updating password")
+        }
+    }
+}
+
+#[derive(Deserialize)]
 pub struct DeployRequest {
     container_name: String,
     application_name: String,
