@@ -34,12 +34,22 @@ pub struct ContainerDeleteSchema{
 }
 
 #[derive(Debug,Serialize,Deserialize)]
-pub struct HostProjectPost{
+pub struct Applications{
     pub owner:String,
     pub container_name :String,
     pub application_name:String,
-    pub application_port : String
+    pub application_port : String,
+    pub public_url: String
 }
+
+#[derive(Debug,Serialize,Deserialize)]
+pub struct ApplicationsReq{
+    pub owner:String,
+    pub container_name :String,
+    pub application_name:String,
+    pub application_port : String,
+}
+
 #[derive(Debug,Serialize,Deserialize)]
 pub struct ContainerPost{
     #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]

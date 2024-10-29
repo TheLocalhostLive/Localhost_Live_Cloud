@@ -7,11 +7,11 @@ use dotenv::dotenv;
 use std::{env, f32::consts::E};
 
 
-use crate::model::{DnsRecordRequest, HostProjectPost, Ingress, OriginRequest};
+use crate::model::{Applications, ApplicationsReq, DnsRecordRequest, Ingress, OriginRequest};
 
 use super::{container::get_container_collection, utils::get_ip};
 
-pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(String), Box<dyn std::error::Error>> {
 
     dotenv().ok();
     
@@ -83,7 +83,7 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(), Box<dyn std
 
     if !put_response.status().is_success() {
         println!("Failed to update tunnel configuration.");
-        return Ok(());
+        return Err(Box::from("Failed to create DNS record"))
     }
 
     let dns_record = DnsRecordRequest {
@@ -111,12 +111,12 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(), Box<dyn std
     println!("{:#?}", dns_response);
     if dns_response.status().is_success() {
         println!("DNS record created successfully.");
-        return Ok(());
+        return Ok((config.subdomain.clone()));
     } else {
         println!("Failed to create DNS record.");
     }
 
-    Err(Box::from("Failed to create DNS record"))
+    return Err(Box::from("Failed to create DNS record"))
 
     
 }
@@ -124,7 +124,7 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(), Box<dyn std
 
 
 
-pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web::Json<HostProjectPost>) -> impl Responder {
+pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web::Json<ApplicationsReq>) -> impl Responder {
 
     dbg!("Host Project");
     let collection = get_container_collection(&db);
@@ -158,15 +158,37 @@ pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web:
     
 
     match update_cloudflare_tunnel(config).await {
-        Ok(_) => {
-            HttpResponse::Ok().json(json!({
-                "status": "success",
-                "message": hostname.to_string()
-            }))
+        Ok(name) => {
+            let new_app = Applications{
+                owner: hosting_details.owner.clone(),
+                application_port: hosting_details.application_port.clone(),
+                application_name: hosting_details.application_name.clone(),
+                container_name: hosting_details.container_name.clone(),
+                public_url: hostname.clone(),
+            };
+            let app_collections = db.collection::<Applications>("applications");
+    
+            // Return the response from this match block
+            match app_collections.insert_one(new_app).await {
+                Ok(_) => {
+                    return HttpResponse::Ok().json(json!({
+                        "status": "success",
+                        "message": hostname.to_string()
+                    }))
+                }
+                Err(err) => {
+                    eprintln!("Failed to insert application: {:?}", err);
+                    return HttpResponse::InternalServerError().json(json!({
+                        "status": "error",
+                        "message": "Failed to insert application."
+                    }))
+                }
+            }
         }
         Err(e) => {
             eprintln!("Error: {}", e);
-            HttpResponse::InternalServerError().json(json!({
+            // Return the error response directly
+            return HttpResponse::InternalServerError().json(json!({
                 "status": "error",
                 "message": format!("Failed to host project: {}", e)
             }))
