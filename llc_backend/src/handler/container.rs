@@ -5,7 +5,7 @@ use std::process::{self, Stdio};
 use crate::handler::container;
 use crate::handler::utils::get_ip;
 use crate::model::{
-    Claims, Container, ContainerDeleteSchema, ContainerPost, Ingress, LaunchPayLoad, OriginRequest,
+    UserInfo, Applications, Claims, Container, ContainerDeleteSchema, ContainerPost, Ingress, LaunchPayLoad, OriginRequest
 };
 use actix_web::{web, HttpMessage, HttpRequest, HttpResponse, Responder};
 use futures::TryStreamExt;
@@ -298,4 +298,44 @@ pub async fn delecte(
             "error": e.to_string()
         })),
     }
+}
+pub async fn get_applications(
+    db: web::Data<mongodb::Database>,
+    req: HttpRequest,
+    path: web::Path<String>, // container_id from the URL path
+) -> impl Responder {
+    // Extract container_id from the path
+    let container_id = path.into_inner();
+
+    // Store the extensions in a variable
+    let extensions = req.extensions();
+
+    // Extract user_info from request extensions
+    let user_info = match extensions.get::<UserInfo>() {
+        Some(info) => info,
+        None => return HttpResponse::Unauthorized().json("Unauthorized: missing user info"),
+    };
+
+    let owner = &user_info.nickname;
+
+    // Filter to match both container_id and owner
+    let filter = doc! { "container_name": &container_id, "owner": owner };
+    let collection = db.collection::<Applications>("applications");
+
+    // Execute query
+    let mut cursor = match collection.find(filter).await {
+        Ok(cursor) => cursor,
+        Err(err) => {
+            eprintln!("Failed to fetch applications: {:?}", err);
+            return HttpResponse::InternalServerError().json("Failed to fetch applications.");
+        }
+    };
+
+    // Collect applications
+    let mut applications = Vec::new();
+    while let Some(app) = cursor.try_next().await.unwrap_or(None) {
+        applications.push(app);
+    }
+
+    HttpResponse::Ok().json(applications)
 }

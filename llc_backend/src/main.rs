@@ -182,6 +182,7 @@ async fn main() -> std::io::Result<()> {
                     .route("/deploy", web::post().to(handler::container::create_container))
                     .route("/deploy/{owner}", web::get().to(handler::container::get_deployed_containers))
                     .route("/deploy/{owner}", web::patch().to(handler::container::change_container_password))
+                    .route("/containers/{container_id}/applications", web::get().to(handler::container::get_applications))
                     .route("/build-deploy", web::post().to(handler::container::deploy_and_build))
                     .route("/launch", web::get().to(handler::container::launch_ttyd_in_browser))
                     .route("/delete", web::delete().to(handler::container::delecte))
