@@ -411,7 +411,9 @@ function PubURLSettingsContent() {
     startLoading();
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/containers/${container_name}/applications`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/containers/${container_name}/applications`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -429,7 +431,6 @@ function PubURLSettingsContent() {
     } finally {
       stopLoading();
     }
-    
   }
 
   useEffect(() => {
@@ -461,43 +462,49 @@ function PubURLSettingsContent() {
           </Button>
         </Box>
         <Box gap={3}>
-          {pubUrls.map(({ application_name: name, application_port: port, public_url: publicURL }) => (
-            <Box key={name} gap={3} sx={{ display: "flex" }}>
-              <TextField
-                variant="outlined"
-                label="Application name"
-                disabled
-                sx={{ marginBottom: "20px", flexGrow: 3 }}
-                value={name}
-              />
-              <TextField
-                sx={{ flexGrow: 1 }}
-                variant="outlined"
-                label="Port Number"
-                disabled
-                value={port}
-              />
-              <FormControl sx={{ m: 1, flexGrow: 3 }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-password">
-                  Public URL
-                </InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton edge="end">
-                        <ContentPasteIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="Public URL"
-                  value={publicURL}
+          {pubUrls.map(
+            ({
+              application_name: name,
+              application_port: port,
+              public_url: publicURL,
+            }) => (
+              <Box key={name} gap={3} sx={{ display: "flex" }}>
+                <TextField
+                  variant="outlined"
+                  label="Application name"
                   disabled
+                  sx={{ marginBottom: "20px", flexGrow: 3 }}
+                  value={name}
                 />
-              </FormControl>
-              <Button>Edit</Button>
-            </Box>
-          ))}
+                <TextField
+                  sx={{ flexGrow: 1 }}
+                  variant="outlined"
+                  label="Port Number"
+                  disabled
+                  value={port}
+                />
+                <FormControl sx={{ m: 1, flexGrow: 3 }} variant="outlined">
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Public URL
+                  </InputLabel>
+                  <OutlinedInput
+                    id="outlined-adornment-password"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton edge="end">
+                          <ContentPasteIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Public URL"
+                    value={publicURL}
+                    disabled
+                  />
+                </FormControl>
+                <Button>Edit</Button>
+              </Box>
+            )
+          )}
           {pubUrls.length === 0 && (
             <Box>
               <Typography sx={{ width: "100%", textAlign: "center" }}>
