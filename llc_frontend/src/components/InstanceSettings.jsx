@@ -228,7 +228,7 @@ function GeneralSettingsContent() {
 
   const handleChangePassword = async (newPassword) => {
     console.log(newPassword);
-    if(newPassword.trim().length < 6) {
+    if (newPassword.trim().length < 6) {
       setSnackbarMessage("Password Must be atleast 6 charecter long.");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
@@ -388,9 +388,9 @@ function PubURLSettingsContent() {
         setPubUrls((state) => [
           ...state,
           {
-            name,
-            port,
-            publicURL: URL,
+            application_name: name,
+            application_port: port,
+            public_url: URL,
           },
         ]);
       }
@@ -405,7 +405,36 @@ function PubURLSettingsContent() {
     }
   };
 
-  useEffect(() => {}, []);
+  async function fetchApps() {
+    const accessToken = await getAccessTokenSilently();
+    console.log(accessToken);
+    startLoading();
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/containers/${container_name}/applications`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setPubUrls(res.data);
+    } catch (err) {
+      snackbarMessage("Something went wrong!!");
+      snackbarSeverity("error");
+      setOpenSnackbar(true);
+      console.log(err);
+    } finally {
+      stopLoading();
+    }
+    
+  }
+
+  useEffect(() => {
+    fetchApps();
+  }, []);
 
   return (
     <Box
@@ -432,7 +461,7 @@ function PubURLSettingsContent() {
           </Button>
         </Box>
         <Box gap={3}>
-          {pubUrls.map(({ name, port, publicURL }) => (
+          {pubUrls.map(({ application_name: name, application_port: port, public_url: publicURL }) => (
             <Box key={name} gap={3} sx={{ display: "flex" }}>
               <TextField
                 variant="outlined"
