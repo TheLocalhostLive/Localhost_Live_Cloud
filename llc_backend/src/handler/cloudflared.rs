@@ -127,8 +127,7 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(), Box<dyn std
 pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web::Json<HostProjectPost>) -> impl Responder {
 
     dbg!("Host Project");
-    let collection = get_container_collection(db);
-
+    let collection = get_container_collection(&db);
     let container_exist = collection.find_one(
         doc! { "owner": hosting_details.owner.clone(), "container_name": hosting_details.container_name.clone() }
     ).await;

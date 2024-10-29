@@ -23,7 +23,7 @@ use std::time::Duration;
 
 use super::cloudflared::update_cloudflare_tunnel;
 
-pub fn get_container_collection(db: web::Data<mongodb::Database>) -> Collection<Container> {
+pub fn get_container_collection(db: &web::Data<mongodb::Database>) -> Collection<Container> {
     db.collection::<Container>("containers")
 }
 
@@ -33,7 +33,7 @@ pub async fn create_container(
     container: web::Json<ContainerPost>,
 ) -> impl Responder {
     dbg!("Create Contaienr");
-    let collection = get_container_collection(db);
+    let collection = get_container_collection(&db);
 
     let container_exist = collection.find_one(
         doc! { "owner": container.owner.clone(), "container_name": container.container_name.clone() }
@@ -111,7 +111,7 @@ pub async fn get_deployed_containers(
 
     HttpResponse::Unauthorized().finish();
 
-    let collection = get_container_collection(db);
+    let collection = get_container_collection(&db);
 
     let mut cursor = match collection.find(doc! {"owner": owner.into_inner()}).await {
         Ok(cursor) => cursor,
@@ -154,7 +154,7 @@ pub async fn change_container_password(
     // Define filter based on user_id and container_name
     let filter = doc! { "container_name": &container_name, "owner": &owner };
     let update = doc! { "$set": { "password": &payload.new_password } };
-    let collection = get_container_collection(db);
+    let collection = get_container_collection(&db);
     // Attempt to update the password field
     match collection.update_one(filter, update).await {
         Ok(update_result) => {
@@ -214,7 +214,7 @@ pub async fn launch_ttyd_in_browser(
     db: web::Data<mongodb::Database>,
     launch_payload: web::Query<LaunchPayLoad>,
 ) -> impl Responder {
-    let collection = get_container_collection(db);
+    let collection = get_container_collection(&db);
     let machine_name = launch_payload.container_name.clone();
     let owner = launch_payload.owner.clone();
     dbg!(machine_name.clone());
@@ -261,7 +261,7 @@ pub async fn delecte(
     db: web::Data<mongodb::Database>,
     container: web::Json<ContainerDeleteSchema>,
 ) -> impl Responder {
-    let collection = get_container_collection(db);
+    let collection = get_container_collection(&db);
 
     let container_exist = collection.find_one(
         doc! { "owner": container.owner.clone(), "container_name": container.container_name.clone() }
