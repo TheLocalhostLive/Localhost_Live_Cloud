@@ -98,4 +98,15 @@ pub struct LaunchPayLoad {
 }
 
 
+#[derive(Debug, Deserialize, Clone)]
+pub struct UserInfo {
+    pub sub: String,
+    pub nickname: String,
+    pub name: String,
+    pub picture: String,
+    pub updated_at: String,
+    pub email: String,
+    pub email_verified: bool,
+}
+
 

@@ -112,7 +112,7 @@ where
 
                         // Now we can safely call the UserInfo endpoint
                         let userinfo_url = format!("https://{}/userinfo", auth0_domain);
-                        let user_info: serde_json::Value = client
+                        let user_info: UserInfo = client
                             .get(&userinfo_url)
                             .bearer_auth(token) // Use the access token
                             .send()
@@ -120,12 +120,12 @@ where
                             .map_err(|_| {
                                 actix_web::error::ErrorUnauthorized("Could not fetch user info")
                             })?
-                            .json()
+                            .json::<UserInfo>()
                             .await
                             .map_err(|_| {
                                 actix_web::error::ErrorUnauthorized("Invalid user info format")
                             })?;
-                        
+
                         dbg!(user_info.clone());
                         // Insert user info into the request extensions
                         req.extensions_mut().insert(user_info.clone());
