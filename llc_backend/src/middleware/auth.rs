@@ -9,6 +9,7 @@ use reqwest::Client;
 use serde_json::json;
 use std::{sync::Arc};
 use std::task::{Context, Poll};
+use crate::model::UserInfo;
 
 // Define the middleware
 pub struct AuthMiddleware {
