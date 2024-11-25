@@ -1,25 +1,28 @@
-use actix_web::{web::{self, put}, HttpResponse, Responder};
+use actix_web::{
+    web::{self, put},
+    HttpResponse, Responder,
+};
+use dotenv::dotenv;
 use mongodb::bson::doc;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use dotenv::dotenv;
 use std::{env, f32::consts::E};
-
 
 use crate::model::{Applications, ApplicationsReq, DnsRecordRequest, Ingress, OriginRequest};
 
 use super::{container::get_container_collection, utils::get_ip};
 
-pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(String), Box<dyn std::error::Error>> {
-
+pub async fn update_cloudflare_tunnel(
+    config: Ingress,
+) -> Result<(String), Box<dyn std::error::Error>> {
     dotenv().ok();
-    
+
     let account_id = env::var("account_id").expect("account_id must be set");
     let tunnel_id = env::var("tunnel_id").expect("tunned_id must be set");
     let api_token = env::var("api_token").expect("api_token must be set");
     let zone_id = env::var("zone_id").expect("zone_id must be set");
-    //let dns_api_token = env::var("dns_api_token").expect("dns_api_token must be set");
+
     dbg!(account_id.clone());
     dbg!(api_token.clone());
     dbg!(api_token.clone());
@@ -30,7 +33,8 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(String), Box<d
 
     let base_url = format!(
         "https://api.cloudflare.com/client/v4/accounts/{}/cfd_tunnel/{}",
-        account_id.clone(), tunnel_id.clone()
+        account_id.clone(),
+        tunnel_id.clone()
     );
 
     let client = Client::new();
@@ -53,8 +57,7 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(String), Box<d
     let http_status_404 = ingress_config
         .iter()
         .position(|entry| entry["service"] == "http_status:404")
-        .map(|pos| ingress_config.remove(pos)); 
-
+        .map(|pos| ingress_config.remove(pos));
 
     ingress_config.push(serde_json::json!({
         "service": config.service,
@@ -66,7 +69,6 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(String), Box<d
         ingress_config.push(status_entry);
     }
 
-  
     let put_body = json!({
         "config": {
             "ingress": ingress_config
@@ -79,11 +81,11 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(String), Box<d
         .json(&put_body)
         .send()
         .await?;
-   // dbg!()
+    // dbg!()
 
     if !put_response.status().is_success() {
         println!("Failed to update tunnel configuration.");
-        return Err(Box::from("Failed to create DNS record"))
+        return Err(Box::from("Failed to create DNS record"));
     }
 
     let dns_record = DnsRecordRequest {
@@ -91,13 +93,11 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(String), Box<d
         proxied: true,
         name: config.subdomain.clone(),
         content: format!("{}.cfargotunnel.com", tunnel_id.clone()),
-        ttl: 3600
+        ttl: 3600,
     };
-    
+
     println!("{}", json!(dns_record));
 
-
-    
     let dns_response = client
         .post(format!(
             "https://api.cloudflare.com/client/v4/zones/{}/dns_records",
@@ -116,16 +116,13 @@ pub async fn update_cloudflare_tunnel(config: Ingress) -> Result<(String), Box<d
         println!("Failed to create DNS record.");
     }
 
-    return Err(Box::from("Failed to create DNS record"))
-
-    
+    return Err(Box::from("Failed to create DNS record"));
 }
 
-
-
-
-pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web::Json<ApplicationsReq>) -> impl Responder {
-
+pub async fn host_project(
+    db: web::Data<mongodb::Database>,
+    hosting_details: web::Json<ApplicationsReq>,
+) -> impl Responder {
     dbg!("Host Project");
     let collection = get_container_collection(&db);
     let container_exist = collection.find_one(
@@ -137,29 +134,35 @@ pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web:
             .json("Either Container Does not exist or you are not Permitted to do this operation");
     }
 
-    let sdomain = format!("{}-{}",hosting_details.owner.clone(),hosting_details.application_name.clone());
+    let sdomain = format!(
+        "{}-{}",
+        hosting_details.owner.clone(),
+        hosting_details.application_name.clone()
+    );
     let container_ip = get_ip(hosting_details.container_name.clone());
-    let service = format!("http://{}:{}", container_ip, hosting_details.application_port.clone());
+    let service = format!(
+        "http://{}:{}",
+        container_ip,
+        hosting_details.application_port.clone()
+    );
     let hostname = format!("{}.thelocalhost.live", sdomain.clone());
-   
+
     dbg!(sdomain.clone());
     dbg!(hosting_details.application_name.clone());
     dbg!(hosting_details.container_name.clone());
     dbg!(hosting_details.owner.clone());
     dbg!(hosting_details.application_port.clone());
 
-
     let config = Ingress {
         service,
-        hostname:hostname.clone(),
+        hostname: hostname.clone(),
         originRequest: OriginRequest {},
-        subdomain:sdomain,
+        subdomain: sdomain,
     };
-    
 
     match update_cloudflare_tunnel(config).await {
         Ok(name) => {
-            let new_app = Applications{
+            let new_app = Applications {
                 owner: hosting_details.owner.clone(),
                 application_port: hosting_details.application_port.clone(),
                 application_name: hosting_details.application_name.clone(),
@@ -167,7 +170,7 @@ pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web:
                 public_url: hostname.clone(),
             };
             let app_collections = db.collection::<Applications>("applications");
-    
+
             // Return the response from this match block
             match app_collections.insert_one(new_app).await {
                 Ok(_) => {
@@ -181,7 +184,7 @@ pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web:
                     return HttpResponse::InternalServerError().json(json!({
                         "status": "error",
                         "message": "Failed to insert application."
-                    }))
+                    }));
                 }
             }
         }
@@ -191,22 +194,7 @@ pub async fn host_project(db: web::Data<mongodb::Database>,hosting_details: web:
             return HttpResponse::InternalServerError().json(json!({
                 "status": "error",
                 "message": format!("Failed to host project: {}", e)
-            }))
+            }));
         }
     }
 }
-
-
-// #[tokio::main]
-// async fn main() {
-//     let config = Ingress {
-//         service: "http://localhost:5005".to_string(),
-//         hostname: "joydeep.thelocalhost.live".to_string(),
-//         originRequest: OriginRequest {},
-//         subdomain: "joydeep".to_string()
-//     };
-
-//     if let Err(e) = update_cloudflare_tunnel(config).await {
-//         eprintln!("Error: {}", e);
-//     }
-// }
