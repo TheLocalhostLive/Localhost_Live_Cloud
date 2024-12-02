@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::{env, f32::consts::E};
 
-use crate::model::{Applications, ApplicationsReq, DnsRecordRequest, Ingress, OriginRequest};
+use crate::model::{Applications, ApplicationsReq, DnsRecordRequest, Ingress, OriginRequest, Status};
 
 use super::{container::get_container_collection, utils::get_ip};
 
@@ -168,6 +168,8 @@ pub async fn host_project(
                 application_name: hosting_details.application_name.clone(),
                 container_name: hosting_details.container_name.clone(),
                 public_url: hostname.clone(),
+                status: Status::Pending,
+                remarks: String::from("Processing request, It can take upto 5 minutes.")
             };
             let app_collections = db.collection::<Applications>("applications");
 

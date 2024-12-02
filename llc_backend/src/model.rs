@@ -34,12 +34,26 @@ pub struct ContainerDeleteSchema{
 }
 
 #[derive(Debug,Serialize,Deserialize)]
+pub enum Status {
+    #[serde(rename = "PENDING")]
+    Pending,
+    #[serde(rename = "HEALTHY")]
+    Healthy,
+    #[serde(rename = "FAILED")]
+    Failed,
+    #[serde(rename = "TERMINATED")]
+    Terminated,
+}
+
+#[derive(Debug,Serialize,Deserialize)]
 pub struct Applications{
     pub owner:String,
     pub container_name :String,
     pub application_name:String,
     pub application_port : String,
-    pub public_url: String
+    pub public_url: String,
+    pub status: Status,
+    pub remarks: String
 }
 
 #[derive(Debug,Serialize,Deserialize)]
