@@ -3,6 +3,10 @@ name = "Localhost_live_cloud"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "migrate"
+path = "src/migrate.rs"
+
 [dependencies]
 actix-web = "4.0"
 actix-cors = "0.7.0"
