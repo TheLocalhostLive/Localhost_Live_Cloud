@@ -17,7 +17,9 @@ pub struct Container{
     pub owner:String,
     pub container_name : String,
     pub container_domain:String,
-    pub password : String
+    pub password : String,
+    pub status: Status,
+    pub remarks: String
 }
 
 #[derive(Debug, Serialize, Deserialize)]

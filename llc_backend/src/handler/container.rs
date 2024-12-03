@@ -20,6 +20,7 @@ use tokio::time::sleep;
 use std::io::{BufReader, Read};
 use std::string::String;
 use std::time::Duration;
+use crate::model::Status;
 
 use super::cloudflared::update_cloudflare_tunnel;
 
@@ -82,6 +83,8 @@ pub async fn create_container(
         container_name: container.container_name.clone(),
         container_domain: hostname.clone(),
         password: container.password.clone(),
+        status: Status::Pending,
+        remarks: String::from("Processing the request")
     };
 
     match collection.insert_one(&new_container).await {
