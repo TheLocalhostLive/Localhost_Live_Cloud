@@ -238,7 +238,7 @@ function GeneralSettingsContent() {
       startLoading();
       const token = await getAccessTokenSilently();
       const response = await axios.patch(
-        `http://localhost:8080/api/deploy/${user?.nickname}`,
+        `${import.meta.env.VITE_BACKEND_URL}/${user?.nickname}`,
         {
           container_name: container_name,
           new_password: newPassword,
