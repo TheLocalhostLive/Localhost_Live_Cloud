@@ -2,7 +2,6 @@ mod db;
 mod migrations;
 mod model;
 use migrations::run_all;
-use model::Applications;
 
 
 
