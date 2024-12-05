@@ -63,7 +63,7 @@ const PaymentComponent = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{padding: "100px"}}>
       <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
@@ -95,7 +95,6 @@ const PaymentComponent = () => {
           justifyContent: "center",
           width: "300px",
           margin: "auto",
-          marginTop: "100px",
           backgroundColor: "#2c2c2c", // Dark background for the card
           color: "#fff", // Light text color
         }}
