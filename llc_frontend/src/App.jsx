@@ -1,6 +1,10 @@
 import ConsolePage from "./components/ConsolePage";
 import Dashboard from "./components/Dashboard";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  BrowserRouter,
+} from "react-router-dom";
 import LandingPage from "./components/LandingPage";
 //import Deploy from "./components/Deploy";
 import VirtulMatchine from "./components/VirtulMatchine";
@@ -13,6 +17,7 @@ import "./App.css";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import InstanceSettings from "./components/InstanceSettings";
+import CustomAppBar from "./components/ui_components/CustomAppBar";
 
 const darkTheme = createTheme({
   palette: {
@@ -69,6 +74,9 @@ function App() {
       >
         <CircularProgress color="inherit" />
       </Backdrop>
+      <BrowserRouter>
+        <CustomAppBar />
+      </BrowserRouter>
       <main>
         <RouterProvider router={router} />
       </main>
