@@ -25,6 +25,7 @@ use crate::middleware::auth::AuthMiddleware;
 use reqwest::{Client};
 use actix_files::Files;
 use actix_files::NamedFile;
+mod rabbitmq_conn;
 
 // Initialize MongoDB Collection
 fn get_user_collection(db: web::Data<mongodb::Database>) -> Collection<User> {
@@ -129,7 +130,9 @@ async fn main() -> std::io::Result<()> {
     let mongo_uri = env::var("MONGO_URI").expect("MONGO_URI must be set");
     println!("Mongo URI: {}", mongo_uri);
     let db = db::init_db().await;
-
+    let rabbitmq_uri = env::var("RABBITMQ_URI").expect("RABBITMQ_URL must be set!");
+    let mq_channel = rabbitmq_conn::init_mq_conn(&rabbitmq_uri).await;
+    
     HttpServer::new(move || {
         let cors = Cors::default()
             .allowed_origin("http://127.0.0.1:5173")
@@ -173,6 +176,7 @@ async fn main() -> std::io::Result<()> {
                         client: Arc::new(Client::new()),
                     })
                     .app_data(web::Data::new(db.clone()))
+                    .app_data(web::Data::new(mq_channel.clone()))
                     .route("/test", web::get().to(test_route))
                     .route("/users", web::post().to(create_user))
                     .route("/users", web::get().to(get_users))
