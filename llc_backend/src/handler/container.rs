@@ -27,7 +27,20 @@ use super::cloudflared::update_cloudflare_tunnel;
 pub fn get_container_collection(db: &web::Data<mongodb::Database>) -> Collection<Container> {
     db.collection::<Container>("containers")
 }
+async fn create_incus_container(container: &web::Json<ContainerPost>) -> Output{
+    let script_path1 = "scripts/ceate_lxc.sh";
+    let output1 = Command::new("sh")
+        .arg(script_path1)
+        .arg(&container.container_name)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .output() // This runs the command and waits for it to finish
+        .await // Await the result of the command
+        .expect("Failed to start process");
 
+        return output1;
+
+}
 pub async fn create_container(
     req: HttpRequest,
     db: web::Data<mongodb::Database>,
@@ -45,15 +58,7 @@ pub async fn create_container(
             .json("Container exists with the same name. Try a different name.");
     }
 
-    let script_path1 = "scripts/ceate_lxc.sh";
-    let output1 = Command::new("sh")
-        .arg(script_path1)
-        .arg(&container.container_name)
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .output() // This runs the command and waits for it to finish
-        .await // Await the result of the command
-        .expect("Failed to start process");
+    let output1 = create_incus_container(&container).await;
 
     if !output1.status.success() {
         let stderr = String::from_utf8_lossy(&output1.stderr);
