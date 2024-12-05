@@ -4,4 +4,6 @@
 }
 main {
   min-height: 100vh;
+  background-color: rgb(24, 24, 24);
+  padding-bottom: 20px;
 }
