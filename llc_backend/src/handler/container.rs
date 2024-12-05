@@ -1,6 +1,6 @@
 use std::clone;
 use std::fmt::format;
-use std::process::{self, Stdio};
+use std::process::{self, Output, Stdio};
 
 use crate::handler::container;
 use crate::handler::utils::get_ip;
@@ -23,6 +23,8 @@ use std::time::Duration;
 use crate::model::Status;
 
 use super::cloudflared::update_cloudflare_tunnel;
+use lapin::{options::*, types::FieldTable, BasicProperties, Connection, ConnectionProperties};
+use tokio;
 
 pub fn get_container_collection(db: &web::Data<mongodb::Database>) -> Collection<Container> {
     db.collection::<Container>("containers")
@@ -44,6 +46,7 @@ async fn create_incus_container(container: &web::Json<ContainerPost>) -> Output{
 pub async fn create_container(
     req: HttpRequest,
     db: web::Data<mongodb::Database>,
+    mq_channel: web::Data<lapin::Channel>,
     container: web::Json<ContainerPost>,
 ) -> impl Responder {
     dbg!("Create Contaienr");
@@ -75,12 +78,17 @@ pub async fn create_container(
         originRequest: OriginRequest {},
         subdomain,
     };
-    if let Err(e) = update_cloudflare_tunnel(config).await {
-        HttpResponse::InternalServerError().json(json!({
-            "status": "error",
-            "message": format!("Failed to Host Virtual Machine: {}", e)
-        }));
-    };
+    let config_json = serde_json::to_string(&config).expect("Failed to serialize Ingress object");
+    mq_channel.basic_publish(
+        "",
+        "container_req",
+        BasicPublishOptions::default(),
+        config_json.as_bytes(),
+        BasicProperties::default(),
+    )
+    .await
+    .expect("Failed to publish message");    
+
 
     let new_container = Container {
         id: None,

@@ -14,7 +14,7 @@ use crate::model::{Applications, ApplicationsReq, DnsRecordRequest, Ingress, Ori
 use super::{container::get_container_collection, utils::get_ip};
 
 pub async fn update_cloudflare_tunnel(
-    config: Ingress,
+    config: &Ingress,
 ) -> Result<(String), Box<dyn std::error::Error>> {
     dotenv().ok();
 
@@ -160,7 +160,7 @@ pub async fn host_project(
         subdomain: sdomain,
     };
 
-    match update_cloudflare_tunnel(config).await {
+    match update_cloudflare_tunnel(&config).await {
         Ok(name) => {
             let new_app = Applications {
                 owner: hosting_details.owner.clone(),

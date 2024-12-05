@@ -7,6 +7,12 @@ edition = "2021"
 name = "migrate"
 path = "src/migrate.rs"
 
+
+[[bin]]
+name = "cloudflare_service"
+path = "src/cloudflare_service.rs"
+
+
 [dependencies]
 actix-web = "4.0"
 actix-cors = "0.7.0"
