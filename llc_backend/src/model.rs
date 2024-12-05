@@ -46,6 +46,16 @@ pub enum Status {
     #[serde(rename = "TERMINATED")]
     Terminated,
 }
+impl ToString for Status {
+    fn to_string(&self) -> String {
+        match self {
+            Status::Healthy => "HEALTHY".to_string(),
+            Status::Failed => "FAILED".to_string(),
+            Status::Pending => "PENDING".to_string(),
+            Status::Terminated => "TERMINATED".to_string(),
+        }
+    }
+}
 
 #[derive(Debug,Serialize,Deserialize)]
 pub struct Applications{
