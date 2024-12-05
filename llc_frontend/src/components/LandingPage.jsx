@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "../style/landing_page.css";
 import { useAuth0 } from "@auth0/auth0-react";
-import CustomAppBar from "./ui_components/CustomAppBar";
 import BlackHoleModel from "./BlackHoleModel";
 
 const LandingPage = () => {
@@ -52,7 +51,6 @@ const LandingPage = () => {
 
   return (
     <>
-      <CustomAppBar />
       <div className="outer">
         <BlackHoleModel />
 

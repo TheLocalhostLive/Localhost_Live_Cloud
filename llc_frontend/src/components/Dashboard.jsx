@@ -6,7 +6,7 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import CreateInstancePopup from "./CreateInstancePopup";
 import { useAuth0 } from "@auth0/auth0-react";
-import CustomAppBar from "./ui_components/CustomAppBar";
+
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useLoading } from "../hook/useLoader";
@@ -162,7 +162,7 @@ function Dashboard() {
 
   return (
     <>
-      <CustomAppBar />
+
       <div className="top-container">
         <h1 className="top-container-h1">Dashboard</h1>
         <div className="top-container-div">
@@ -170,37 +170,6 @@ function Dashboard() {
             <AiOutlinePlus />
             Create Instance
           </Button>
-          {/*<Button
-            color="warning"
-            onClick={handleDepoyProjectClick}
-            variant="outlined"
-            sx={{
-              backgroundColor: "white",
-              borderColor: "black",
-              color: "black",
-              display: "flex",
-              alignItems: "center",
-              gap: "5px",
-              "&:hover": {
-                backgroundColor: "black",
-                color: "white",
-                borderColor: "black",
-              },
-            }}
-          >
-            <AiOutlinePlus />
-            Deploy Project
-          </Button>*/}
-          {/* <Button
-            color="warning"
-            onClick={handleHostProjectClick}
-            variant="contained"
-            
-          >
-            <AiOutlinePlus />
-            Host Your Project
-          </Button> */}
-
           <Button
             color="warning"
             onClick={handleDontateCLick}
