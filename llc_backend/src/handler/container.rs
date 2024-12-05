@@ -29,27 +29,14 @@ use tokio;
 pub fn get_container_collection(db: &web::Data<mongodb::Database>) -> Collection<Container> {
     db.collection::<Container>("containers")
 }
-async fn create_incus_container(container: &web::Json<ContainerPost>) -> Output{
-    let script_path1 = "scripts/ceate_lxc.sh";
-    let output1 = Command::new("sh")
-        .arg(script_path1)
-        .arg(&container.container_name)
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .output() // This runs the command and waits for it to finish
-        .await // Await the result of the command
-        .expect("Failed to start process");
 
-        return output1;
-
-}
 pub async fn create_container(
     req: HttpRequest,
     db: web::Data<mongodb::Database>,
     mq_channel: web::Data<lapin::Channel>,
     container: web::Json<ContainerPost>,
 ) -> impl Responder {
-    dbg!("Create Contaienr");
+    
     let collection = get_container_collection(&db);
 
     let container_exist = collection.find_one(
@@ -61,24 +48,35 @@ pub async fn create_container(
             .json("Container exists with the same name. Try a different name.");
     }
 
-    let output1 = create_incus_container(&container).await;
-
-    if !output1.status.success() {
-        let stderr = String::from_utf8_lossy(&output1.stderr);
-        return HttpResponse::InternalServerError().body(format!("Script failed: {}", stderr));
-    }
-    let container_ip = get_ip(container.container_name.clone());
-    let service = format!("http://{}:7681", container_ip,);
+   
     let hostname = format!("{}.thelocalhost.live", container.container_name.clone());
-    let subdomain = container.container_name.clone();
-
-    let config = Ingress {
-        service,
-        hostname: hostname.clone(),
-        originRequest: OriginRequest {},
-        subdomain,
+    let mut new_container = Container {
+        id: None,
+        owner: container.owner.clone(),
+        container_name: container.container_name.clone(),
+        container_domain: hostname.clone(),
+        password: container.password.clone(),
+        status: Status::Pending,
+        remarks: String::from("Processing the request")
     };
-    let config_json = serde_json::to_string(&config).expect("Failed to serialize Ingress object");
+    let container_id;
+    match collection.insert_one(&new_container).await {
+        Ok(inserted) => {
+            if let Some(_id) = inserted.inserted_id.as_object_id() {
+                container_id = _id;
+            } else {
+               return HttpResponse::InternalServerError().json("Failed to retrieve inserted ObjectId.");
+            }
+        }
+        Err(err) => {
+            eprintln!("Failed to insert new containerlication: {}", err);
+            return HttpResponse::InternalServerError().json("Error inserting new containerlication.");
+        }
+    }
+
+    new_container.id = Some(container_id.clone());
+    
+    let config_json = serde_json::to_string(&new_container).expect("Failed to serialize Ingress object");
     mq_channel.basic_publish(
         "",
         "container_req",
@@ -89,30 +87,10 @@ pub async fn create_container(
     .await
     .expect("Failed to publish message");    
 
+    HttpResponse::Ok().json(new_container)
+   
 
-    let new_container = Container {
-        id: None,
-        owner: container.owner.clone(),
-        container_name: container.container_name.clone(),
-        container_domain: hostname.clone(),
-        password: container.password.clone(),
-        status: Status::Pending,
-        remarks: String::from("Processing the request")
-    };
-
-    match collection.insert_one(&new_container).await {
-        Ok(inserted) => {
-            if let Some(_id) = inserted.inserted_id.as_object_id() {
-                HttpResponse::Ok().json(new_container)
-            } else {
-                HttpResponse::InternalServerError().json("Failed to retrieve inserted ObjectId.")
-            }
-        }
-        Err(err) => {
-            eprintln!("Failed to insert new containerlication: {}", err);
-            HttpResponse::InternalServerError().json("Error inserting new containerlication.")
-        }
-    }
+    
 }
 
 pub async fn get_deployed_containers(

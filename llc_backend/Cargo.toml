@@ -9,8 +9,8 @@ path = "src/migrate.rs"
 
 
 [[bin]]
-name = "cloudflare_service"
-path = "src/cloudflare_service.rs"
+name = "container_service"
+path = "src/container_service.rs"
 
 
 [dependencies]
