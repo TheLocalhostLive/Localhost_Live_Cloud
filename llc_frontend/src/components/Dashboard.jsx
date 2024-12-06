@@ -13,7 +13,7 @@ import { useLoading } from "../hook/useLoader";
 import InstanceCard from "./ui_components/InstanceCard";
 
 function Dashboard() {
-  const [DeployedList, updateDeployedList] = useState([]);
+  const [containers, setContainers] = useState([]);
   const navigate = useNavigate();
   const { user, getAccessTokenSilently, logout } = useAuth0();
   const [accessToken, setAccessToken] = useState(null);
@@ -49,7 +49,7 @@ function Dashboard() {
         },
       })
       .then((res) => {
-        updateDeployedList(res.data);
+        setContainers(res.data);
       })
       .catch((error) => {
         console.error("Error fetching deployed projects", error);
@@ -84,7 +84,7 @@ function Dashboard() {
           setSnackbarSeverity("success");
           setOpenSnackbar(true);
           // Optionally remove the terminated container from the list
-          updateDeployedList((prev) =>
+          setContainers((prev) =>
             prev.filter((item) => item.container_name !== container_name)
           );
         }
@@ -137,7 +137,7 @@ function Dashboard() {
       );
 
       console.log(deployRes);
-      updateDeployedList((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
+      setContainers((state) => [...state, deployRes.data]); // Use deployRes.data to get the response data
       handleClose();
     } catch (error) {
       console.error("Error creating instance:", error);
@@ -212,7 +212,7 @@ function Dashboard() {
         </div>
       </div>
       <div className="deployed-list-container">
-        {DeployedList.map(({ _id, container_name }) => (
+        {containers.map(({ _id, container_name, status }) => (
           <InstanceCard
             _id={_id}
             key={_id}
