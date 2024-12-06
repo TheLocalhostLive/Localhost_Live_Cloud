@@ -160,6 +160,36 @@ function Dashboard() {
     navigate("/settings", { state: { container_name } });
   };
 
+  const handleContainerStatusUpdate = async (_id) => {
+    if (!user) return;
+    console.log(_id["$oid"]);
+    try {
+      startLoading();
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/containers/${_id["$oid"]}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setContainers((_containers) =>
+        _containers.map((_container) => {
+          if (_container._id["$oid"] === _id["$oid"]) return res.data;
+
+          return _container;
+        })
+      );
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+      snackbarMessage("Failed to update");
+      snackbarSeverity("error");
+    } finally {
+      stopLoading();
+    }
+  };
+
   return (
     <>
       <CustomAppBar />
@@ -220,6 +250,8 @@ function Dashboard() {
             handleTerminateClick={handleTerminateClick}
             handleLaunchClick={handleLaunchClick}
             handleConfigure={handleConfigure}
+            status={status}
+            onGetUpdateClick={handleContainerStatusUpdate}
           />
         ))}
         {open && (

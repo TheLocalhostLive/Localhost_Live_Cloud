@@ -185,6 +185,7 @@ async fn main() -> std::io::Result<()> {
                     .route("/users/{id}", web::delete().to(delete_user))
                     .route("/deploy", web::post().to(handler::container::create_container))
                     .route("/deploy/{owner}", web::get().to(handler::container::get_deployed_containers))
+                    .route("/containers/{container_id}", web::get().to(handler::container::get_container_by_id))
                     .route("/deploy/{owner}", web::patch().to(handler::container::change_container_password))
                     .route("/containers/{container_id}/applications", web::get().to(handler::container::get_applications))
                     .route("/build-deploy", web::post().to(handler::container::deploy_and_build))
