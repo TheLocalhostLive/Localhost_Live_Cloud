@@ -215,7 +215,7 @@ function Dashboard() {
         {containers.map(({ _id, container_name, status }) => (
           <InstanceCard
             _id={_id}
-            key={_id}
+            key={_id["$oid"]}
             container_name={container_name}
             handleTerminateClick={handleTerminateClick}
             handleLaunchClick={handleLaunchClick}
