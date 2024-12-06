@@ -5,11 +5,11 @@ use std::process::{self, Output, Stdio};
 use crate::handler::container;
 use crate::handler::utils::get_ip;
 use crate::model::{
-    UserInfo, Applications, Claims, Container, ContainerDeleteSchema, ContainerPost, Ingress, LaunchPayLoad, OriginRequest
+    Applications, Claims, Container, ContainerDeleteSchema, ContainerPost, Ingress, LaunchPayLoad, OriginRequest, User, UserInfo
 };
 use actix_web::{web, HttpMessage, HttpRequest, HttpResponse, Responder};
 use futures::TryStreamExt;
-use mongodb::{bson::doc, Collection};
+use mongodb::{bson::{doc, oid::ObjectId}, Collection};
 use serde::Deserialize;
 use serde_json::json;
 use tokio::process::Command;
@@ -124,6 +124,44 @@ pub async fn get_deployed_containers(
 
     HttpResponse::Ok().json(containers)
 }
+
+
+pub async fn get_container_by_id(
+    db: web::Data<mongodb::Database>,
+    req: HttpRequest,
+    _id: web::Path<String>,
+) -> impl Responder {
+    
+    
+    // Safely extract `user_info`
+    let user_info = match req.extensions().get::<UserInfo>() {
+        Some(user_info) => user_info.clone(),
+        None => return HttpResponse::Unauthorized().finish(),
+    };
+
+    let object_id = match ObjectId::parse_str(&*_id) {  
+        Ok(oid) => oid,
+        Err(_) => return HttpResponse::BadRequest().json("Invalid document ID"),
+    };
+    // Build the filter using the extracted `user_info`
+    let filter = doc! { "_id": object_id.clone(), "owner": &user_info.nickname };
+
+    let container = get_container_collection(&db);
+
+    let result = container.find_one(filter).await;
+
+    // Handle the database result
+    match result {
+        Ok(Some(result)) => HttpResponse::Ok().json(result),
+        Ok(None) => HttpResponse::NotFound().json("No such containers!"),
+        Err(err) => {
+            dbg!(err);
+            HttpResponse::InternalServerError().json("Failed to fetch containers.")
+        }
+    }
+}
+
+
 
 #[derive(Deserialize)]
 pub struct PasswordChangeRequest {
