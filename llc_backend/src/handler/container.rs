@@ -98,13 +98,7 @@ pub async fn get_deployed_containers(
     req: HttpRequest,
     owner: web::Path<String>,
 ) -> impl Responder {
-    if let Some(claims) = req.extensions().get::<Claims>() {
-        println!("Claims: {:?}", claims);
-        return HttpResponse::Ok().json(claims);
-    }
-
-    HttpResponse::Unauthorized().finish();
-
+   
     let collection = get_container_collection(&db);
 
     let mut cursor = match collection.find(doc! {"owner": owner.into_inner()}).await {
