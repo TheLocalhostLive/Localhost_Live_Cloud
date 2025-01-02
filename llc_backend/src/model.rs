@@ -65,7 +65,9 @@ pub struct Applications{
     pub application_port : String,
     pub public_url: String,
     pub status: Status,
-    pub remarks: String
+    pub remarks: String,
+    pub ip : String
+
 }
 
 #[derive(Debug,Serialize,Deserialize)]
