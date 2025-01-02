@@ -1,4 +1,4 @@
-use std::clone;
+use std::{clone, collections};
 use std::fmt::format;
 use std::process::{self, Output, Stdio};
 
@@ -197,6 +197,7 @@ pub async fn change_container_password(
     }
 }
 
+
 #[derive(Deserialize)]
 pub struct DeployRequest {
     container_name: String,
@@ -364,4 +365,24 @@ pub async fn get_applications(
     }
 
     HttpResponse::Ok().json(applications)
+}
+
+
+
+pub async fn get_ipaddress(db: web::Data<mongodb::Database>,
+    path: web::Path<String>)->impl Responder{
+        let collections = db.collection::<Applications>("applications");
+        let container_name = path.into_inner();
+        let filter = doc! {"container_name":container_name};
+        match collections.find_one(filter).await{
+            Ok(application) => {
+                HttpResponse::Ok().json(application.unwrap().ip)
+               
+            }
+            Err(e) => {
+                eprintln!("Failed to update password: {:?}", e);
+                HttpResponse::InternalServerError().json("Could not Found")
+            }
+        }
+        
 }

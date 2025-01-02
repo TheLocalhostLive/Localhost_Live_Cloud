@@ -169,7 +169,8 @@ pub async fn host_project(
                 container_name: hosting_details.container_name.clone(),
                 public_url: hostname.clone(),
                 status: Status::Pending,
-                remarks: String::from("Processing request, It can take upto 5 minutes.")
+                remarks: String::from("Processing request, It can take upto 5 minutes."),
+                ip:container_ip
             };
             let app_collections = db.collection::<Applications>("applications");
 
