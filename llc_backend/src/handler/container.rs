@@ -386,3 +386,20 @@ pub async fn get_ipaddress(db: web::Data<mongodb::Database>,
         }
         
 }
+pub async fn get_application_details(db: web::Data<mongodb::Database>,
+    path: web::Path<String>)->impl Responder{
+        let collections = db.collection::<Applications>("applications");
+        let container_name = path.into_inner();
+        let filter = doc! {"container_name":container_name};
+        match collections.find_one(filter).await{
+            Ok(application) => {
+                HttpResponse::Ok().json(application.unwrap())
+               
+            }
+            Err(e) => {
+                eprintln!("Failed to update password: {:?}", e);
+                HttpResponse::InternalServerError().json("Could not Found")
+            }
+        }
+        
+}

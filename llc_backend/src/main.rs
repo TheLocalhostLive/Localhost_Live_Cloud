@@ -193,7 +193,8 @@ async fn main() -> std::io::Result<()> {
                     .route("/delete", web::delete().to(handler::container::delecte))
                     .route("/host-project", web::post().to(handler::cloudflared::host_project))
                     .route("/create_order", web::post().to(create_order))
-                    .route("/get-ip",web::get().to(handler::container::get_ipaddress)),
+                    .route("/get-ip",web::get().to(handler::container::get_ipaddress))
+                    .route("/get/application-details",web::get().to(handler::container::get_application_details)),
             ).service(Files::new("/", "./build").index_file("index.html"))
             .default_service(
                 web::get().to(index_fallback), 
